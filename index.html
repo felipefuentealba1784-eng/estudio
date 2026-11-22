@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F8C8DC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ronrutina">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Ronrutina</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--fondo:#FFF5F8;--sup:#FFFFFF;--sup2:#FDEAF1;--borde:#F6D3E0;--tx:#4A2B36;--mu:#8A6372;--ac:#C2185B;--ac2:#F8C8DC;--ok:#2E7D5B;--r:20px;--f:'Nunito',system-ui,-apple-system,sans-serif}
+[data-tema=nube]{--fondo:#FFF4F5;--sup2:#FCE6E9;--ac2:#FADADD}
+[data-tema=chicle]{--fondo:#FFF2F7;--sup2:#FCE3EE;--ac2:#F8C8DC}
+[data-tema=frutilla]{--fondo:#FFF0F3;--sup2:#FBDDE4;--ac2:#F4B6C2;--ac:#B0144F}
+[data-tema=algodon]{--fondo:#FFF8FA;--sup2:#FFEAF0;--ac2:#FFE4EC}
+[data-tema=blanco]{--fondo:#FFFFFF;--sup2:#FBF1F5;--ac2:#F6D9E4}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--fondo);color:var(--tx);font:16px/1.45 var(--f)}
+body{min-height:100dvh}
+body.deco{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg opacity='.16'%3E%3Cpath d='M30 22c-8 0-10 9-6 16l6 10 6-10c4-7 2-16-6-16z' fill='%23E8475F'/%3E%3Cpath d='M24 23l6-6 6 6-6 3z' fill='%236BBF59'/%3E%3Cg fill='%23F48FB1'%3E%3Ccircle cx='112' cy='96' r='6'/%3E%3Ccircle cx='122' cy='103' r='6'/%3E%3Ccircle cx='118' cy='115' r='6'/%3E%3Ccircle cx='106' cy='115' r='6'/%3E%3Ccircle cx='102' cy='103' r='6'/%3E%3C/g%3E%3Ccircle cx='112' cy='106' r='4' fill='%23FFD54F'/%3E%3C/g%3E%3C/svg%3E")}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px;border-radius:12px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.01em}
+h1{font-size:26px;line-height:1.2}h2{font-size:20px}h3{font-size:17px}
+p{margin:0}
+.app{max-width:520px;margin:0 auto;padding:14px 16px calc(96px + env(safe-area-inset-bottom));min-height:100dvh}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 14px}
+.sub{color:var(--mu);font-size:14px}
+.eti{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+.card{background:var(--sup);border:1px solid var(--borde);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 2px 0 rgba(194,24,91,.04)}
+.card.rosa{background:var(--sup2)}
+.fila{display:flex;align-items:center;gap:10px}.entre{justify-content:space-between}.wrap{flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:8px}
+.mt{margin-top:12px}.mt2{margin-top:20px}.mb{margin-bottom:10px}
+.btn{min-height:48px;padding:0 18px;border-radius:24px;border:1.5px solid var(--borde);background:var(--sup);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:var(--tx)}
+.btn.pr{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.suave{background:var(--sup2);border-color:transparent}
+.btn.big{min-height:58px;border-radius:29px;font-size:18px;width:100%}
+.btn.w{width:100%}.btn.sm{min-height:40px;padding:0 14px;font-size:14px}
+.btn:disabled{opacity:.45}
+.icono{width:44px;height:44px;border-radius:22px;border:1.5px solid var(--borde);background:var(--sup);display:inline-grid;place-items:center;flex:none;color:var(--tx)}
+svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin:0 -16px;padding-left:16px;padding-right:16px}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chip{min-height:40px;padding:0 14px;border-radius:20px;border:1.5px solid var(--borde);background:var(--sup);font-weight:700;font-size:14px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed=true]{background:var(--ac);border-color:var(--ac);color:#fff}
+.pt{width:10px;height:10px;border-radius:5px;display:inline-block;flex:none;border:1px solid rgba(0,0,0,.08)}
+.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--borde);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+.nav a{flex:1;max-width:130px;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mu);text-decoration:none;font-size:12px;font-weight:800}
+.nav a[aria-current=page]{color:var(--ac)}
+.nav.oculta{display:none}
+.ev{display:flex;gap:12px;align-items:stretch;padding:12px;border-radius:16px;background:var(--sup);border:1.5px solid var(--borde);width:100%;text-align:left;margin-bottom:8px}
+.ev .barra{width:6px;border-radius:3px;flex:none}
+.ev .txt{flex:1;min-width:0}.ev b{display:block}
+.ev small{color:var(--mu);font-size:13px}
+.ev .cuando{font-weight:800;font-size:13px;color:var(--ac);white-space:nowrap}
+.ev.hecho{opacity:.55}
+.tipo{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mu)}
+.vacio{color:var(--mu);text-align:center;padding:16px 8px}
+.ron-zona{display:flex;align-items:flex-end;gap:10px}
+.ron-zona .ron{width:120px;flex:none;cursor:pointer;position:relative}
+.ron-zona.chico .ron{width:92px}
+.ron-zona.grande{flex-direction:column;align-items:center}
+.ron-zona.grande .ron{width:200px}
+.globo{position:relative;background:var(--sup);border:1.5px solid var(--borde);border-radius:18px;padding:10px 14px;font-weight:700;flex:1;margin-bottom:24px;min-height:44px}
+.globo::after{content:'';position:absolute;left:-8px;bottom:14px;width:14px;height:14px;background:var(--sup);border-left:1.5px solid var(--borde);border-bottom:1.5px solid var(--borde);transform:rotate(45deg)}
+.ron-zona.grande .globo{margin:0 0 6px;text-align:center;flex:none;max-width:100%}
+.ron-zona.grande .globo::after{left:50%;bottom:-8px;margin-left:-7px;transform:rotate(-45deg)}
+.ron svg{width:100%;height:auto;display:block;overflow:visible}
+.corazon{position:absolute;left:50%;top:10%;font-size:22px;pointer-events:none;animation:sube 1.2s ease-out forwards;color:#E91E63}
+@keyframes sube{from{opacity:1;transform:translate(-50%,0) scale(.8)}to{opacity:0;transform:translate(-50%,-70px) scale(1.3)}}
+.ron .cola{transform-origin:152px 242px;animation:cola 2.6s ease-in-out infinite}
+@keyframes cola{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+.ron .cuerpo{transform-origin:120px 230px;animation:resp 3.4s ease-in-out infinite}
+@keyframes resp{0%,100%{transform:scale(1)}50%{transform:scale(1.015,1.02)}}
+.ron .ojos-ab{transform-origin:120px 110px;animation:parpadeo 5s infinite}
+@keyframes parpadeo{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.ron .ojos-ce,.ron .zzz,.ron .brazo{display:none}
+.ron.saluda .brazo{display:block;transform-origin:94px 190px;animation:salu .9s ease-in-out 3}
+.ron.saluda .pata-izq{display:none}
+@keyframes salu{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
+.ron.celebra svg{animation:salto .55s ease-in-out 3}
+@keyframes salto{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.ron.duerme .ojos-ab{display:none}.ron.duerme .ojos-ce,.ron.duerme .zzz{display:block}
+.ron.duerme .zzz{animation:zz 2.4s ease-in-out infinite}
+@keyframes zz{0%{opacity:0;transform:translate(0,6px)}50%{opacity:1}100%{opacity:0;transform:translate(6px,-10px)}}
+.ron.piensa .pupila{transform:translate(3px,-3px)}
+@media (prefers-reduced-motion:reduce){.ron *,.ron svg,.corazon{animation:none!important}}
+.anillo{position:relative;width:230px;height:230px;margin:8px auto}
+.anillo>svg{width:100%;height:100%;transform:rotate(-90deg)}
+.anillo circle{fill:none;stroke-width:14}
+.anillo .fondo{stroke:var(--sup2)}.anillo .prog{stroke:var(--ac);stroke-linecap:round;transition:stroke-dashoffset .5s linear}
+.anillo .centro{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.num{font-size:56px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.mes{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.mes .cab{font-size:12px;font-weight:800;color:var(--mu);padding:4px 0}
+.dia{min-height:44px;border-radius:12px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px 0;font-weight:700}
+.dia.otro{opacity:.35}.dia.hoy{box-shadow:inset 0 0 0 2px var(--ac)}
+.dia[aria-pressed=true]{background:var(--ac);color:#fff}
+.puntos{display:flex;gap:2px;margin-top:3px;height:6px}.puntos i{width:6px;height:6px;border-radius:3px;display:block}
+label.lbl{display:block;font-weight:800;font-size:14px;margin:14px 0 6px}
+input[type=text],input[type=email],input[type=date],input[type=time],select,textarea{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--borde);background:var(--sup);color:var(--tx)}
+textarea{min-height:90px;resize:vertical}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:6px 0;border-bottom:1px solid var(--borde)}
+.sw:last-child{border-bottom:0}
+.sw input[type=checkbox]{appearance:none;-webkit-appearance:none;width:52px;height:32px;border-radius:16px;background:#E9CBD6;position:relative;flex:none;cursor:pointer;margin:0}
+.sw input[type=checkbox]::after{content:'';position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:13px;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw input[type=checkbox]:checked{background:var(--ac)}.sw input[type=checkbox]:checked::after{left:23px}
+.hoja{position:fixed;inset:0;background:rgba(74,43,54,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.hoja>div{background:var(--fondo);border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:92dvh;overflow:auto;padding:16px 16px calc(24px + env(safe-area-inset-bottom))}
+.agarre{width:44px;height:5px;border-radius:3px;background:var(--borde);margin:0 auto 12px}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--tx);color:#fff;padding:12px 18px;border-radius:16px;font-weight:700;z-index:60;max-width:min(460px,92vw);text-align:center}
+.check{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 10px;border-radius:14px;background:var(--sup2);width:100%;text-align:left;border:0;margin-bottom:6px}
+.check .box{width:26px;height:26px;border-radius:8px;border:2px solid var(--ac);flex:none;display:grid;place-items:center;background:#fff}
+.check[aria-pressed=true] .box{background:var(--ac)}
+.check[aria-pressed=true] .box::after{content:'✓';color:#fff;font-weight:900}
+.check[aria-pressed=true] span:last-child{text-decoration:line-through;color:var(--mu)}
+.swatch{width:52px;height:52px;border-radius:26px;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--borde)}
+.swatch[aria-pressed=true]{box-shadow:0 0 0 3px var(--ac)}
+.aviso{padding:12px 14px;border-radius:14px;background:#FFF3D6;color:#6B4A00;font-size:14px;margin-bottom:12px}
+.bienv{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:20px 0}
+.paso-tr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--borde)}
+.pre{white-space:pre-wrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.badge{font-size:12px;font-weight:800;padding:3px 9px;border-radius:10px;background:var(--sup2);color:var(--ac);white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mas-item{display:flex;align-items:center;gap:14px;width:100%;padding:14px;border-radius:16px;border:1.5px solid var(--borde);background:var(--sup);text-align:left;margin-bottom:8px;font-weight:800}
+.mas-item small{display:block;font-weight:600;color:var(--mu)}
+.mas-item .ic{width:44px;height:44px;border-radius:14px;background:var(--sup2);display:grid;place-items:center;color:var(--ac);flex:none}
+[tabindex="-1"]:focus{outline:none}
+.check.opcion[aria-pressed=true] span:last-child{text-decoration:none;color:inherit}
+.check.opcion[aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--ac)}
+
+.ron .acc{display:none}
+.ron[data-acc=collar] .acc-collar,.ron[data-acc=mono] .acc-mono,.ron[data-acc=corona] .acc-corona,.ron[data-acc=lentes] .acc-lentes,.ron[data-acc=gorro] .acc-gorro{display:block}
+#ron-casa .ron{touch-action:none}
+.nav a{max-width:110px}
+
+</style>
+<script defer src="fb.js"></script>
+</head>
+<body class="deco">
+<main class="app"><div id="vista"></div></main>
+<nav class="nav oculta" aria-label="Secciones"><a href="#hoy" data-tab="hoy"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Hoy</a><a href="#calendario" data-tab="calendario"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a><a href="#estudiar" data-tab="estudiar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/></svg>Estudiar</a><a href="#ron" data-tab="ron"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/></svg>Ron</a><a href="#mas" data-tab="mas"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a></nav>
+<script>
+/* ===== Utilidades ===== */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const deYmd = s => { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const hoyYmd = () => ymd(new Date());
+const sumaDias = (s, n) => { const d = deYmd(s); d.setDate(d.getDate() + n); return ymd(d); };
+const difDias = (a, b) => Math.round((deYmd(b) - deYmd(a)) / 864e5);
+const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+const DIAS_C = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+const fechaLarga = s => { const d = deYmd(s); return DIAS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()]; };
+const fechaCorta = s => { const d = deYmd(s); return DIAS[d.getDay()].slice(0, 3) + ' ' + d.getDate() + '/' + (d.getMonth() + 1); };
+function cuando(s) {
+  const n = difDias(hoyYmd(), s);
+  if (n === 0) return 'Hoy'; if (n === 1) return 'Mañana'; if (n === -1) return 'Ayer';
+  if (n > 1 && n < 7) return cap(DIAS[deYmd(s).getDay()]); if (n >= 7) return 'En ' + n + ' días'; return 'Hace ' + (-n) + ' días';
+}
+const IC = {
+  hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  lapiz: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
+  mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>', x: '<path d="M18 6L6 18M6 6l12 12"/>', back: '<path d="M15 18l-6-6 6-6"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/>', mochila: '<path d="M7 8a5 5 0 0 1 10 0v12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2M7 14h10"/>',
+  reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>',
+  ajustes: '<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/>',
+  grupo: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a4.5 4.5 0 0 1 7 0"/>',
+  tabla: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/>', check: '<path d="M5 12l5 5L20 7"/>',
+  pausa: '<path d="M9 6v12M15 6v12"/>', play: '<path d="M8 5l11 7-11 7z"/>', descarga: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'
+};
+const ic = (n, cls) => `<svg class="i ${cls || ''}" viewBox="0 0 24 24" aria-hidden="true">${IC[n] || ''}</svg>`;
+
+let tToast = 0;
+function toast(m) { let t = $('.toast'); if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); } t.textContent = m; clearTimeout(tToast); tToast = setTimeout(() => t.remove(), 3600); }
+
+/* ===== Datos por defecto ===== */
+const COLORES = ['#F8BBD0', '#BBDEFB', '#FFE0B2', '#C8E6C9', '#E1BEE7', '#FFCCBC', '#FFF59D', '#B2EBF2', '#CFD8DC', '#FFE4D6', '#D1C4E9', '#DCEDC8'];
+const ASIG0 = [['Lengua y Literatura', 0], ['Matemática', 1], ['Historia, Geografía y Cs. Sociales', 2], ['Ciencias Naturales', 3], ['Inglés', 4], ['Educación Física', 5], ['Artes Visuales', 6], ['Música', 7], ['Tecnología', 8], ['Orientación', 9]];
+const TIPOS = { prueba: 'Prueba', control: 'Control de lectura', trabajo: 'Trabajo', disertacion: 'Disertación', material: 'Materiales', otro: 'Otro' };
+const TEMAS = { nube: '#FADADD', chicle: '#F8C8DC', frutilla: '#F4B6C2', algodon: '#FFE4EC', blanco: '#FFFFFF' };
+const TEMAS_N = { nube: 'Nube', chicle: 'Chicle', frutilla: 'Frutilla', algodon: 'Algodón', blanco: 'Blanco' };
+const TECNICAS = [
+  ['Ponte a prueba', 'Cierra el cuaderno y responde de memoria. Después revisa qué te faltó.'],
+  ['Explícalo con tus palabras', 'Imagina que se lo enseñas a Ron: explica el tema en voz alta, simple.'],
+  ['Dibújalo', 'Haz un esquema, una línea de tiempo o un dibujo del tema.'],
+  ['Busca un ejemplo', 'Relaciona lo que estudias con algo de tu vida.'],
+  ['Mézclalo', 'Alterna ejercicios o temas distintos en vez de repetir el mismo.'],
+  ['Anota la duda', 'Escríbela para preguntarle a tu profe. ¡Preguntar también es estudiar!']
+];
+const PLANTILLAS = {
+  consulta: ['Consulta sobre {asig}', 'Estimado/a profesor/a {profe}:\n\nLe escribo para consultarle sobre {tema}.\n\n\nMuchas gracias.\nSaludos cordiales,\n{nombre}\n7° básico'],
+  trabajo: ['Envío de trabajo: {tema}', 'Estimado/a profesor/a {profe}:\n\nLe adjunto mi trabajo "{tema}" de {asig}.\n\nQuedo atenta a sus comentarios.\nSaludos cordiales,\n{nombre}\n7° básico'],
+  justificacion: ['Justificación de inasistencia', 'Estimado/a profesor/a {profe}:\n\nLe escribo para informarle que no pude asistir a clases el día {fecha} por el siguiente motivo: \n\n\nSaludos cordiales,\n{nombre}\n7° básico'],
+  libre: ['', 'Estimado/a profesor/a {profe}:\n\n\n\nSaludos cordiales,\n{nombre}']
+};
+
+/* ===== Ajustes de este teléfono ===== */
+const AJ0 = { rol: '', nombre: '', codigo: '', tema: 'chicle', deco: true, ronFreq: 15, sonido: true, agua: 45, dormir: '22:00', mochilaHora: '20:00', materialesHora: '07:00', duracion: 25, estirar: true, hobbies: '', aire: true, horaEstudio: '17:00' };
+let AJ = Object.assign({}, AJ0);
+const LS = 'ronrutina.ajustes';
+function cargarAjustes() { try { AJ = Object.assign({}, AJ0, JSON.parse(localStorage.getItem(LS) || '{}')); } catch (e) { } }
+function guardarAjustes() { try { localStorage.setItem(LS, JSON.stringify(AJ)); } catch (e) { } aplicarTema(); }
+function aplicarTema() { document.documentElement.dataset.tema = AJ.tema; document.body.classList.toggle('deco', !!AJ.deco); }
+
+/* ===== Datos compartidos (Firebase o local) ===== */
+const FB_CONFIG = { apiKey: 'AIzaSyB_Z7YOYFsR-Br2FJLCFBf2SVyUg7TtCPE', authDomain: 'app-estudio-2027.firebaseapp.com', projectId: 'app-estudio-2027', storageBucket: 'app-estudio-2027.firebasestorage.app', messagingSenderId: '532112907706', appId: '1:532112907706:web:4a27001a73fe4ca8325183' };
+const COLS = ['asig', 'eventos', 'sesiones', 'config', 'reflex'];
+const D = { asig: [], eventos: [], sesiones: [], config: [], reflex: [] };
+const DB = { modo: 'cargando', fs: null, unsubs: [], listo: false };
+const cfg = id => D.config.find(c => c.id === id) || {};
+
+function nuevoCodigo() {
+  const abc = 'abcdefghijkmnpqrstuvwxyz23456789', a = new Uint8Array(28);
+  (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => a[i] = Math.random() * 256);
+  return [...a].map(x => abc[x % abc.length]).join('');
+}
+async function conectar(codigo) {
+  DB.unsubs.forEach(u => { try { u(); } catch (e) { } }); DB.unsubs = []; DB.listo = false;
+  COLS.forEach(c => D[c] = []);
+  const FB = window.FB;
+  if (!FB || !codigo) return modoLocal(codigo);
+  try {
+    if (!DB.app) {
+      DB.app = FB.initializeApp(FB_CONFIG);
+      DB.auth = FB.getAuth(DB.app);
+      try { DB.fs = FB.initializeFirestore(DB.app, { localCache: FB.persistentLocalCache() }); }
+      catch (e) { DB.fs = FB.initializeFirestore(DB.app, {}); }
+    }
+    if (!DB.auth.currentUser) await Promise.race([FB.signInAnonymously(DB.auth), new Promise((_, r) => setTimeout(() => r(new Error('tiempo')), 15000))]);
+    DB.modo = 'nube'; DB.codigo = codigo;
+    let llegaron = 0;
+    COLS.forEach(c => {
+      const u = FB.onSnapshot(FB.collection(DB.fs, 'familias', codigo, c), s => {
+        D[c] = s.docs.map(d => Object.assign({}, d.data(), { id: d.id }));
+        if (!DB.listo && ++llegaron >= COLS.length) { DB.listo = true; alListo(); }
+        render();
+      }, e => { console.warn(e); toast('No pude conectar con los datos compartidos. Revisa tu internet.'); });
+      DB.unsubs.push(u);
+    });
+    return true;
+  } catch (e) {
+    console.warn(e); toast('Sin conexión: trabajarás en este teléfono hasta que vuelva internet.');
+    return modoLocal(codigo);
+  }
+}
+function modoLocal(codigo) {
+  DB.modo = 'local'; DB.codigo = codigo || 'local';
+  try { const j = JSON.parse(localStorage.getItem('ronrutina.datos.' + DB.codigo) || '{}'); COLS.forEach(c => D[c] = j[c] || []); } catch (e) { }
+  DB.listo = true; alListo(); render(); return false;
+}
+function guardarLocal() { if (DB.modo !== 'local') return; try { localStorage.setItem('ronrutina.datos.' + DB.codigo, JSON.stringify(D)); } catch (e) { } }
+const limpio = o => JSON.parse(JSON.stringify(o));
+async function put(col, obj) {
+  if (!obj.id) obj.id = uid(); obj.act = Date.now(); obj.por = AJ.nombre || '';
+  const i = D[col].findIndex(x => x.id === obj.id); if (i >= 0) D[col][i] = obj; else D[col].push(obj);
+  if (DB.modo === 'nube') { const { id, ...data } = obj; DB.FBset(col, id, limpio(data)); } else { guardarLocal(); render(); }
+  return obj;
+}
+async function borrar(col, id) {
+  D[col] = D[col].filter(x => x.id !== id);
+  if (DB.modo === 'nube') DB.FBdel(col, id); else { guardarLocal(); render(); }
+}
+DB.FBset = (col, id, data) => window.FB.setDoc(window.FB.doc(DB.fs, 'familias', DB.codigo, col, id), data).catch(e => { console.warn(e); toast('No se pudo guardar en la nube. Revisa tu conexión.'); });
+DB.FBdel = (col, id) => window.FB.deleteDoc(window.FB.doc(DB.fs, 'familias', DB.codigo, col, id)).catch(e => { console.warn(e); toast('No se pudo borrar.'); });
+
+/* ===== Consultas ===== */
+const asigPor = id => D.asig.find(a => a.id === id) || { nombre: 'Sin asignatura', color: '#EEE' };
+const asigOrden = () => D.asig.slice().sort((a, b) => (a.orden ?? 99) - (b.orden ?? 99) || a.nombre.localeCompare(b.nombre));
+const horario = () => cfg('horario').dias || {};
+const asigDelDia = s => (horario()[deYmd(s).getDay()] || []).map(asigPor).filter(a => a.id);
+const eventosOrden = () => D.eventos.slice().sort((a, b) => (a.fecha + (a.hora || '')).localeCompare(b.fecha + (b.hora || '')));
+const proximos = (dias = 21) => { const h = hoyYmd(), f = sumaDias(h, dias); return eventosOrden().filter(e => e.fecha >= h && e.fecha <= f && !e.hecho); };
+const materialesDe = s => D.eventos.filter(e => e.fecha === s && (e.materiales || '').trim());
+const sesionesDe = evId => D.sesiones.filter(s => s.evento === evId);
+const frutillas = () => D.sesiones.length;
+const estudiante = () => cfg('familia').estudiante || (AJ.rol === 'estudiante' ? AJ.nombre : '') || 'Emy';
+
+/* ===== Enlaces externos ===== */
+const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function gcalEnlace({ titulo, fecha, hora, min = 30, detalles = '', recur }) {
+  const p = new URLSearchParams({ action: 'TEMPLATE', text: titulo, details: detalles, ctz: 'America/Santiago' });
+  const f = fecha.replace(/-/g, '');
+  if (hora) {
+    const [h, m] = hora.split(':').map(Number), fin = new Date(2000, 0, 1, h, m + min);
+    p.set('dates', `${f}T${pad(h)}${pad(m)}00/${f}T${pad(fin.getHours())}${pad(fin.getMinutes())}00`);
+  } else p.set('dates', `${f}/${sumaDias(fecha, 1).replace(/-/g, '')}`);
+  if (recur) p.set('recur', recur);
+  return 'https://calendar.google.com/calendar/render?' + p.toString().replace(/\+/g, '%20');
+}
+function correoEnlaces(para, asunto, cuerpo) {
+  const q = s => encodeURIComponent(s || '');
+  return {
+    app: esIOS ? `googlegmail://co?to=${q(para)}&subject=${q(asunto)}&body=${q(cuerpo)}` : `mailto:${q(para).replace(/%40/g, '@')}?subject=${q(asunto)}&body=${q(cuerpo)}`,
+    web: `https://mail.google.com/mail/?view=cm&fs=1&to=${q(para)}&su=${q(asunto)}&body=${q(cuerpo)}`
+  };
+}
+
+/* ===== Sonido suave ===== */
+let actx = null;
+document.addEventListener('pointerdown', () => { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } } }, { once: true });
+function campana(notas = [880, 1175]) {
+  if (!AJ.sonido || !actx) return;
+  try { notas.forEach((f, k) => { const t = actx.currentTime + k * .18, o = actx.createOscillator(), g = actx.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .5); o.connect(g).connect(actx.destination); o.start(t); o.stop(t + .55); }); } catch (e) { }
+}
+
+/* ===== Contenidos de "Cómo estudiar" ===== */
+const TEC = [
+  { id: 'prueba', n: 'Ponte a prueba', ic: '🧠', que: 'Sacar de tu memoria lo que aprendiste, sin mirar el cuaderno. Es una de las formas que más ayudan a recordar.', cuando: 'Siempre que estudies para una prueba o control, desde varios días antes.',
+    pasos: ['Lee o repasa el tema una vez.', 'Cierra el cuaderno y escribe o di todo lo que recuerdes, o responde preguntas.', 'Abre el cuaderno, revisa qué te faltó y vuelve a intentarlo otro día.'],
+    ej: 'Para Historia: tapa tus apuntes y escribe las 3 causas de la Conquista. Luego compara.' },
+  { id: 'reparte', n: 'Repártelo', ic: '📅', que: 'Estudiar un poco en varios días en vez de todo la noche anterior. Lo que repasas espaciado se queda más tiempo.', cuando: 'Apenas sabes la fecha de una evaluación.',
+    pasos: ['Anota la prueba en Ronrutina apenas te la avisen.', 'Usa el "Plan sugerido" para repartir sesiones cortas en varios días.', 'En cada sesión, repasa primero lo de la sesión anterior.'],
+    ej: 'Prueba el viernes: 20 min el lunes, 20 min el miércoles y 15 min de repaso el jueves.' },
+  { id: 'mezcla', n: 'Mézclalo', ic: '🔀', que: 'Alternar tipos de ejercicios o temas distintos en una misma sesión, en vez de repetir siempre lo mismo.', cuando: 'Sobre todo en Matemática y Ciencias, cuando ya entiendes cada tema por separado.',
+    pasos: ['Junta ejercicios de 2 o 3 temas distintos.', 'Resuélvelos en desorden.', 'Antes de cada uno, pregúntate: ¿qué tipo de ejercicio es este?'],
+    ej: 'Mezcla fracciones, porcentajes y ecuaciones en vez de hacer 10 de fracciones seguidas.' },
+  { id: 'porque', n: 'Pregúntate por qué', ic: '❓', que: 'Explicar con tus propias palabras cómo y por qué pasa algo, y conectarlo con lo que ya sabes.', cuando: 'Cuando hay que entender procesos, causas o ideas, no solo memorizar.',
+    pasos: ['Lee una idea importante.', 'Pregúntate: ¿por qué pasa esto? ¿Cómo se relaciona con lo que ya sé?', 'Explícaselo a Ron (o a alguien) en voz alta, simple.'],
+    ej: 'En Ciencias: ¿por qué las plantas necesitan luz? Explícalo como si Ron no supiera nada.' },
+  { id: 'ejemplo', n: 'Busca un ejemplo', ic: '🍓', que: 'Relacionar las ideas abstractas con ejemplos concretos, de tu vida o del libro.', cuando: 'Cuando un concepto te parece difícil o "en el aire".',
+    pasos: ['Elige el concepto difícil.', 'Busca 2 ejemplos: uno del cuaderno y uno tuyo.', 'Revisa qué tienen en común los ejemplos.'],
+    ej: 'Metáfora en Lenguaje: "tus ojos son dos luceros". Inventa una sobre Ron.' },
+  { id: 'dibuja', n: 'Dibújalo', ic: '✏️', que: 'Combinar palabras con imágenes: esquemas, líneas de tiempo, mapas o dibujos.', cuando: 'Para procesos, fechas, partes de algo o relaciones entre ideas.',
+    pasos: ['Lee el tema y elige qué se puede dibujar.', 'Haz un esquema o dibujo simple con palabras clave.', 'Después, intenta repetirlo de memoria.'],
+    ej: 'En Historia: una línea de tiempo con los hechos más importantes y un dibujito para cada uno.' }
+];
+const GUIA_ASIG = [
+  { k: /lengua|lenguaje|literatura/i, t: 'Lengua y Literatura', ideas: ['Lectura complementaria: divide las páginas en días hasta la fecha del control.', 'Haz una ficha por capítulo: personajes, qué pasó y una cita importante.', 'Para escribir: planifica (lluvia de ideas), escribe y luego revisa con la pauta.', 'Vocabulario nuevo en tarjetas: ponte a prueba con ellas.'], tec: ['prueba', 'porque', 'ejemplo'] },
+  { k: /matem/i, t: 'Matemática', ideas: ['Se estudia haciendo ejercicios, no solo leyendo.', 'Mezcla tipos de ejercicios en una misma sesión.', 'Ten un "cuaderno de errores": anota qué falló y cómo se corrige.', 'Explica en voz alta cada paso que haces.'], tec: ['mezcla', 'prueba', 'porque'] },
+  { k: /historia|geograf|sociales/i, t: 'Historia', ideas: ['Haz líneas de tiempo con dibujos.', 'Cuadros de causas y consecuencias.', 'Tarjetas con conceptos clave y su definición.', 'Pregúntate por qué pasó cada hecho.'], tec: ['dibuja', 'porque', 'prueba'] },
+  { k: /ciencia|natural|biolog|física|quím/i, t: 'Ciencias', ideas: ['Dibuja los procesos paso a paso.', 'Explícalos con ejemplos de tu casa o tu cuerpo.', 'Tarjetas con el vocabulario científico.', 'Mezcla preguntas de distintas unidades.'], tec: ['dibuja', 'ejemplo', 'prueba'] },
+  { k: /ingl|english/i, t: 'Inglés', ideas: ['Vocabulario en tarjetas repasadas en días distintos.', 'Di las frases en voz alta.', 'Escribe oraciones tuyas con las palabras nuevas.', 'Escucha canciones o videos cortos en inglés.'], tec: ['prueba', 'reparte', 'ejemplo'] },
+  { k: /arte|música|tecnolog|educación física|orientación|religión/i, t: 'Asignaturas de proyecto', ideas: ['Divide el proyecto en pasos con fecha.', 'Revisa la pauta antes de empezar y antes de entregar.', 'Anota los materiales con tiempo y ponles recordatorio.', 'Saca fotos de tu avance.'], tec: ['reparte', 'dibuja'] }
+];
+const GUIA_TIPO = {
+  prueba: { t: 'Prueba escrita', p: ['Anota el temario completo.', 'Reparte 3 o 4 sesiones cortas antes.', 'Dos días antes, hazte una prueba de práctica.', 'La noche anterior: repaso corto y a dormir temprano.'] },
+  control: { t: 'Control de lectura', p: ['Divide las páginas por día hasta la fecha.', 'Ficha por capítulo: personajes, hechos y una cita.', 'Inventa preguntas tipo control y respóndelas sin el libro.', 'Repasa tus fichas el día antes.'] },
+  trabajo: { t: 'Trabajo o investigación', p: ['Lee la pauta o rúbrica primero.', 'Usa "Sugerir pasos" para dividirlo con fechas.', 'Haz un borrador antes de la versión final.', 'Revisa con la pauta antes de entregar.'] },
+  disertacion: { t: 'Disertación', p: ['Escribe un guion corto con ideas clave, no para leer.', 'Prepara un apoyo visual simple.', 'Ensaya con cronómetro.', 'Haz un ensayo final frente a tu familia (¡o frente a Ron!).'] },
+  otro: { t: 'Otra actividad', p: ['Anota qué se pide y para cuándo.', 'Divide en pasos si es largo.', 'Ponle un recordatorio.'] },
+  material: { t: 'Materiales', p: ['Anótalos apenas te los pidan.', 'Ponles recordatorio la noche anterior.', 'Revisa la mochila antes de dormir.'] }
+};
+const guiaAsig = nombre => GUIA_ASIG.find(g => g.k.test(nombre || '')) || { t: nombre, ideas: ['Usa "Ponte a prueba" y "Repártelo": sirven para todo.'], tec: ['prueba', 'reparte'] };
+const tecPor = id => TEC.find(t => t.id === id);
+const LOGROS = [
+  { id: 'primera', n: 'Primera sesión', d: 'Completaste tu primera sesión de estudio.', ic: '🌱', acc: 'collar' },
+  { id: 'cinco', n: '5 sesiones', d: 'Cinco sesiones de estudio.', ic: '⭐', acc: 'mono' },
+  { id: 'racha3', n: 'Racha de 3 días', d: 'Estudiaste 3 días seguidos.', ic: '🔥', acc: 'corona' },
+  { id: 'diez', n: '10 sesiones', d: 'Diez sesiones. ¡Constancia de gato!', ic: '🏅', acc: 'lentes' },
+  { id: 'trabajo', n: 'Trabajo completo', d: 'Terminaste todos los pasos de un trabajo.', ic: '📋' },
+  { id: 'reflexion', n: 'Primera reflexión', d: 'Hiciste tu primera reflexión semanal.', ic: '💭' },
+  { id: 'tecnicas', n: 'Exploradora', d: 'Probaste 3 técnicas de estudio distintas.', ic: '🧭' },
+  { id: 'mochila', n: 'Mochila al día', d: 'Dejaste la mochila lista 5 veces.', ic: '🎒' },
+  { id: 'cuidadora', n: 'Mejor amiga de Ron', d: 'Cuidaste a Ron en 5 pausas.', ic: '🧡' },
+  { id: 'veinte', n: '20 sesiones', d: 'Veinte sesiones de estudio.', ic: '🏆', acc: 'gorro' }
+];
+const ACCESORIOS = { collar: 'Collar rosado', mono: 'Moño', corona: 'Corona de flores', lentes: 'Lentes de estudio', gorro: 'Gorrito de fiesta' };
+
+/* ===== Ron, la mascota ===== */
+const NAR = '#F0943F', RAY = '#C46A24', OSC = '#3A2A1E', ROSA = '#F4A3B4';
+const RON_SVG = `<svg viewBox="0 0 240 262" role="img" aria-label="Ron, el gato naranja" stroke="${OSC}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="120" cy="246" rx="98" ry="15" fill="var(--ac2)" stroke="none"/>
+<g class="cola"><path d="M150 236 C192 240 216 216 212 186 C210 174 224 172 226 186 C230 222 202 252 152 250 Z" fill="${NAR}"/><path d="M206 196 l13 -2 M210 216 l12 3 M196 236 l8 9" stroke="${RAY}" stroke-width="3.5"/></g>
+<g class="cuerpo"><ellipse cx="120" cy="196" rx="58" ry="54" fill="${NAR}"/>
+<path d="M164 172 q-10 9 -4 22 M170 200 q-12 7 -6 22 M76 172 q10 9 4 22 M70 200 q12 7 6 22" stroke="${RAY}" stroke-width="3.5" fill="none"/>
+<path d="M98 150 C88 180 92 224 104 242 L136 242 C148 224 152 180 142 150 Z" fill="#fff" stroke="none"/></g>
+<ellipse class="pata-izq" cx="103" cy="245" rx="15" ry="8" fill="#fff"/>
+<ellipse cx="137" cy="245" rx="15" ry="8" fill="#fff"/>
+<g class="brazo"><path d="M88 194 C74 182 62 164 58 150 C56 140 68 136 74 144 C80 160 92 176 104 186 Z" fill="${NAR}"/><path d="M68 166 l9 -5 M76 178 l9 -5" stroke="${RAY}" stroke-width="3"/><circle cx="64" cy="142" r="12" fill="#fff"/><circle cx="59" cy="137" r="2.8" fill="${ROSA}" stroke="none"/><circle cx="65" cy="135" r="2.8" fill="${ROSA}" stroke="none"/><circle cx="71" cy="139" r="2.8" fill="${ROSA}" stroke="none"/><ellipse cx="65" cy="146" rx="5" ry="3.6" fill="${ROSA}" stroke="none"/></g>
+<polygon points="66,92 70,32 106,66" fill="${NAR}"/><polygon points="74,82 74,46 96,67" fill="#F7B5C2" stroke="none"/>
+<polygon points="134,66 170,32 174,92" fill="${NAR}"/><polygon points="144,67 166,46 166,82" fill="#F7B5C2" stroke="none"/>
+<ellipse cx="120" cy="110" rx="60" ry="51" fill="${NAR}"/>
+<path d="M92 70 q6 10 4 20 M104 64 q4 10 2 18 M136 64 q-4 10 -2 18 M148 70 q-6 10 -4 20 M64 112 q10 2 16 8 M66 124 q8 0 13 4 M176 112 q-10 2 -16 8 M174 124 q-8 0 -13 4" stroke="${RAY}" stroke-width="3.2" fill="none"/>
+<path d="M116 62 Q120 60 124 62 L133 122 L107 122 Z" fill="#fff" stroke="none"/>
+<ellipse cx="120" cy="134" rx="28" ry="19" fill="#fff" stroke="none"/>
+<g class="ojos-ab"><ellipse cx="97" cy="104" rx="11.5" ry="12.5" fill="#E3A126"/><ellipse cx="143" cy="104" rx="11.5" ry="12.5" fill="#E3A126"/>
+<g class="pupila"><ellipse cx="97" cy="105" rx="4.6" ry="8.5" fill="#221A14" stroke="none"/><ellipse cx="143" cy="105" rx="4.6" ry="8.5" fill="#221A14" stroke="none"/><circle cx="100.5" cy="99.5" r="2.8" fill="#fff" stroke="none"/><circle cx="146.5" cy="99.5" r="2.8" fill="#fff" stroke="none"/></g></g>
+<g class="ojos-ce" fill="none" stroke-width="3"><path d="M86 106 q11 9 22 0"/><path d="M132 106 q11 9 22 0"/></g>
+<path d="M113 121 L127 121 L120 129 Z" fill="#F2A0AE" stroke="none"/>
+<path d="M120 129 v4 q-6 7 -11 2 M120 133 q6 7 11 2" fill="none" stroke-width="2"/>
+<path d="M94 132 L56 125 M94 139 L54 144 M146 132 L184 125 M146 139 L186 144" stroke-width="1.2" fill="none"/>
+<g class="acc acc-collar"><path d="M80 152 q40 20 80 0" fill="none" stroke="#E91E63" stroke-width="7"/><circle cx="120" cy="163" r="6" fill="#FFD54F"/></g>
+<g class="acc acc-mono"><polygon points="150,52 166,62 150,72" fill="#F06292"/><polygon points="182,52 166,62 182,72" fill="#F06292"/><circle cx="166" cy="62" r="4.5" fill="#EC407A"/></g>
+<g class="acc acc-corona" stroke-width="1.5"><circle cx="86" cy="72" r="7" fill="#F8BBD0"/><circle cx="102" cy="63" r="7" fill="#FFF"/><circle cx="120" cy="60" r="7" fill="#F8BBD0"/><circle cx="138" cy="63" r="7" fill="#FFF"/><circle cx="154" cy="72" r="7" fill="#F8BBD0"/><g fill="#FFD54F" stroke="none"><circle cx="86" cy="72" r="2.6"/><circle cx="102" cy="63" r="2.6"/><circle cx="120" cy="60" r="2.6"/><circle cx="138" cy="63" r="2.6"/><circle cx="154" cy="72" r="2.6"/></g></g>
+<g class="acc acc-lentes" fill="rgba(255,255,255,.18)" stroke="#8E24AA" stroke-width="3"><circle cx="97" cy="104" r="16"/><circle cx="143" cy="104" r="16"/><path d="M113 103 q7 -5 14 0" fill="none"/></g>
+<g class="acc acc-gorro"><polygon points="104,66 120,10 136,66" fill="#BA68C8"/><path d="M110 46 l14 -6 M107 58 l22 -8" stroke="#FFF" stroke-width="3"/><circle cx="120" cy="10" r="7" fill="#FFD54F"/></g>
+<g class="zzz" stroke="none" fill="#C2185B" font-weight="900" font-family="Nunito,sans-serif"><text x="168" y="54" font-size="20">z</text><text x="184" y="36" font-size="15">z</text><text x="196" y="22" font-size="11">z</text></g>
+</svg>`;
+
+const RON = {
+  saludos: ['¡Hola, {n}! Qué bueno verte 🐾', '¡Miau! Llegaste, {n}.', 'Hola {n}, ¿organizamos el día?', '¡{n}! Te estaba esperando 🧡'],
+  toque: ['Prrr… prrr… 🧡', '¡Miau! Me gusta que me hagas cariño.', 'Prrrrr. Eres mi persona favorita.', '¿Ya tomaste agüita hoy? Yo sí 💧', '¡Tú puedes con todo, {n}!', 'Prrr… ¿una frutilla? 🍓'],
+  animo: ['¡Vas súper bien! 🐾', 'Concentrada como gato cazando. ¡Sigue así!', 'Cada minuto cuenta. ¡Bien, {n}!', 'Me encanta estudiar contigo.'],
+  mitad: ['¡Ya vas en la mitad! 🎉', 'Mitad lista. Respira hondo y seguimos.'],
+  agua: ['¿Un sorbito de agua? Yo ya tomé 💧', 'Pausa de agüita: tu cerebro te lo agradece 💧'],
+  costando: ['Tranqui, a todos nos cuesta a veces. Probemos otra forma:', 'Respira. Cambiemos de estrategia:'],
+  fin: ['¡Lo lograste! Te ganaste una frutilla 🍓', '¡Sesión completa! Estoy muy orgulloso de ti 🧡', '¡Miau! Otra sesión lista. ¡Bien hecho!'],
+  pausa: ['Zzz… descansa un ratito, yo te espero.', 'Estírate, mira por la ventana y vuelve.'],
+  noche: ['Ya es hora de descansar, {n}. Mañana seguimos 🌙', 'Bostezo… ¿a dormir? Dormir bien también es estudiar.'],
+  mochilaLista: ['¡Mochila lista! Mañana partimos con todo 🎒'],
+  vacio: ['Todo tranquilo por ahora. ¿Agregamos algo?', 'Sin pendientes a la vista. ¡Disfruta tu día!']
+};
+const elige = (arr, n) => (arr[Math.floor(Math.random() * arr.length)] || '').replace(/\{n\}/g, n || '');
+
+function ronHTML(tam, frase, id) {
+  const acc = (typeof ronCfg === 'function' && ronCfg().accesorio) || '';
+  return `<div class="ron-zona ${tam || ''}" ${id ? `id="${id}"` : ''}><div class="ron saluda" data-acc="${acc}" data-ron role="button" tabindex="0" aria-label="Hacerle cariño a Ron">${RON_SVG}</div><p class="globo" aria-live="polite">${esc(frase || '')}</p></div>`;
+}
+function ronEstado(zona, estado, frase) {
+  const z = typeof zona === 'string' ? document.getElementById(zona) : zona; if (!z) return;
+  const r = z.querySelector('.ron'); if (r) { r.classList.remove('saluda', 'celebra', 'duerme', 'piensa'); void r.offsetWidth; if (estado) r.classList.add(estado); if (estado === 'saluda' || estado === 'celebra') ronFin(r); }
+  if (frase != null) { const g = z.querySelector('.globo'); if (g) g.textContent = frase; }
+}
+function ronCorazon(r) {
+  const c = document.createElement('span'); c.className = 'corazon'; c.textContent = '🧡'; r.appendChild(c); setTimeout(() => c.remove(), 1300);
+}
+function ronFin(r) { clearTimeout(r._t); r._t = setTimeout(() => r.classList.remove('saluda', 'celebra'), 2800); }
+
+/* ===== Estado compartido de Ron ===== */
+const ronCfg = () => cfg('ron');
+const guardarRon = cambios => put('config', Object.assign({ id: 'ron' }, ronCfg(), cambios));
+const frutillasDisp = () => Math.max(0, frutillas() - (ronCfg().gastadas || 0));
+function rachaMax() {
+  const dias = [...new Set(D.sesiones.map(s => s.fecha))].sort(); let mx = 0, r = 0, prev = null;
+  dias.forEach(d => { r = prev && difDias(prev, d) === 1 ? r + 1 : 1; mx = Math.max(mx, r); prev = d; }); return mx;
+}
+function rachaActual() {
+  const dias = new Set(D.sesiones.map(s => s.fecha)); let d = hoyYmd(), n = 0;
+  if (!dias.has(d)) d = sumaDias(d, -1);
+  while (dias.has(d)) { n++; d = sumaDias(d, -1); } return n;
+}
+function logrosCumplidos() {
+  const n = D.sesiones.length, rc = ronCfg(), tec = new Set(D.sesiones.map(s => s.tecId).filter(Boolean));
+  Object.entries((cfg('desafio').marcas) || {}).forEach(([k, v]) => { if (v.probe) tec.add(k); });
+  const ok = { primera: n >= 1, cinco: n >= 5, diez: n >= 10, veinte: n >= 20, racha3: rachaMax() >= 3,
+    trabajo: D.eventos.some(e => (e.pasos || []).length && e.pasos.every(p => p.hecho)), reflexion: D.reflex.length > 0,
+    tecnicas: tec.size >= 3, mochila: (rc.mochilas || 0) >= 5, cuidadora: (rc.cuidados || 0) >= 5 };
+  return LOGROS.filter(l => ok[l.id]).map(l => l.id);
+}
+let revisandoLogros = false;
+async function revisarLogros() {
+  if (AJ.rol !== 'estudiante' || revisandoLogros || !DB.listo || $('.hoja') || (S.est && S.est.fase === 'corre')) return;
+  const tiene = new Set(ronCfg().logros || []), nuevos = logrosCumplidos().filter(id => !tiene.has(id));
+  if (!nuevos.length) return;
+  revisandoLogros = true;
+  await guardarRon({ logros: [...tiene, ...nuevos] });
+  const l = LOGROS.find(x => x.id === nuevos[0]);
+  setTimeout(() => {
+    abrirHoja(`<div style="text-align:center">${ronHTML('grande', '¡Nuevo logro! ' + l.ic, 'ron-logro')}<h2 class="mt">${l.n}</h2><p class="mt">${esc(l.d)}</p>
+      ${l.acc ? `<p class="badge mt" style="display:inline-block">Desbloqueaste: ${ACCESORIOS[l.acc]} para Ron</p>` : ''}
+      <button class="btn pr big mt2" data-a="cerrar">¡Genial!</button></div>`);
+    ronEstado('ron-logro', 'celebra'); campana([784, 988, 1319]); revisandoLogros = false;
+  }, 400);
+}
+const accDisponibles = () => LOGROS.filter(l => l.acc && (ronCfg().logros || []).includes(l.id)).map(l => l.acc);
+
+/* ===== Pestaña de Ron ===== */
+function enPausa() { return S.cuidado && Date.now() < S.cuidado.hasta; }
+function vRon() {
+  const est = AJ.rol === 'estudiante', pausa = enPausa(), disp = frutillasDisp(), rc = ronCfg();
+  const logros = new Set(rc.logros || []);
+  let h = `<div class="top"><h1>Ron</h1><span class="badge">🍓 ${disp} para darle</span></div>`;
+  h += ronHTML('grande', pausa ? '¡Es nuestra pausa! ¿Me cuidas un ratito? 🧡' : est ? 'Puedes hacerme cariño cuando quieras. Los juegos se abren en tus pausas de estudio.' : `Soy Ron, el compañero de estudio de ${estudiante()} 🐾`, 'ron-casa');
+  if (pausa) {
+    h += `<p class="sub" style="text-align:center">Pausa: <b id="p-rest">${mmss((S.cuidado.hasta - Date.now()) / 1000)}</b></p>
+    <div class="grid3 mt">${[['comer', '🍓', 'Darle frutilla'], ['agua', '💧', 'Darle agua'], ['cepillar', '🪮', 'Cepillarlo'], ['jugar', '🧶', 'Jugar'], ['caja', '📦', 'Su cajita'], ['cariño', '🧡', 'Cariño']].map(([k, e, t]) => `<button class="chip" style="flex-direction:column;justify-content:center;min-height:84px;white-space:normal;text-align:center" data-a="cuidar" data-v="${k}"><span style="font-size:28px">${e}</span>${t}</button>`).join('')}</div>
+    <div id="juego" class="mt"></div>
+    ${S.est && S.est.fase === 'corre' ? `<a class="btn pr big mt2" href="#estudiar">Volver a estudiar</a>` : `<button class="btn w mt2" data-a="fin-pausa">Terminar pausa</button>`}`;
+  } else if (est) {
+    h += `<p class="sub mt" style="text-align:center">Desliza el dedo sobre Ron para acariciarlo.</p><button class="btn w mt" data-a="pausa-ron">Tomar una pausa con Ron (5 min)</button>`;
+  }
+  const acc = accDisponibles();
+  h += `<div class="card mt2"><p class="eti">Accesorios de Ron</p>${acc.length ? `<div class="chips mt"><button class="chip" data-a="acc" data-v="" aria-pressed="${!rc.accesorio}">Ninguno</button>${acc.map(a => `<button class="chip" data-a="acc" data-v="${a}" aria-pressed="${rc.accesorio === a}" ${est ? '' : 'disabled'}>${ACCESORIOS[a]}</button>`).join('')}</div>` : `<p class="sub mt">Se desbloquean con los logros. ¡El primero llega con tu primera sesión de estudio!</p>`}</div>
+  <div class="card"><div class="fila entre"><p class="eti">Logros</p><span class="sub">${logros.size}/${LOGROS.length}</span></div><div class="grid2 mt">${LOGROS.map(l => `<div class="card ${logros.has(l.id) ? 'rosa' : ''}" style="margin:0;padding:12px;${logros.has(l.id) ? '' : 'opacity:.45;filter:grayscale(1)'}"><div style="font-size:26px">${l.ic}</div><b>${l.n}</b><p class="sub">${esc(l.d)}</p></div>`).join('')}</div></div>
+  <a class="btn w" href="#semana">Ver mi semana</a>`;
+  return h;
+}
+const mmss = s => { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + pad(s % 60); };
+setInterval(() => {
+  if (!S.cuidado) return; const p = $('#p-rest'), r = (S.cuidado.hasta - Date.now()) / 1000;
+  if (p) p.textContent = mmss(r);
+  if (r <= 0) { S.cuidado = null; if (S.vista === 'ron') { campana([660, 880]); render(true); setTimeout(() => ronEstado('ron-casa', 'saluda', '¡Gracias por cuidarme! ¿Seguimos? 🐾'), 0); } }
+}, 1000);
+function iniciarPausaRon() {
+  S.cuidado = { hasta: Date.now() + 5 * 60000 };
+  guardarRon({ cuidados: (ronCfg().cuidados || 0) + 1 });
+  location.hash = '#ron';
+}
+function cuidar(tipo) {
+  const z = 'ron-casa', j = $('#juego'), r = $('#ron-casa .ron');
+  if (tipo === 'comer') {
+    if (!frutillasDisp()) return ronEstado(z, 'piensa', 'No quedan frutillas… ¡ganas más estudiando! 🍓');
+    guardarRon({ gastadas: (ronCfg().gastadas || 0) + 1 }); ronCorazon(r); campana([523, 659]);
+    return ronEstado(z, 'celebra', elige(['¡Ñam ñam! Mi favorita 🍓', '¡Qué rica! Gracias 🧡', 'Mmm… ¡frutilla de la buena!']));
+  }
+  if (tipo === 'agua') { j.innerHTML = '<p style="text-align:center;font-size:44px" aria-hidden="true">🥣💧</p>'; return ronEstado(z, 'saluda', 'Glu glu glu… ¡ah, qué rica el agua! Tú también toma un poco 💧'); }
+  if (tipo === 'cepillar') { j.innerHTML = '<p class="sub" style="text-align:center">Pasa el dedo sobre Ron para cepillarlo.</p>'; S.modoToque = 'cepillar'; return ronEstado(z, null, '¡Sí! Me encanta que me cepilles 🪮'); }
+  if (tipo === 'cariño') { S.modoToque = 'cariño'; j.innerHTML = '<p class="sub" style="text-align:center">Desliza el dedo sobre Ron.</p>'; return ronEstado(z, null, 'Prrr… aquí, detrás de la oreja 🧡'); }
+  if (tipo === 'caja') { j.innerHTML = '<p style="text-align:center;font-size:56px" aria-hidden="true">📦</p>'; return ronEstado(z, 'celebra', '¡UNA CAJA! Es lo mejor del mundo 📦✨'); }
+  if (tipo === 'jugar') {
+    S.lana = 0;
+    j.innerHTML = `<div style="position:relative;height:120px;background:var(--sup2);border-radius:18px;overflow:hidden" id="lana-zona"><button id="lana" data-a="lana" aria-label="Lanita" style="position:absolute;left:40%;top:30%;font-size:40px;background:none;border:0">🧶</button></div><p class="sub mt" style="text-align:center">Toca la lanita para que Ron la persiga.</p>`;
+    return ronEstado(z, null, '¡Lanzámela! 🧶');
+  }
+}
+let caricia = 0;
+document.addEventListener('pointermove', e => {
+  const r = e.target.closest && e.target.closest('#ron-casa .ron'); if (!r || !e.buttons && e.pointerType === 'mouse') return;
+  caricia += Math.abs(e.movementX || 0) + Math.abs(e.movementY || 0) || 6;
+  if (caricia > 140) {
+    caricia = 0; ronCorazon(r);
+    if (S.modoToque === 'cepillar') { const p = document.createElement('span'); p.className = 'corazon'; p.textContent = '〰'; p.style.color = '#F0943F'; r.appendChild(p); setTimeout(() => p.remove(), 1300); ronEstado('ron-casa', null, elige(['¡Qué suavecito quedo!', 'Prrr… sigue, sigue', 'Ahora estoy más bonito ✨'])); }
+    else ronEstado('ron-casa', null, elige(['Prrrrrr… 🧡', 'Prrr… eres la mejor', 'Mmm… cariñito']));
+  }
+}, { passive: true });
+
+/* ===== Mi semana ===== */
+const semanaKey = (s = hoyYmd()) => { const d = deYmd(s), l = new Date(d); l.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return ymd(l); };
+function vSemana() {
+  const ini = semanaKey(), fin = sumaDias(ini, 6), est = AJ.rol === 'estudiante';
+  const ses = D.sesiones.filter(s => s.fecha >= ini && s.fecha <= fin), min = ses.reduce((a, s) => a + (s.min || 0), 0);
+  const evs = D.eventos.filter(e => e.fecha >= ini && e.fecha <= fin && e.tipo !== 'material');
+  const pasos = D.eventos.reduce((a, e) => a + (e.pasos || []).filter(p => p.hecho && p.fecha >= ini && p.fecha <= fin).length, 0);
+  const r = D.reflex.find(x => x.id === ini) || {};
+  const tecs = {}; D.sesiones.filter(s => s.tecId).forEach(s => { tecs[s.tecId] = tecs[s.tecId] || { n: 0, bien: 0 }; tecs[s.tecId].n++; if (s.como === 'bien') tecs[s.tecId].bien++; });
+  let h = `<div class="top"><a class="icono" href="#ron" aria-label="Volver">${ic('back')}</a><div style="flex:1"><p class="sub">${fechaCorta(ini)} al ${fechaCorta(fin)}</p><h1>${est ? 'Mi semana' : 'La semana de ' + esc(estudiante())}</h1></div></div>
+  <div class="grid3 mb"><div class="card" style="margin:0;text-align:center"><b style="font-size:26px">${ses.length}</b><p class="sub">sesiones</p></div><div class="card" style="margin:0;text-align:center"><b style="font-size:26px">${min}</b><p class="sub">minutos</p></div><div class="card" style="margin:0;text-align:center"><b style="font-size:26px">${rachaActual()}</b><p class="sub">días de racha</p></div></div>
+  <div class="card"><p class="eti">Esta semana</p><p class="mt">${evs.length} ${evs.length === 1 ? 'evaluación o trabajo' : 'evaluaciones o trabajos'} · ${pasos} ${pasos === 1 ? 'paso cumplido' : 'pasos cumplidos'}</p>
+  ${evs.map(e => `<p class="sub mt">${e.resultado ? { bien: '😊', regular: '😐', costo: '😣' }[e.resultado] : '·'} ${esc(e.titulo || TIPOS[e.tipo])} (${esc(asigPor(e.asig).nombre)})${e.confianza && e.resultado ? ` — te sentías ${['', 'nada', 'poco', 'algo', 'bastante', 'muy'][e.confianza]} preparada` : ''}</p>`).join('')}</div>`;
+  if (Object.keys(tecs).length) h += `<div class="card"><p class="eti">Tus técnicas</p>${Object.entries(tecs).sort((a, b) => b[1].n - a[1].n).map(([k, v]) => `<div class="fila entre mt"><span>${tecPor(k)?.ic || ''} ${esc(tecPor(k)?.n || k)}</span><span class="sub">${v.n} ${v.n === 1 ? 'vez' : 'veces'}${v.bien ? ' · ' + v.bien + ' 😊' : ''}</span></div>`).join('')}</div>`;
+  if (est) h += `<div class="card rosa"><p class="eti">Reflexión de 2 minutos</p>
+    <label class="lbl" for="r1">¿Qué te funcionó esta semana?</label><textarea id="r1" style="min-height:70px">${esc(r.funciono || '')}</textarea>
+    <label class="lbl" for="r2">¿Qué te costó?</label><textarea id="r2" style="min-height:70px">${esc(r.costo || '')}</textarea>
+    <label class="lbl" for="r3">¿Qué vas a hacer distinto la próxima semana?</label><textarea id="r3" style="min-height:70px">${esc(r.cambio || '')}</textarea>
+    <label class="sw mt"><span>Compartir esta reflexión con mamá</span><input type="checkbox" id="r-comp" ${r.compartir ? 'checked' : ''}></label>
+    <button class="btn pr big mt" data-a="reflex">Guardar reflexión</button></div>`;
+  else h += r.compartir ? `<div class="card rosa"><p class="eti">Reflexión de ${esc(estudiante())}</p><p class="mt"><b>Le funcionó:</b> ${esc(r.funciono || '—')}</p><p class="mt"><b>Le costó:</b> ${esc(r.costo || '—')}</p><p class="mt"><b>Hará distinto:</b> ${esc(r.cambio || '—')}</p></div>` : `<p class="sub">${r.id ? `${esc(estudiante())} hizo su reflexión de la semana ✓` : 'Aún no hay reflexión esta semana.'}</p>`;
+  return h;
+}
+
+/* ===== Cómo estudiar ===== */
+function semaforo() {
+  const hoy = hoyYmd();
+  return asigOrden().map(a => {
+    const ev = proximos(21).filter(e => e.asig === a.id && e.tipo !== 'material'); if (!ev.length) return null;
+    const e = ev[0], dias = difDias(hoy, e.fecha), ses = sesionesDe(e.id).length, conf = e.confianza || 0;
+    let color = 'verde';
+    if ((dias <= 7 && (ses === 0 || (conf && conf <= 2))) || (dias <= 2 && ses < 2)) color = 'rojo';
+    else if (dias <= 14 && ses < 2) color = 'amarillo';
+    return { a, e, dias, ses, conf, color, peso: (color === 'rojo' ? 0 : color === 'amarillo' ? 100 : 200) + dias };
+  }).filter(Boolean).sort((x, y) => x.peso - y.peso);
+}
+const SEM_C = { rojo: ['#FFCDD2', '🔴', 'Necesita atención'], amarillo: ['#FFF3C4', '🟡', 'Vamos bien, sigue'], verde: ['#D7F2DF', '🟢', 'Tranquila'] };
+function vGuia() {
+  const sem = semaforo(), des = cfg('desafio'), est = AJ.rol === 'estudiante';
+  let h = `<div class="top"><a class="icono" href="#estudiar" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">Cómo estudiar</h1></div>`;
+  h += `<div class="card"><p class="eti">Prioridades de la semana</p>${sem.length ? sem.slice(0, 6).map(x => `<button class="ev" data-a="ver" data-id="${x.e.id}" style="background:${SEM_C[x.color][0]};border-color:transparent"><span class="txt"><span class="tipo">${SEM_C[x.color][1]} ${SEM_C[x.color][2]}</span><b>${esc(x.a.nombre)}: ${esc(x.e.titulo || TIPOS[x.e.tipo])}</b><small>${cuando(x.e.fecha)} · ${x.ses} ${x.ses === 1 ? 'sesión' : 'sesiones'}${x.conf ? ' · confianza ' + x.conf + '/5' : ''}</small></span></button>`).join('') : '<p class="sub mt">No hay evaluaciones en las próximas 3 semanas.</p>'}
+  ${sem.some(x => x.color === 'rojo') ? `<div class="aviso mt"><b>Plan de rescate</b> para lo que está en rojo: 1) Abre la evaluación y usa el "Plan sugerido". 2) Haz hoy una sesión corta de "Ponte a prueba". 3) Anota tus dudas y pregúntale a tu profe. 4) Si es mucho, conversa con tu mamá para organizar la semana.</div>` : ''}</div>`;
+  const semana = des.inicio ? Math.floor(difDias(des.inicio, hoyYmd()) / 7) : -1, t = TEC[semana];
+  h += `<div class="card rosa"><p class="eti">Desafío "Aprende a estudiar"</p>${des.inicio ? (t ? `<p class="mt">Semana ${semana + 1} de 6</p><h3 class="mt">${t.ic} ${t.n}</h3><p class="mt">${esc(t.que)}</p>
+    <div class="grid2 mt"><button class="btn sm" data-a="tec-ver" data-v="${t.id}">Ver cómo</button><button class="btn sm pr" data-a="des-probe" data-v="${t.id}" ${est ? '' : 'disabled'}>${(des.marcas || {})[t.id]?.probe ? '✓ La probé' : '¡La probé!'}</button></div>
+    ${(des.marcas || {})[t.id]?.probe ? `<p class="mt">¿Te sirvió?</p><div class="grid2 mt"><button class="chip" style="justify-content:center" data-a="des-sirvio" data-v="${t.id}" data-s="1" aria-pressed="${(des.marcas || {})[t.id]?.sirvio === true}">Sí 😊</button><button class="chip" style="justify-content:center" data-a="des-sirvio" data-v="${t.id}" data-s="0" aria-pressed="${(des.marcas || {})[t.id]?.sirvio === false}">No mucho</button></div>` : ''}`
+    : `<p class="mt">¡Terminaste el desafío! 🎉 Tus favoritas: ${Object.entries(des.marcas || {}).filter(([, v]) => v.sirvio).map(([k]) => tecPor(k)?.n).join(', ') || 'aún no marcas ninguna'}.</p>`)
+    : `<p class="mt">Seis semanas, una técnica por semana. Pruébalas y descubre cuáles te sirven más. Ideal para empezar en marzo.</p><button class="btn pr w mt" data-a="des-empezar" ${est ? '' : 'disabled'}>Empezar el desafío</button>`}</div>`;
+  h += `<h2 class="mt2 mb">Las 6 técnicas</h2>${TEC.map(x => `<button class="mas-item" data-a="tec-ver" data-v="${x.id}"><span class="ic" style="font-size:22px">${x.ic}</span><span>${x.n}<small>${esc(x.que.split('.')[0])}.</small></span></button>`).join('')}`;
+  h += `<h2 class="mt2 mb">Por asignatura</h2>${asigOrden().map(a => `<button class="ev" data-a="guia-asig" data-id="${a.id}"><span class="barra" style="background:${a.color}"></span><span class="txt"><b>${esc(a.nombre)}</b><small>${esc(guiaAsig(a.nombre).ideas[0])}</small></span></button>`).join('')}`;
+  h += `<h2 class="mt2 mb">Por tipo de evaluación</h2>${['prueba', 'control', 'trabajo', 'disertacion'].map(k => `<div class="card"><h3>${GUIA_TIPO[k].t}</h3><ol class="mt" style="padding-left:20px">${GUIA_TIPO[k].p.map(p => `<li>${esc(p)}</li>`).join('')}</ol></div>`).join('')}`;
+  return h;
+}
+function verTecnica(id) {
+  const t = tecPor(id); if (!t) return;
+  abrirHoja(`${cabHoja(t.ic + ' ' + t.n)}<p>${esc(t.que)}</p><h3 class="mt2">¿Cuándo usarla?</h3><p class="mt">${esc(t.cuando)}</p>
+    <h3 class="mt2">Cómo, en 3 pasos</h3><ol class="mt" style="padding-left:20px">${t.pasos.map(p => `<li class="mb">${esc(p)}</li>`).join('')}</ol>
+    <div class="card rosa mt"><p class="eti">Ejemplo</p><p class="mt">${esc(t.ej)}</p></div>
+    ${AJ.rol === 'estudiante' ? `<a class="btn pr big mt" href="#estudiar" data-a="tec-usar" data-v="${t.id}">Estudiar con esta técnica</a>` : ''}`);
+}
+function verGuiaAsig(id) {
+  const a = asigPor(id), g = guiaAsig(a.nombre);
+  abrirHoja(`${cabHoja('Cómo estudiar ' + esc(a.nombre))}<ul style="padding-left:20px">${g.ideas.map(i => `<li class="mb">${esc(i)}</li>`).join('')}</ul>
+    <p class="eti mt2">Técnicas recomendadas</p>${g.tec.map(k => tecPor(k)).filter(Boolean).map(t => `<button class="mas-item mt" data-a="tec-ver" data-v="${t.id}"><span class="ic" style="font-size:22px">${t.ic}</span><span>${t.n}</span></button>`).join('')}`);
+}
+
+/* ===== Plan sugerido para una evaluación ===== */
+function planSesiones(e) {
+  const hoy = hoyYmd(), d = difDias(hoy, e.fecha); if (d < 1) return [];
+  let offs = d >= 8 ? [-7, -5, -3, -1] : d >= 5 ? [-4, -2, -1] : d >= 2 ? [-2, -1] : [-1];
+  let fechas = offs.map(o => sumaDias(e.fecha, o)).filter(f => f >= hoy);
+  if (!fechas.length) fechas = [hoy];
+  const g = guiaAsig(asigPor(e.asig).nombre), tecs = e.tipo === 'control' ? ['reparte', 'prueba', 'porque', 'prueba'] : [g.tec[1] || 'porque', g.tec[0], 'mezcla', 'prueba'];
+  return fechas.map((f, i) => ({ fecha: f, min: i === fechas.length - 1 ? 15 : 25, tec: i === fechas.length - 1 ? 'prueba' : tecs[i % tecs.length] }));
+}
+
+/* ===== Estado de la interfaz ===== */
+const S = { vista: 'hoy', filtro: '', mesOff: 0, diaSel: '', ob: null, est: null, hDia: 1 };
+
+/* ===== Hojas ===== */
+let hojaFoco = null;
+function abrirHoja(html) {
+  cerrarHoja(true); hojaFoco = document.activeElement;
+  const w = document.createElement('div'); w.className = 'hoja'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true');
+  w.innerHTML = `<div><div class="agarre"></div>${html}</div>`; document.body.appendChild(w);
+  w.addEventListener('click', e => { if (e.target === w) cerrarHoja(); });
+  const f = w.querySelector('h2'); if (f) { f.tabIndex = -1; f.focus(); }
+  return w.firstElementChild;
+}
+function cerrarHoja(silencio) { const w = $('.hoja'); if (!w) return; w.remove(); if (!silencio && hojaFoco && hojaFoco.isConnected) hojaFoco.focus(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarHoja(); });
+const cabHoja = t => `<div class="fila entre mb"><h2>${t}</h2><button class="icono" data-a="cerrar" aria-label="Cerrar">${ic('x')}</button></div>`;
+
+/* ===== Bienvenida y unión a la familia ===== */
+function vBienvenida() {
+  const o = S.ob || (S.ob = { paso: 'inicio', rol: '', nombre: '', est: '', codigo: '' });
+  if (o.paso === 'inicio') return `<div class="bienv">${ronHTML('grande', '¡Hola! Soy Ron 🐾 Te voy a ayudar a organizar tu año escolar.')}
+    <h1 style="text-align:center">Ronrutina</h1>
+    <button class="btn pr big" data-a="ob-crear">Empezar una Ronrutina nueva</button>
+    <button class="btn big" data-a="ob-unir">Tengo un código o enlace</button>
+    <p class="sub" style="text-align:center">Si tu familia ya usa Ronrutina, elige la segunda opción.</p></div>`;
+  return `<div class="bienv">${ronHTML('chico', o.paso === 'unir' ? 'Pega el código que te compartieron.' : '¡Genial! Cuéntame un poco de ti.')}
+    <div class="card"><p class="eti">¿Quién eres?</p><div class="grid2 mt">
+      <button class="chip" style="justify-content:center;min-height:48px" data-a="ob-rol" data-v="estudiante" aria-pressed="${o.rol === 'estudiante'}">Estudiante</button>
+      <button class="chip" style="justify-content:center;min-height:48px" data-a="ob-rol" data-v="apoderado" aria-pressed="${o.rol === 'apoderado'}">Mamá o apoderado</button></div>
+    <label class="lbl" for="ob-nombre">Tu nombre</label><input type="text" id="ob-nombre" value="${esc(o.nombre)}" autocomplete="given-name" placeholder="¿Cómo te llamo?">
+    ${o.paso === 'crear' && o.rol === 'apoderado' ? `<label class="lbl" for="ob-est">Nombre de la estudiante</label><input type="text" id="ob-est" value="${esc(o.est)}" placeholder="Por ejemplo, Emy">` : ''}
+    ${o.paso === 'unir' ? `<label class="lbl" for="ob-cod">Código familiar</label><input type="text" id="ob-cod" value="${esc(o.codigo)}" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="Pega aquí el código">` : ''}</div>
+    <button class="btn pr big" data-a="ob-listo">${o.paso === 'unir' ? 'Unirme' : 'Crear mi Ronrutina'}</button>
+    <button class="btn w" data-a="ob-volver">Volver</button></div>`;
+}
+async function obListo() {
+  const o = S.ob; o.nombre = $('#ob-nombre').value.trim(); if ($('#ob-est')) o.est = $('#ob-est').value.trim(); if ($('#ob-cod')) o.codigo = $('#ob-cod').value.trim().toLowerCase().replace(/^.*#unir=/, '').replace(/[^a-z0-9]/g, '');
+  if (!o.rol) return toast('Elige quién eres.');
+  if (!o.nombre) return toast('Escribe tu nombre.');
+  if (o.paso === 'unir' && o.codigo.length < 24) return toast('El código no parece completo. Revísalo.');
+  const b = $('[data-a=ob-listo]'); if (b) { b.disabled = true; b.textContent = 'Conectando…'; }
+  const codigo = o.paso === 'unir' ? o.codigo : nuevoCodigo();
+  Object.assign(AJ, { rol: o.rol, nombre: o.nombre, codigo }); guardarAjustes();
+  S.nuevo = o.paso === 'crear' ? { est: o.rol === 'estudiante' ? o.nombre : (o.est || 'Emy') } : null;
+  S.ob = null; history.replaceState(null, '', location.pathname + '#hoy');
+  await conectar(codigo); render(true);
+}
+async function alListo() {
+  if (S.nuevo) {
+    const n = S.nuevo; S.nuevo = null;
+    await put('config', { id: 'familia', estudiante: n.est, creada: hoyYmd() });
+    await put('config', { id: 'horario', dias: {} });
+    for (let i = 0; i < ASIG0.length; i++) await put('asig', { id: 'a' + i, nombre: ASIG0[i][0], color: COLORES[ASIG0[i][1]], profe: '', correo: '', orden: i });
+    toast('¡Listo! Ahora arma el horario de clases en "Más".');
+  } else if (DB.modo === 'nube' && !D.config.length && !D.asig.length) toast('Ese código aún no tiene datos. Revisa que esté completo.');
+}
+
+/* ===== HOY ===== */
+function siguienteDiaClases() { let s = sumaDias(hoyYmd(), 1); for (let k = 0; k < 7; k++) { const d = deYmd(s).getDay(); if (d > 0 && d < 6) return s; s = sumaDias(s, 1); } return s; }
+function esNoche() { const [h, m] = (AJ.dormir || '22:00').split(':').map(Number), n = new Date(); return n.getHours() * 60 + n.getMinutes() >= h * 60 + m || n.getHours() < 5; }
+const mochilaKey = s => 'ronrutina.mochila.' + s;
+function mochilaChecks(s) { try { return JSON.parse(localStorage.getItem(mochilaKey(s)) || '{}'); } catch (e) { return {}; } }
+function vHoy() {
+  const hoy = hoyYmd(), est = AJ.rol === 'estudiante', man = siguienteDiaClases(), noche = est && esNoche();
+  const prox = proximos(21).filter(e => e.tipo !== 'material'), semana = prox.filter(e => difDias(hoy, e.fecha) <= 7);
+  const pruebaMan = D.eventos.find(e => e.fecha === sumaDias(hoy, 1) && ['prueba', 'control', 'disertacion'].includes(e.tipo) && !e.hecho);
+  const finde = [0, 6].includes(new Date().getDay()), hobbies = (AJ.hobbies || '').split(',').map(x => x.trim()).filter(Boolean);
+  let frase = noche ? elige(RON.noche, AJ.nombre) : est && pruebaMan ? `Mañana tienes ${TIPOS[pruebaMan.tipo].toLowerCase()} de ${asigPor(pruebaMan.asig).nombre}. ¿Repasamos ${AJ.duracion || 20} minutos? 🐾`
+    : est && finde && hobbies.length && Math.random() < .5 ? `Hoy te ganaste un rato para ${elige(hobbies)} 🎨`
+    : est && finde && AJ.aire && new Date().getHours() >= 11 && new Date().getHours() < 19 && Math.random() < .4 ? '¿Y si sales un ratito al aire libre? Yo miro por la ventana 🌤️' : !est ? (semana.length ? `Hola ${AJ.nombre}. ${estudiante()} tiene ${semana.length} ${semana.length === 1 ? 'evaluación o trabajo' : 'evaluaciones o trabajos'} esta semana.` : `Hola ${AJ.nombre}. ${estudiante()} no tiene evaluaciones ni trabajos esta semana.`) : elige(RON.saludos, AJ.nombre);
+  let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
+  h += ronHTML('', frase, 'ron-hoy');
+  if (DB.modo === 'local') h += `<div class="aviso">Sin conexión con la nube: los cambios quedan en este teléfono y se compartirán cuando vuelva internet.</div>`;
+  const asigM = asigDelDia(man), mats = materialesDe(man), chk = mochilaChecks(man);
+  h += `<div class="card rosa"><div class="fila entre"><p class="eti">${ic('mochila')} Mochila para ${man === sumaDias(hoy, 1) ? 'mañana' : 'el ' + DIAS[deYmd(man).getDay()]}</p><span class="sub">${fechaCorta(man)}</span></div>
+    ${asigM.length ? `<div class="chips mt">${asigM.map(a => `<span class="chip"><i class="pt" style="background:${a.color}"></i>${esc(a.nombre)}</span>`).join('')}</div>` : `<p class="sub mt">Aún no hay horario. <a href="#mas-horario">Armar horario</a></p>`}
+    ${mats.length ? `<p class="eti mt">Materiales</p><div class="mt">${mats.map(e => e.materiales.split('\n').filter(Boolean).map((m, k) => { const key = e.id + k; return `<button class="check" data-a="mochila" data-dia="${man}" data-k="${key}" aria-pressed="${!!chk[key]}"><span class="box"></span><span>${esc(m)} <small class="sub">· ${esc(asigPor(e.asig).nombre)}</small></span></button>`; }).join('')).join('')}</div>` : ''}</div>`;
+  const matsHoy = materialesDe(hoy);
+  if (matsHoy.length && new Date().getHours() < 14) h += `<div class="card"><p class="eti">${ic('mochila')} Hoy llevar</p><ul class="mt">${matsHoy.map(e => e.materiales.split('\n').filter(Boolean).map(m => `<li>${esc(m)}</li>`).join('')).join('')}</ul></div>`;
+  h += `<div class="card"><div class="fila entre mb"><p class="eti">Próximas evaluaciones y trabajos</p><button class="btn sm suave" data-a="nuevo">${ic('plus')} Agregar</button></div>
+    ${prox.length ? prox.slice(0, 6).map(vEvItem).join('') : `<p class="vacio">${elige(RON.vacio)}</p>`}</div>`;
+  const trab = D.eventos.filter(e => (e.pasos || []).some(p => !p.hecho) && !e.hecho && e.fecha >= hoy);
+  if (trab.length) h += `<div class="card"><p class="eti mb">Trabajos en curso</p>${trab.map(e => { const p = e.pasos.find(x => !x.hecho), n = e.pasos.filter(x => x.hecho).length; return `<button class="ev" data-a="ver" data-id="${e.id}"><span class="barra" style="background:${asigPor(e.asig).color}"></span><span class="txt"><b>${esc(e.titulo)}</b><small>Siguiente paso: ${esc(p.t)}${p.fecha ? ' · ' + fechaCorta(p.fecha) : ''}</small></span><span class="badge">${n}/${e.pasos.length}</span></button>`; }).join('')}</div>`;
+  if (est) h += `<a class="btn pr big" href="#estudiar">${ic('libro')} Estudiar ahora</a><p class="sub mt" style="text-align:center">🍓 ${frutillas()} ${frutillas() === 1 ? 'frutilla ganada' : 'frutillas ganadas'}</p>`;
+  setTimeout(() => ronEstado('ron-hoy', noche ? 'duerme' : 'saluda'), 0);
+  return h;
+}
+function vEvItem(e) {
+  const a = asigPor(e.asig), n = sesionesDe(e.id).length;
+  return `<button class="ev ${e.hecho ? 'hecho' : ''}" data-a="ver" data-id="${e.id}"><span class="barra" style="background:${a.color}"></span><span class="txt"><span class="tipo">${TIPOS[e.tipo] || ''} · ${esc(a.nombre)}</span><b>${esc(e.titulo || TIPOS[e.tipo])}</b>${e.contenidos ? `<small>${esc(e.contenidos.split('\n')[0].slice(0, 70))}</small>` : ''}</span><span style="text-align:right"><span class="cuando">${cuando(e.fecha)}</span>${n ? `<br><span class="badge">${n} 🍓</span>` : ''}</span></button>`;
+}
+
+/* ===== CALENDARIO ===== */
+function vCalendario() {
+  const f = S.filtro, asigs = asigOrden(), base = new Date(); base.setDate(1); base.setMonth(base.getMonth() + S.mesOff);
+  const evs = eventosOrden().filter(e => !f || e.asig === f);
+  let h = `<div class="top"><h1>Calendario</h1><button class="btn pr sm" data-a="nuevo">${ic('plus')} Agregar</button></div>
+  <div class="chips scroll mb"><button class="chip" data-a="filtro" data-v="" aria-pressed="${!f}">Todas</button>${asigs.map(a => `<button class="chip" data-a="filtro" data-v="${a.id}" aria-pressed="${f === a.id}"><i class="pt" style="background:${a.color}"></i>${esc(a.nombre)}</button>`).join('')}</div>`;
+  if (f) {
+    const a = asigPor(f);
+    h += `<div class="card" style="border-color:${a.color};border-width:2px"><div class="fila entre"><div><h2>${esc(a.nombre)}</h2><p class="sub">${a.profe ? 'Profe: ' + esc(a.profe) : 'Sin profesor anotado'}</p></div><button class="icono" data-a="edit-asig" data-id="${a.id}" aria-label="Editar asignatura">${ic('lapiz')}</button></div>
+      <div class="grid2 mt"><button class="btn sm" data-a="correo" data-id="${a.id}">${ic('mail')} Escribir</button><button class="btn sm" data-a="nuevo" data-asig="${a.id}">${ic('plus')} Evaluación</button></div></div>`;
+  }
+  const y = base.getFullYear(), m = base.getMonth(), ini = new Date(y, m, 1), off = (ini.getDay() + 6) % 7, dias = new Date(y, m + 1, 0).getDate(), hoy = hoyYmd();
+  let celdas = '';
+  for (let k = 0; k < 42; k++) {
+    const d = new Date(y, m, 1 - off + k), s = ymd(d); if (k >= 35 && d.getMonth() !== m) break;
+    const ev = evs.filter(e => e.fecha === s).slice(0, 4);
+    celdas += `<button class="dia ${d.getMonth() !== m ? 'otro' : ''} ${s === hoy ? 'hoy' : ''}" data-a="dia" data-v="${s}" aria-pressed="${S.diaSel === s}" aria-label="${fechaLarga(s)}${ev.length ? ', ' + ev.length + ' eventos' : ''}">${d.getDate()}<span class="puntos">${ev.map(e => `<i style="background:${asigPor(e.asig).color};box-shadow:0 0 0 1px rgba(0,0,0,.15)"></i>`).join('')}</span></button>`;
+  }
+  h += `<div class="card"><div class="fila entre mb"><button class="icono" data-a="mes" data-v="-1" aria-label="Mes anterior">${ic('back')}</button><h3>${cap(MESES[m])} ${y}</h3><button class="icono" data-a="mes" data-v="1" aria-label="Mes siguiente" style="transform:scaleX(-1)">${ic('back')}</button></div>
+    <div class="mes">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(x => `<span class="cab">${x}</span>`).join('')}${celdas}</div></div>`;
+  if (S.diaSel) {
+    const l = evs.filter(e => e.fecha === S.diaSel);
+    h += `<div class="fila entre mb"><h3>${cap(fechaLarga(S.diaSel))}</h3><button class="btn sm suave" data-a="dia" data-v="">Ver próximos</button></div>${l.length ? l.map(vEvItem).join('') : '<p class="vacio">Nada este día.</p>'}<button class="btn w mt" data-a="nuevo" data-fecha="${S.diaSel}" ${f ? `data-asig="${f}"` : ''}>${ic('plus')} Agregar para este día</button>`;
+  } else {
+    const fut = evs.filter(e => e.fecha >= hoy), pas = evs.filter(e => e.fecha < hoy).reverse();
+    h += `<h3 class="mb">Próximos</h3>${fut.length ? fut.map(vEvItem).join('') : '<p class="vacio">No hay nada agendado todavía.</p>'}`;
+    if (pas.length) h += `<details class="mt"><summary class="sub" style="padding:10px 0">Anteriores (${pas.length})</summary>${pas.slice(0, 30).map(vEvItem).join('')}</details>`;
+  }
+  return h;
+}
+
+/* ===== Detalle y formulario de evento ===== */
+function verEvento(id) {
+  const e = D.eventos.find(x => x.id === id); if (!e) return;
+  const a = asigPor(e.asig), n = sesionesDe(e.id).length, mats = (e.materiales || '').trim();
+  const det = `${TIPOS[e.tipo]}: ${e.titulo || ''}\n${e.contenidos || ''}`.trim();
+  let enl = '';
+  if (e.tipo === 'material' || (mats && e.tipo !== 'material')) {
+    enl += `<a class="btn sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: '🎒 Mañana llevar: ' + mats.split('\n').join(', '), fecha: sumaDias(e.fecha, -1), hora: AJ.mochilaHora, min: 15, detalles: a.nombre })}">Recordar la noche anterior</a>
+      <a class="btn sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: '🎒 Hoy llevar: ' + mats.split('\n').join(', '), fecha: e.fecha, hora: AJ.materialesHora, min: 15, detalles: a.nombre })}">Recordar en la mañana</a>`;
+  }
+  if (e.tipo !== 'material') enl = `<a class="btn pr sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: `${TIPOS[e.tipo]} de ${a.nombre}${e.titulo ? ': ' + e.titulo : ''}`, fecha: e.fecha, hora: e.hora, min: 60, detalles: det })}">${ic('cal')} Agregar a mi calendario</a>` + enl;
+  const el = abrirHoja(`<div class="fila entre mb"><div><span class="tipo">${TIPOS[e.tipo]} · ${esc(a.nombre)}</span><h2>${esc(e.titulo || TIPOS[e.tipo])}</h2></div><button class="icono" data-a="cerrar" aria-label="Cerrar">${ic('x')}</button></div>
+    <div style="height:6px;border-radius:3px;background:${a.color}" class="mb"></div>
+    <p><b>${cap(fechaLarga(e.fecha))}</b>${e.hora ? ' · ' + e.hora : ''} <span class="badge">${cuando(e.fecha)}</span></p>
+    ${e.contenidos ? `<h3 class="mt2">Contenidos</h3><p class="pre mt">${esc(e.contenidos)}</p>` : ''}
+    ${e.detalles ? `<h3 class="mt2">Detalles</h3><p class="pre mt">${esc(e.detalles)}</p>` : ''}
+    ${mats ? `<h3 class="mt2">Materiales</h3><p class="pre mt">${esc(mats)}</p>` : ''}
+    ${(e.pasos || []).length ? `<h3 class="mt2">Pasos</h3><div class="mt">${e.pasos.map((p, i) => `<button class="check" data-a="paso" data-id="${e.id}" data-i="${i}" aria-pressed="${!!p.hecho}"><span class="box"></span><span>${esc(p.t)}${p.fecha ? ` <small class="sub">· ${fechaCorta(p.fecha)}</small>` : ''}</span></button>`).join('')}</div>` : ''}
+    ${e.dudas ? `<h3 class="mt2">Dudas para el profe</h3><p class="pre mt">${esc(e.dudas)}</p>` : ''}
+    ${e.tipo !== 'material' ? `<p class="sub mt2">🍓 ${n} ${n === 1 ? 'sesión' : 'sesiones'} de estudio para esto</p>` : ''}
+    ${e.tipo !== 'material' && e.fecha >= hoyYmd() ? `<h3 class="mt2">¿Qué tan preparada te sientes?</h3><div class="fila mt" style="justify-content:space-between">${['😟', '🙁', '😐', '🙂', '😄'].map((x, i) => `<button class="chip" style="font-size:24px;min-width:52px;justify-content:center" data-a="confianza" data-id="${e.id}" data-v="${i + 1}" aria-pressed="${e.confianza === i + 1}" aria-label="${i + 1} de 5" ${AJ.rol === 'estudiante' ? '' : 'disabled'}>${x}</button>`).join('')}</div>` : ''}
+    ${e.tipo !== 'material' && e.fecha <= hoyYmd() ? `<h3 class="mt2">¿Cómo te fue?</h3><div class="grid3 mt">${[['bien', 'Bien 😊'], ['regular', 'Más o menos'], ['costo', 'Me costó']].map(([k, t]) => `<button class="chip" style="justify-content:center" data-a="resultado" data-id="${e.id}" data-v="${k}" aria-pressed="${e.resultado === k}">${t}</button>`).join('')}</div>${e.resultado && e.confianza ? `<p class="sub mt">Antes te sentías ${e.confianza}/5 preparada. ${e.resultado === 'bien' && e.confianza <= 2 ? '¡Sabías más de lo que creías!' : e.resultado === 'costo' && e.confianza >= 4 ? 'La próxima vez, ponte a prueba antes: ayuda a medir cuánto sabes.' : ''}</p>` : ''}` : ''}
+    ${e.tipo !== 'material' && e.fecha > hoyYmd() && !e.hecho ? `<h3 class="mt2">Plan sugerido</h3><p class="sub mt">Sesiones cortas repartidas. Toca una para agregarla a tu calendario "Estudio".</p><div class="mt">${planSesiones(e).map(p => `<a class="ev" target="_blank" rel="noopener" style="text-decoration:none;color:inherit" href="${gcalEnlace({ titulo: '📚 Estudiar ' + a.nombre + (e.titulo ? ': ' + e.titulo : ''), fecha: p.fecha, hora: AJ.horaEstudio, min: p.min, detalles: 'Técnica: ' + (tecPor(p.tec) || {}).n })}"><span class="txt"><b>${cap(fechaCorta(p.fecha))} · ${p.min} min</b><small>${(tecPor(p.tec) || {}).ic || ''} ${(tecPor(p.tec) || {}).n || ''}</small></span>${ic('cal')}</a>`).join('')}</div>
+    <p class="eti mt2">Técnicas para ${esc(a.nombre)}</p><div class="chips mt">${guiaAsig(a.nombre).tec.map(k => tecPor(k)).map(t => `<button class="chip" data-a="tec-ver" data-v="${t.id}">${t.ic} ${t.n}</button>`).join('')}</div>` : ''}
+    <div class="col mt2">${e.tipo !== 'material' && AJ.rol === 'estudiante' ? `<a class="btn pr big" href="#estudiar" data-a="estudiar-ev" data-id="${e.id}">${ic('libro')} Estudiar para esto</a>` : ''}
+    ${enl}
+    <div class="grid2"><button class="btn sm" data-a="correo" data-id="${e.asig}" data-ev="${e.id}">${ic('mail')} Escribir al profe</button><button class="btn sm" data-a="editar" data-id="${e.id}">${ic('lapiz')} Editar</button></div>
+    <div class="grid2"><button class="btn sm" data-a="hecho" data-id="${e.id}">${e.hecho ? 'Reabrir' : ic('check') + ' Marcar lista'}</button><button class="btn sm" data-a="eliminar" data-id="${e.id}">Eliminar</button></div></div>
+    <p class="sub mt">Al agregar a tu calendario, elige el calendario "Colegio" antes de guardar.</p>`);
+  return el;
+}
+function formEvento(e, pre = {}) {
+  e = e ? JSON.parse(JSON.stringify(e)) : { tipo: pre.tipo || 'prueba', asig: pre.asig || (asigOrden()[0] || {}).id, fecha: pre.fecha || sumaDias(hoyYmd(), 7), hora: '', titulo: '', contenidos: '', detalles: '', materiales: '', pasos: [] };
+  S.form = e;
+  const pinta = () => {
+    const el = abrirHoja(`${cabHoja(e.id ? 'Editar' : 'Agregar')}
+      <p class="eti">Tipo</p><div class="chips mt">${Object.entries(TIPOS).map(([k, t]) => `<button class="chip" data-a="f-tipo" data-v="${k}" aria-pressed="${e.tipo === k}">${t}</button>`).join('')}</div>
+      <p class="eti mt2">Asignatura</p><div class="chips mt">${asigOrden().map(a => `<button class="chip" data-a="f-asig" data-v="${a.id}" aria-pressed="${e.asig === a.id}"><i class="pt" style="background:${a.color}"></i>${esc(a.nombre)}</button>`).join('')}</div>
+      <label class="lbl" for="f-tit">${e.tipo === 'material' ? 'Para qué (opcional)' : 'Título'}</label><input type="text" id="f-tit" value="${esc(e.titulo)}" placeholder="${e.tipo === 'control' ? 'Nombre del libro' : e.tipo === 'material' ? 'Por ejemplo, clase de arte' : 'Por ejemplo, Prueba unidad 2'}">
+      <div class="grid2"><div><label class="lbl" for="f-fecha">Fecha</label><input type="date" id="f-fecha" value="${e.fecha}"></div><div><label class="lbl" for="f-hora">Hora (opcional)</label><input type="time" id="f-hora" value="${e.hora || ''}"></div></div>
+      ${e.tipo !== 'material' ? `<label class="lbl" for="f-cont">Contenidos o temario</label><textarea id="f-cont" placeholder="¿Qué entra?">${esc(e.contenidos)}</textarea>
+      <label class="lbl" for="f-det">Detalles</label><textarea id="f-det" placeholder="Páginas, pauta o rúbrica, enlaces, indicaciones del profe">${esc(e.detalles)}</textarea>` : ''}
+      <label class="lbl" for="f-mat">Materiales que llevar (uno por línea)</label><textarea id="f-mat" placeholder="Block de dibujo&#10;Témperas">${esc(e.materiales)}</textarea>
+      ${['trabajo', 'disertacion'].includes(e.tipo) ? `<p class="eti mt2">Pasos</p><div id="f-pasos" class="mt">${(e.pasos || []).map((p, i) => `<div class="paso-tr"><input type="text" data-paso="${i}" value="${esc(p.t)}" aria-label="Paso ${i + 1}"><input type="date" data-pasof="${i}" value="${p.fecha || ''}" style="width:150px" aria-label="Fecha del paso ${i + 1}"><button class="icono" data-a="f-quitapaso" data-i="${i}" aria-label="Quitar paso">${ic('x')}</button></div>`).join('')}</div>
+      <button class="btn sm mt" data-a="f-paso">${ic('plus')} Agregar paso</button><button class="btn sm mt suave" data-a="f-pasos-sug">Sugerir pasos</button>` : ''}
+      <button class="btn pr big mt2" data-a="f-guardar">Guardar</button>`);
+    return el;
+  };
+  S.formPinta = pinta; pinta();
+}
+function leerForm() {
+  const e = S.form; if (!e) return;
+  const v = id => { const x = $('#' + id); return x ? x.value : undefined; };
+  if (v('f-tit') !== undefined) e.titulo = v('f-tit').trim();
+  if (v('f-fecha')) e.fecha = v('f-fecha'); if (v('f-hora') !== undefined) e.hora = v('f-hora');
+  if (v('f-cont') !== undefined) e.contenidos = v('f-cont'); if (v('f-det') !== undefined) e.detalles = v('f-det'); if (v('f-mat') !== undefined) e.materiales = v('f-mat');
+  $$('[data-paso]').forEach(x => { const i = +x.dataset.paso; if (e.pasos[i]) e.pasos[i].t = x.value; });
+  $$('[data-pasof]').forEach(x => { const i = +x.dataset.pasof; if (e.pasos[i]) e.pasos[i].fecha = x.value; });
+}
+function sugerirPasos(e) {
+  const f = e.fecha, t = e.tipo === 'disertacion'
+    ? [['Leer la pauta y elegir el tema', -10], ['Buscar información', -8], ['Escribir el guion', -6], ['Preparar el apoyo visual', -4], ['Ensayar con cronómetro', -2], ['Ensayo final en casa', -1]]
+    : [['Leer la pauta o rúbrica', -10], ['Buscar información', -8], ['Hacer un borrador', -6], ['Escribir la versión final', -3], ['Revisar con la pauta', -2], ['Entregar', 0]];
+  return t.map(([x, d]) => ({ t: x, fecha: sumaDias(f, d), hecho: false })).filter(p => p.fecha >= hoyYmd());
+}
+
+/* ===== ESTUDIAR ===== */
+function vEstudiar() {
+  if (AJ.rol !== 'estudiante') return `<div class="top"><h1>Estudiar</h1></div>${ronHTML('', `Esta sección es para ${estudiante()}. Aquí verás cuánto ha estudiado:`)}<div class="card">${proximos(30).filter(e => e.tipo !== 'material').map(e => `<div class="fila entre" style="padding:8px 0"><span>${esc(e.titulo || TIPOS[e.tipo])} <small class="sub">· ${esc(asigPor(e.asig).nombre)}</small></span><span class="badge">${sesionesDe(e.id).length} 🍓</span></div>`).join('') || '<p class="vacio">Sin evaluaciones próximas.</p>'}<p class="sub mt">🍓 ${frutillas()} sesiones en total.</p></div>`;
+  const st = S.est;
+  if (st && st.fase !== 'elegir') return vEstudiando();
+  const sel = S.estSel || {}, prox = proximos(30).filter(e => e.tipo !== 'material');
+  if (!sel.ev && !sel.asig && prox[0]) sel.ev = prox[0].id;
+  S.estSel = sel;
+  const dur = sel.min || AJ.duracion || 25, selAsig = sel.ev ? (D.eventos.find(e => e.id === sel.ev) || {}).asig : sel.asig, recTec = selAsig ? guiaAsig(asigPor(selAsig).nombre).tec : [];
+  return `<div class="top"><h1>Estudiar</h1><span class="badge">🍓 ${frutillas()}</span></div>
+  ${ronHTML('chico', '¿Qué estudiamos hoy? Yo te acompaño 🐾', 'ron-est')}
+  <div class="card"><p class="eti">Para qué</p><div class="mt">${prox.slice(0, 6).map(e => `<button class="check opcion" data-a="est-ev" data-id="${e.id}" aria-pressed="${sel.ev === e.id}"><span class="box"></span><span><b>${esc(e.titulo || TIPOS[e.tipo])}</b> <small class="sub">· ${esc(asigPor(e.asig).nombre)} · ${cuando(e.fecha)}</small></span></button>`).join('') || '<p class="sub">No hay evaluaciones próximas. Elige una asignatura:</p>'}</div>
+  <p class="sub mt">O repasar una asignatura:</p><div class="chips scroll mt">${asigOrden().map(a => `<button class="chip" data-a="est-asig" data-id="${a.id}" aria-pressed="${!sel.ev && sel.asig === a.id}"><i class="pt" style="background:${a.color}"></i>${esc(a.nombre)}</button>`).join('')}</div></div>
+  <div class="card"><div class="fila entre"><p class="eti">Técnica (opcional)</p><a class="btn sm suave" href="#guia">Cómo estudiar</a></div><div class="chips mt">${TEC.map(t => `<button class="chip" data-a="est-tecsel" data-v="${t.id}" aria-pressed="${sel.tecId === t.id}" ${recTec.includes(t.id) ? 'style="border-color:var(--ac)"' : ''}>${t.ic} ${t.n}</button>`).join('')}</div>${recTec.length ? '<p class="sub mt">Con borde: recomendadas para esta asignatura.</p>' : ''}</div>
+  <div class="card"><p class="eti">Cuánto rato</p><div class="chips mt">${[10, 15, 20, 25, 30, 45].map(m => `<button class="chip" data-a="est-min" data-v="${m}" aria-pressed="${dur === m}">${m} min</button>`).join('')}</div></div>
+  <button class="btn pr big" data-a="est-empezar">${ic('play')} Empezar</button>`;
+}
+function vEstudiando() {
+  const st = S.est, rest = Math.max(0, st.fin - (st.pausaDesde || Date.now())) / 1000, tot = st.min * 60, C = 653.5;
+  const que = st.ev ? (D.eventos.find(e => e.id === st.ev) || {}) : null, a = asigPor(que ? que.asig : st.asig);
+  if (st.fase === 'fin') return `<div class="top"><h1>¡Bien hecho!</h1></div>${ronHTML('grande', st.frase || elige(RON.fin, AJ.nombre), 'ron-est')}
+    <div class="card"><p class="eti">¿Cómo te fue?</p><div class="grid3 mt">${[['bien', 'Bien 😊'], ['regular', 'Más o menos'], ['costo', 'Me costó']].map(([k, t]) => `<button class="chip" style="justify-content:center;min-height:52px" data-a="est-como" data-v="${k}" aria-pressed="${st.como === k}">${t}</button>`).join('')}</div></div>
+    <button class="btn pr big" data-a="est-guardar">Guardar sesión</button>
+    ${st.min >= 20 ? `<p class="sub mt" style="text-align:center">Después de guardar, puedes tomar una pausa de 5 minutos con Ron.</p>` : ''}`;
+  return `<div class="top"><div><p class="sub">${esc(a.nombre)}</p><h1>${esc(que ? (que.titulo || TIPOS[que.tipo]) : 'Repaso')}</h1></div></div>
+    ${ronHTML('grande', st.frase || '¡Empezamos! Yo te acompaño.', 'ron-est')}
+    <div class="anillo"><svg viewBox="0 0 230 230" aria-hidden="true"><circle class="fondo" cx="115" cy="115" r="104"/><circle class="prog" id="t-ring" cx="115" cy="115" r="104" stroke-dasharray="${C}" stroke-dashoffset="${(C * (1 - rest / tot)).toFixed(1)}"/></svg>
+    <div class="centro"><div><div class="num" id="t-num" role="timer">${Math.floor(rest / 60)}:${pad(Math.floor(rest % 60))}</div><div class="sub">${st.pausaDesde ? 'En pausa' : 'minutos'}</div></div></div></div>
+    <div class="grid2"><button class="btn" data-a="est-pausa">${st.pausaDesde ? ic('play') + ' Seguir' : ic('pausa') + ' Pausa'}</button><button class="btn" data-a="est-cuesta">Me está costando</button></div>
+    ${st.pausaDesde && AJ.rol === 'estudiante' ? `<button class="btn pr w mt" data-a="pausa-ron">🧡 Cuidar de Ron en la pausa</button>` : ''}
+    <button class="btn w mt" data-a="est-terminar">Terminar</button>
+    ${st.tec ? `<div class="card mt2"><p class="eti">Técnica</p><p class="mt"><b>${esc(st.tec[0])}:</b> ${esc(st.tec[1])}</p></div>` : ''}`;
+}
+let wl = null;
+async function pantallaOn() { try { if ('wakeLock' in navigator) wl = await navigator.wakeLock.request('screen'); } catch (e) { } }
+function pantallaOff() { try { wl && wl.release(); } catch (e) { } wl = null; }
+function estEmpezar() {
+  const sel = S.estSel || {}, min = sel.min || AJ.duracion || 25;
+  if (!sel.ev && !sel.asig) return toast('Elige qué vas a estudiar.');
+  AJ.duracion = min; guardarAjustes();
+  const t0 = tecPor(sel.tecId);
+  S.est = { fase: 'corre', ev: sel.ev || null, asig: sel.asig || null, min, ini: Date.now(), fin: Date.now() + min * 60000, ultimoMsg: Date.now(), ultimaAgua: Date.now(), ultimoEstirar: Date.now(), mitad: false, frase: t0 ? `Hoy usamos "${t0.n}". ${t0.pasos[0]}` : '', tec: t0 ? [t0.n, t0.pasos.join(' ')] : null, tecId: t0 ? t0.id : null };
+  pantallaOn(); campana([660, 880]); render(true); setTimeout(() => ronEstado('ron-est', 'saluda'), 0);
+}
+function estDecir(frase, estado) { S.est.frase = frase; ronEstado('ron-est', estado || null, frase); }
+setInterval(() => {
+  const st = S.est; if (!st || st.fase !== 'corre' || st.pausaDesde) return;
+  const ahora = Date.now(), rest = Math.max(0, st.fin - ahora) / 1000, tot = st.min * 60;
+  const n = $('#t-num'); if (n) n.textContent = Math.floor(rest / 60) + ':' + pad(Math.floor(rest % 60));
+  const r = $('#t-ring'); if (r) r.style.strokeDashoffset = (653.5 * (1 - rest / tot)).toFixed(1);
+  if (rest <= 0) { st.fase = 'fin'; st.frase = elige(RON.fin, AJ.nombre); pantallaOff(); campana([880, 1175, 1568]); render(true); setTimeout(() => ronEstado('ron-est', 'celebra'), 0); return; }
+  if (!st.mitad && rest <= tot / 2 && tot >= 600) { st.mitad = true; st.ultimoMsg = ahora; return estDecir(elige(RON.mitad), 'celebra'); }
+  if (AJ.agua && ahora - st.ultimaAgua >= AJ.agua * 60000) { st.ultimaAgua = ahora; st.ultimoMsg = ahora; return estDecir(elige(RON.agua)); }
+  if (AJ.rol === 'estudiante' && AJ.estirar && ahora - st.ultimoEstirar >= 30 * 60000) { st.ultimoEstirar = ahora; st.ultimoMsg = ahora; return estDecir('Llevamos un buen rato. ¡Estiremos las patitas! Brazos arriba 🐾'); }
+  if (AJ.ronFreq && ahora - st.ultimoMsg >= AJ.ronFreq * 60000) { st.ultimoMsg = ahora; estDecir(elige(RON.animo, AJ.nombre), 'saluda'); }
+}, 500);
+function estPausa() {
+  const st = S.est; if (!st) return;
+  if (st.pausaDesde) { st.fin += Date.now() - st.pausaDesde; st.pausaDesde = null; st.frase = '¡Seguimos! 🐾'; pantallaOn(); render(true); setTimeout(() => ronEstado('ron-est', 'saluda'), 0); }
+  else { st.pausaDesde = Date.now(); st.frase = elige(RON.pausa); pantallaOff(); render(true); setTimeout(() => ronEstado('ron-est', 'duerme'), 0); }
+}
+function estCuesta() {
+  const el = abrirHoja(`${cabHoja('Probemos otra forma')}<p class="mb">${esc(elige(RON.costando))}</p>
+    ${TEC.map(t => `<button class="mas-item" data-a="est-tec" data-v="${t.id}"><span class="ic" style="font-size:22px">${t.ic}</span><span>${esc(t.n)}<small>${esc(t.pasos[1])}</small></span></button>`).join('')}
+    <button class="mas-item" data-a="est-tec" data-v="duda"><span class="ic" style="font-size:22px">📝</span><span>Anota la duda<small>Escríbela para preguntarle a tu profe. ¡Preguntar también es estudiar!</small></span></button>`);
+  ronEstado('ron-est', 'piensa');
+  return el;
+}
+async function estGuardar() {
+  const st = S.est, min = Math.max(1, Math.round(((st.pausaDesde || Date.now()) - st.ini - 0) / 60000));
+  const ev = st.ev ? D.eventos.find(e => e.id === st.ev) : null;
+  await put('sesiones', { id: uid(), fecha: hoyYmd(), min: Math.min(min, st.min), evento: st.ev || null, asig: ev ? ev.asig : st.asig, como: st.como || null, tec: st.tec ? st.tec[0] : null, tecId: st.tecId || null });
+  if (st.duda && ev) await put('eventos', Object.assign({}, ev, { dudas: ((ev.dudas || '') + '\n' + st.duda).trim() }));
+  const largo = st.min >= 20;
+  S.est = null; S.estSel = null; pantallaOff(); toast('¡Sesión guardada! 🍓 ' + frutillas() + ' frutillas');
+  if (largo && AJ.rol === 'estudiante') { S.cuidado = { hasta: Date.now() + 5 * 60000 }; guardarRon({ cuidados: (ronCfg().cuidados || 0) + 1 }); location.hash = '#ron'; } else location.hash = '#hoy';
+}
+
+/* ===== MÁS ===== */
+function vMas() {
+  const it = (h, i, t, s) => `<a class="mas-item" href="#${h}" style="text-decoration:none;color:inherit"><span class="ic">${ic(i)}</span><span>${t}<small>${s}</small></span></a>`;
+  return `<div class="top"><h1>Más</h1><span class="badge">🍓 ${frutillas()}</span></div>
+  ${it('guia', 'libro', 'Cómo estudiar', 'Técnicas, prioridades y desafío')}
+  ${it('semana', 'cal', AJ.rol === 'estudiante' ? 'Mi semana' : 'La semana de ' + esc(estudiante()), 'Resumen, reflexión y técnicas')}
+  ${it('mas-correo', 'mail', 'Correo a profes', 'Escribe consultas o envía trabajos')}
+  ${it('mas-horario', 'tabla', 'Horario de clases', 'Qué asignaturas hay cada día')}
+  ${it('mas-asig', 'libro', 'Asignaturas y profes', 'Colores, profesores y correos')}
+  ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
+  ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
+  ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 2</p>`;
+}
+const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
+
+function vCorreo() {
+  return cabSub('Correo a profes') + `<p class="sub mb">Elige la asignatura. Se abrirá Gmail con el mensaje listo; si es un trabajo, adjunta el archivo allí antes de enviar.</p>
+  ${asigOrden().map(a => `<button class="ev" data-a="correo" data-id="${a.id}"><span class="barra" style="background:${a.color}"></span><span class="txt"><b>${esc(a.nombre)}</b><small>${a.profe ? esc(a.profe) : 'Sin profe anotado'}${a.correo ? ' · ' + esc(a.correo) : ''}</small></span>${ic('mail')}</button>`).join('')}`;
+}
+function abrirCorreo(asigId, evId, tipo) {
+  const a = asigPor(asigId), ev = evId ? D.eventos.find(e => e.id === evId) : null;
+  tipo = tipo || (ev && ['trabajo', 'disertacion'].includes(ev.tipo) ? 'trabajo' : 'consulta');
+  const rel = s => s.replace(/\{asig\}/g, a.nombre).replace(/\{profe\}/g, a.profe || '').replace(/\{tema\}/g, ev ? (ev.titulo || TIPOS[ev.tipo]) : (tipo === 'trabajo' ? '[nombre del trabajo]' : '[tema]')).replace(/\{nombre\}/g, AJ.rol === 'estudiante' ? AJ.nombre : estudiante()).replace(/\{fecha\}/g, fechaLarga(hoyYmd()));
+  const [as, cu] = PLANTILLAS[tipo];
+  abrirHoja(`${cabHoja('Escribir a ' + esc(a.profe || 'profe'))}<p class="sub">${esc(a.nombre)}</p>
+    <div class="chips mt">${[['consulta', 'Consulta'], ['trabajo', 'Envío de trabajo'], ['justificacion', 'Justificación'], ['libre', 'Libre']].map(([k, t]) => `<button class="chip" data-a="correo-tipo" data-v="${k}" data-id="${asigId}" ${evId ? `data-ev="${evId}"` : ''} aria-pressed="${tipo === k}">${t}</button>`).join('')}</div>
+    <label class="lbl" for="c-para">Para</label><input type="email" id="c-para" value="${esc(a.correo || '')}" placeholder="correo@colegio.cl" autocapitalize="off">
+    <label class="lbl" for="c-asunto">Asunto</label><input type="text" id="c-asunto" value="${esc(rel(as) || a.nombre)}">
+    <label class="lbl" for="c-cuerpo">Mensaje</label><textarea id="c-cuerpo" style="min-height:200px">${esc(rel(cu))}</textarea>
+    ${tipo === 'trabajo' ? '<div class="aviso mt">📎 Recuerda adjuntar el archivo en Gmail antes de enviar.</div>' : ''}
+    <div class="col mt"><button class="btn pr big" data-a="correo-abrir" data-v="app" data-id="${asigId}">${ic('mail')} Abrir en Gmail</button><button class="btn w" data-a="correo-abrir" data-v="web" data-id="${asigId}">Gmail en el navegador</button></div>
+    <p class="sub mt">Usa la cuenta de correo del colegio para enviar.</p>`);
+}
+function correoAbrir(modo, asigId) {
+  const para = $('#c-para').value.trim(), as = $('#c-asunto').value, cu = $('#c-cuerpo').value, a = D.asig.find(x => x.id === asigId);
+  if (!para) return toast('Escribe el correo del profe.');
+  if (a && para !== a.correo) put('asig', Object.assign({}, a, { correo: para }));
+  const l = correoEnlaces(para, as, cu); window.open(modo === 'app' ? l.app : l.web, '_blank') || (location.href = modo === 'app' ? l.app : l.web);
+}
+
+function vHorario() {
+  const h = horario(), d = S.hDia, lista = (h[d] || []).map(asigPor).filter(a => a.id);
+  return cabSub('Horario de clases') + `<p class="sub mb">Para cada día, toca las asignaturas en el orden en que las tienes. Con esto, Ron arma la mochila del día siguiente.</p>
+  <div class="grid3" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(k => `<button class="chip" style="justify-content:center" data-a="h-dia" data-v="${k}" aria-pressed="${d === k}">${DIAS[k].slice(0, 3)}</button>`).join('')}</div>
+  <div class="card mt"><p class="eti">${cap(DIAS[d])}</p><div class="mt">${lista.length ? lista.map((a, i) => `<div class="fila entre" style="padding:6px 0;border-bottom:1px dashed var(--borde)"><span class="fila"><i class="pt" style="background:${a.color}"></i>${i + 1}. ${esc(a.nombre)}</span><span class="fila"><button class="icono" data-a="h-sube" data-i="${i}" aria-label="Subir" ${i ? '' : 'disabled'} style="transform:rotate(90deg)">${ic('back')}</button><button class="icono" data-a="h-quita" data-i="${i}" aria-label="Quitar">${ic('x')}</button></span></div>`).join('') : '<p class="sub">Aún no hay asignaturas este día.</p>'}</div></div>
+  <p class="eti">Agregar</p><div class="chips mt">${asigOrden().map(a => `<button class="chip" data-a="h-agrega" data-id="${a.id}"><i class="pt" style="background:${a.color}"></i>${esc(a.nombre)}</button>`).join('')}</div>`;
+}
+function cambiaHorario(fn) { const c = cfg('horario'), dias = Object.assign({}, c.dias || {}), l = (dias[S.hDia] || []).slice(); fn(l); dias[S.hDia] = l; put('config', { id: 'horario', dias }); }
+
+function vAsignaturas() {
+  return cabSub('Asignaturas y profes') + `${asigOrden().map(a => `<button class="ev" data-a="edit-asig" data-id="${a.id}"><span class="barra" style="background:${a.color}"></span><span class="txt"><b>${esc(a.nombre)}</b><small>${a.profe ? esc(a.profe) : 'Toca para anotar profe y correo'}${a.correo ? ' · ' + esc(a.correo) : ''}</small></span>${ic('lapiz')}</button>`).join('')}
+  <button class="btn w mt" data-a="edit-asig" data-id="">${ic('plus')} Agregar asignatura</button>`;
+}
+function editarAsig(id) {
+  const a = id ? Object.assign({}, D.asig.find(x => x.id === id)) : { nombre: '', color: COLORES[D.asig.length % COLORES.length], profe: '', correo: '', orden: D.asig.length };
+  S.asigEd = a;
+  abrirHoja(`${cabHoja(id ? 'Editar asignatura' : 'Nueva asignatura')}
+    <label class="lbl" for="a-nom">Nombre</label><input type="text" id="a-nom" value="${esc(a.nombre)}">
+    <p class="eti mt2">Color</p><div class="chips mt">${COLORES.map(c => `<button class="swatch" style="background:${c};width:40px;height:40px" data-a="a-color" data-v="${c}" aria-pressed="${a.color === c}" aria-label="Color ${c}"></button>`).join('')}</div>
+    <label class="lbl" for="a-profe">Profesor o profesora</label><input type="text" id="a-profe" value="${esc(a.profe)}" placeholder="Nombre">
+    <label class="lbl" for="a-correo">Correo</label><input type="email" id="a-correo" value="${esc(a.correo)}" placeholder="correo@colegio.cl" autocapitalize="off">
+    <button class="btn pr big mt2" data-a="a-guardar">Guardar</button>${id ? `<button class="btn w mt" data-a="a-borrar" data-id="${id}">Eliminar asignatura</button>` : ''}`);
+}
+
+function vMochila() {
+  const h = horario(), BY = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+  const prox = d => { const n = new Date(); const k = (d - n.getDay() + 7) % 7 || 7; n.setDate(n.getDate() + k); return ymd(n); };
+  const botones = [1, 2, 3, 4, 5].map(dia => {
+    const asg = (h[dia] || []).map(asigPor).filter(a => a.id).map(a => a.nombre), noche = (dia + 6) % 7;
+    return asg.length ? `<a class="btn sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: `🎒 Mochila para el ${DIAS[dia]}: ${asg.join(', ')}`, fecha: prox(noche), hora: AJ.mochilaHora, min: 15, detalles: 'Revisa en Ronrutina si hay materiales.', recur: `RRULE:FREQ=WEEKLY;BYDAY=${BY[noche]}` })}">Aviso del ${DIAS[noche]} para el ${DIAS[dia]}</a>` : `<button class="btn sm w" disabled>${cap(DIAS[dia])}: sin horario</button>`;
+  }).join('');
+  return cabSub('Mochila y recordatorios') + `<div class="card"><p class="eti">Horas de los avisos</p><p class="sub mt">Las eliges tú.</p>
+    <div class="grid2"><div><label class="lbl" for="m-noche">La noche anterior</label><input type="time" id="m-noche" data-aj="mochilaHora" value="${AJ.mochilaHora}"></div><div><label class="lbl" for="m-man">En la mañana (materiales)</label><input type="time" id="m-man" data-aj="materialesHora" value="${AJ.materialesHora}"></div></div></div>
+  <div class="card"><p class="eti">Avisos semanales de mochila</p><p class="sub mt mb">Toca cada botón una vez: se abrirá Google Calendar con un aviso que se repite cada semana. Elige el calendario "Mochila" y guarda.</p><div class="col">${botones}</div></div>
+  <div class="card"><p class="eti">Materiales</p><p class="sub mt">Cuando anotes materiales en una evaluación o en "Materiales", ábrela y usa "Recordar la noche anterior" o "Recordar en la mañana".</p></div>
+  ${AJ.rol === 'estudiante' ? `<div class="card"><p class="eti">Hora de dormir</p><p class="sub mt mb">Ron te avisará a las ${AJ.dormir}, todos los días.</p><a class="btn sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: '🌙 Hora de descansar · Ron', fecha: hoyYmd(), hora: AJ.dormir, min: 10, detalles: 'Dormir bien también es estudiar. ¡Buenas noches!', recur: 'RRULE:FREQ=DAILY' })}">Crear aviso diario para dormir</a></div>` : ''}`;
+}
+
+function vFamilia() {
+  const enlace = location.origin + location.pathname + '#unir=' + AJ.codigo;
+  return cabSub('Familia') + `<div class="card"><p class="eti">Estudiante</p><label class="lbl" for="fa-est">Nombre</label><input type="text" id="fa-est" value="${esc(estudiante())}"></div>
+  <div class="card"><p class="eti">Compartir con mamá</p><p class="sub mt">Quien abra este enlace verá y podrá editar el mismo calendario, en vivo. Compártelo solo con tu familia.</p>
+    <button class="btn pr w mt" data-a="fa-compartir">Compartir enlace</button>
+    <details class="mt"><summary class="sub" style="padding:8px 0">Ver código familiar</summary><p style="word-break:break-all;font-family:monospace" class="mt">${esc(AJ.codigo)}</p><button class="btn sm mt" data-a="fa-copiar">Copiar código</button></details>
+    <p class="sub mt">Estado: ${DB.modo === 'nube' ? '✓ Conectado y sincronizado' : 'Sin conexión: se sincronizará al volver internet'}</p></div>
+  <div class="card"><p class="eti">Empezar de cero</p><p class="sub mt">Sale de esta familia en este teléfono. Útil si estabas probando la app. Los datos de la familia no se borran.</p><button class="btn w mt" data-a="fa-salir">Salir y empezar de cero</button></div>`;
+}
+
+function vAjustes() {
+  const f = (a, v, t) => `<button class="chip" data-a="aj" data-k="${a}" data-v="${v}" aria-pressed="${String(AJ[a]) === String(v)}">${t}</button>`;
+  return cabSub('Ajustes') + `<div class="card"><label class="lbl" for="aj-nombre" style="margin-top:0">Tu nombre</label><input type="text" id="aj-nombre" data-aj="nombre" value="${esc(AJ.nombre)}">
+    <p class="sub mt">Usas Ronrutina como: <b>${AJ.rol === 'estudiante' ? 'estudiante' : 'mamá o apoderado'}</b></p></div>
+  <div class="card"><p class="eti">Color de la app</p><div class="fila wrap mt">${Object.entries(TEMAS).map(([k, c]) => `<span style="text-align:center"><button class="swatch" style="background:${c}" data-a="aj" data-k="tema" data-v="${k}" aria-pressed="${AJ.tema === k}" aria-label="${TEMAS_N[k]}"></button><br><small class="sub">${TEMAS_N[k]}</small></span>`).join('')}</div>
+    <label class="sw mt"><span>Decoración de frutillas y flores</span><input type="checkbox" data-ajc="deco" ${AJ.deco ? 'checked' : ''}></label></div>
+  <div class="card"><p class="eti">Ron</p><p class="mt">Comenta mientras estudias cada:</p><div class="chips mt">${f('ronFreq', 0, 'Nunca')}${f('ronFreq', 10, '10 min')}${f('ronFreq', 15, '15 min')}${f('ronFreq', 20, '20 min')}${f('ronFreq', 30, '30 min')}</div>
+    ${AJ.rol === 'estudiante' ? `<p class="mt">Recordarte tomar agua cada:</p><div class="chips mt">${f('agua', 0, 'Nunca')}${f('agua', 30, '30 min')}${f('agua', 45, '45 min')}${f('agua', 60, '60 min')}</div>
+    <label class="lbl" for="aj-dormir">Hora de dormir</label><input type="time" id="aj-dormir" data-aj="dormir" value="${AJ.dormir}">
+    <p class="eti mt2">Ron cuida de ti</p>
+    <label class="sw"><span>Recordarte estirarte en sesiones largas</span><input type="checkbox" data-ajc="estirar" ${AJ.estirar ? 'checked' : ''}></label>
+    <label class="sw"><span>Sugerirte salir al aire libre los fines de semana</span><input type="checkbox" data-ajc="aire" ${AJ.aire ? 'checked' : ''}></label>
+    <label class="lbl" for="aj-hob">Tus hobbies (separados por coma)</label><input type="text" id="aj-hob" data-aj="hobbies" value="${esc(AJ.hobbies)}" placeholder="dibujar, leer, bailar">
+    <label class="lbl" for="aj-hest">Hora habitual de estudio (para el plan sugerido)</label><input type="time" id="aj-hest" data-aj="horaEstudio" value="${AJ.horaEstudio}">` : ''}
+    <label class="sw mt"><span>Sonidos</span><input type="checkbox" data-ajc="sonido" ${AJ.sonido ? 'checked' : ''}></label></div>
+  <div class="card"><p class="eti">Respaldo</p><p class="sub mt">Descarga una copia de todo, por si acaso.</p><button class="btn w mt" data-a="respaldo">${ic('descarga')} Descargar respaldo</button></div>`;
+}
+
+/* ===== Navegación ===== */
+const VISTAS = { hoy: vHoy, calendario: vCalendario, estudiar: vEstudiar, ron: vRon, semana: vSemana, guia: vGuia, mas: vMas, 'mas-correo': vCorreo, 'mas-horario': vHorario, 'mas-asig': vAsignaturas, 'mas-mochila': vMochila, 'mas-familia': vFamilia, 'mas-ajustes': vAjustes };
+const TAB = v => v.startsWith('mas') ? 'mas' : v === 'semana' ? 'ron' : v === 'guia' ? 'estudiar' : v;
+function render(force) {
+  const cont = $('#vista'); if (!cont) return;
+  const sinFamilia = !AJ.codigo || !AJ.rol;
+  $('.nav').classList.toggle('oculta', sinFamilia);
+  if (sinFamilia) { cont.innerHTML = vBienvenida(); return; }
+  if (!force) {
+    const a = document.activeElement;
+    if (a && cont.contains(a) && /INPUT|TEXTAREA|SELECT/.test(a.tagName)) return;
+    if (S.vista === 'estudiar' && S.est && S.est.fase === 'corre') return;
+  }
+  if (!DB.listo) { cont.innerHTML = ronHTML('grande', 'Un momento… estoy buscando tus cosas 🐾') ; return; }
+  const y = scrollY; cont.innerHTML = (VISTAS[S.vista] || vHoy)();
+  $$('.nav a').forEach(a => a.dataset.tab === TAB(S.vista) ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  if (!force) scrollTo(0, y);
+  $$('.ron.saluda').forEach(ronFin);
+  clearTimeout(render._l); render._l = setTimeout(revisarLogros, 600);
+}
+function irVista() {
+  const h = location.hash.slice(1);
+  if (h.startsWith('unir=')) {
+    const cod = h.slice(5).replace(/[^a-z0-9]/g, '');
+    if (AJ.codigo && AJ.codigo !== cod) { if (!confirm('Este enlace es de otra familia. ¿Cambiarte a ella en este teléfono?')) { location.hash = '#hoy'; return; } AJ.codigo = ''; AJ.rol = ''; guardarAjustes(); }
+    if (!AJ.codigo) { S.ob = { paso: 'unir', rol: '', nombre: '', codigo: cod }; render(true); return; }
+    location.hash = '#hoy'; return;
+  }
+  const v = h || 'hoy'; S.vista = VISTAS[v] ? v : 'hoy'; cerrarHoja(true); render(true); scrollTo(0, 0);
+  const t = $('#vista h1'); if (t) { t.tabIndex = -1; t.focus({ preventScroll: true }); }
+}
+window.addEventListener('hashchange', irVista);
+
+/* ===== Eventos ===== */
+document.addEventListener('click', async ev => {
+  const ronEl = ev.target.closest('[data-ron]');
+  if (ronEl) { ronCorazon(ronEl); const z = ronEl.closest('.ron-zona'); if (!(S.est && S.est.fase === 'corre')) ronEstado(z, 'saluda', elige(RON.toque, AJ.nombre)); else ronEstado(z, 'saluda'); campana([523]); return; }
+  const t = ev.target.closest('[data-a]'); if (!t) return;
+  const a = t.dataset.a, id = t.dataset.id, v = t.dataset.v;
+  switch (a) {
+    case 'cerrar': return cerrarHoja();
+    /* bienvenida */
+    case 'ob-crear': S.ob.paso = 'crear'; return render(true);
+    case 'ob-unir': S.ob.paso = 'unir'; return render(true);
+    case 'ob-volver': S.ob = null; return render(true);
+    case 'ob-rol': S.ob.nombre = ($('#ob-nombre') || {}).value || S.ob.nombre; if ($('#ob-est')) S.ob.est = $('#ob-est').value; if ($('#ob-cod')) S.ob.codigo = $('#ob-cod').value; S.ob.rol = v; return render(true);
+    case 'ob-listo': return obListo();
+    /* hoy */
+    case 'mochila': { const c = mochilaChecks(t.dataset.dia); c[t.dataset.k] = !c[t.dataset.k]; try { localStorage.setItem(mochilaKey(t.dataset.dia), JSON.stringify(c)); } catch (e) { } t.setAttribute('aria-pressed', !!c[t.dataset.k]); if ($$('[data-a=mochila]').every(b => b.getAttribute('aria-pressed') === 'true')) { ronEstado('ron-hoy', 'celebra', elige(RON.mochilaLista)); campana(); const k = 'ronrutina.mochilaok.' + t.dataset.dia; if (AJ.rol === 'estudiante' && !localStorage.getItem(k)) { try { localStorage.setItem(k, '1'); } catch (e) { } guardarRon({ mochilas: (ronCfg().mochilas || 0) + 1 }); } } return; }
+    /* eventos */
+    case 'ver': return verEvento(id);
+    case 'nuevo': return formEvento(null, { asig: t.dataset.asig, fecha: t.dataset.fecha });
+    case 'editar': return formEvento(D.eventos.find(e => e.id === id));
+    case 'f-tipo': leerForm(); S.form.tipo = v; if (['trabajo', 'disertacion'].includes(v) && !S.form.pasos.length) S.form.pasos = []; return S.formPinta();
+    case 'f-asig': leerForm(); S.form.asig = v; return S.formPinta();
+    case 'f-paso': leerForm(); S.form.pasos.push({ t: '', fecha: '', hecho: false }); return S.formPinta();
+    case 'f-quitapaso': leerForm(); S.form.pasos.splice(+t.dataset.i, 1); return S.formPinta();
+    case 'f-pasos-sug': leerForm(); S.form.pasos = sugerirPasos(S.form); if (!S.form.pasos.length) toast('La fecha está muy cerca para sugerir pasos.'); return S.formPinta();
+    case 'f-guardar': {
+      leerForm(); const e = S.form; if (!e.asig) return toast('Elige una asignatura.'); if (!e.fecha) return toast('Elige la fecha.');
+      if (e.tipo === 'material' && !(e.materiales || '').trim()) return toast('Anota qué materiales hay que llevar.');
+      e.pasos = (e.pasos || []).filter(p => (p.t || '').trim());
+      const g = await put('eventos', e); S.form = null; cerrarHoja(true); toast('Guardado 🐾'); verEvento(g.id); return;
+    }
+    case 'paso': { const e = D.eventos.find(x => x.id === id); if (!e) return; const p = e.pasos[+t.dataset.i]; p.hecho = !p.hecho; t.setAttribute('aria-pressed', p.hecho); await put('eventos', Object.assign({}, e)); if (e.pasos.every(x => x.hecho)) toast('¡Todos los pasos listos! 🎉'); return; }
+    case 'hecho': { const e = D.eventos.find(x => x.id === id); await put('eventos', Object.assign({}, e, { hecho: !e.hecho })); cerrarHoja(); return toast(e.hecho ? 'Reabierto' : '¡Listo! ✓'); }
+    case 'eliminar': if (t.dataset.ok) { await borrar('eventos', id); cerrarHoja(); return toast('Eliminado'); } t.dataset.ok = '1'; t.textContent = '¿Seguro? Toca otra vez'; return;
+    case 'estudiar-ev': S.estSel = { ev: id }; S.est = null; cerrarHoja(true); return;
+    /* calendario */
+    case 'filtro': S.filtro = v; S.diaSel = ''; return render(true);
+    case 'mes': S.mesOff += +v; return render(true);
+    case 'dia': S.diaSel = v === S.diaSel ? '' : v; return render(true);
+    /* estudiar */
+    case 'est-ev': S.estSel = Object.assign(S.estSel || {}, { ev: id, asig: null }); return render(true);
+    case 'est-asig': S.estSel = Object.assign(S.estSel || {}, { ev: null, asig: id }); return render(true);
+    case 'est-min': S.estSel = Object.assign(S.estSel || {}, { min: +v }); return render(true);
+    case 'est-empezar': return estEmpezar();
+    case 'est-pausa': return estPausa();
+    case 'est-cuesta': return estCuesta();
+    case 'est-tecsel': S.estSel = Object.assign(S.estSel || {}, { tecId: S.estSel && S.estSel.tecId === v ? null : v }); return render(true);
+    case 'est-tec': {
+      cerrarHoja(true);
+      if (v !== 'duda') { const tt = tecPor(v); S.est.tec = [tt.n, tt.pasos.join(' ')]; S.est.tecId = tt.id; render(true); setTimeout(() => ronEstado('ron-est', 'saluda', tt.n + ': ' + tt.pasos[0]), 0); return; }
+      {
+        const el = abrirHoja(`${cabHoja('Anota tu duda')}<textarea id="duda" placeholder="¿Qué no entendiste?"></textarea><button class="btn pr big mt" data-a="est-duda">Guardar duda</button>`);
+        return;
+      }
+    }
+    case 'est-duda': { const d = $('#duda').value.trim(); if (d) S.est.duda = ((S.est.duda || '') + '\n' + d).trim(); cerrarHoja(true); render(true); setTimeout(() => ronEstado('ron-est', 'saluda', '¡Bien! Anotada para preguntarle al profe 📝'), 0); return; }
+    case 'est-terminar': S.est.fase = 'fin'; S.est.frase = elige(RON.fin, AJ.nombre); pantallaOff(); campana([880, 1175, 1568]); render(true); setTimeout(() => ronEstado('ron-est', 'celebra'), 0); return;
+    case 'est-como': S.est.como = v; $$('[data-a=est-como]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return;
+    case 'est-guardar': return estGuardar();
+    /* Ron y v2 */
+    case 'pausa-ron': if (S.est && S.est.fase === 'corre' && !S.est.pausaDesde) estPausa(); return iniciarPausaRon();
+    case 'fin-pausa': S.cuidado = null; return render(true);
+    case 'cuidar': return cuidar(v);
+    case 'lana': { const z = $('#lana-zona'); t.style.left = (10 + Math.random() * 70) + '%'; t.style.top = (5 + Math.random() * 55) + '%'; S.lana = (S.lana || 0) + 1; if (S.lana % 3 === 0) { ronEstado('ron-casa', 'celebra', elige(['¡La atrapé! 🧶', '¡Otra vez, otra vez!', '¡Soy el mejor cazador!'])); campana([660]); } return; }
+    case 'acc': await guardarRon({ accesorio: v }); return render(true);
+    case 'reflex': { await put('reflex', { id: semanaKey(), funciono: $('#r1').value, costo: $('#r2').value, cambio: $('#r3').value, compartir: $('#r-comp').checked, fecha: hoyYmd() }); toast('Reflexión guardada 💭'); return render(true); }
+    case 'tec-ver': return verTecnica(v);
+    case 'tec-usar': S.estSel = Object.assign(S.estSel || {}, { tecId: v }); S.est = null; cerrarHoja(true); return;
+    case 'guia-asig': return verGuiaAsig(id);
+    case 'des-empezar': await put('config', { id: 'desafio', inicio: semanaKey(), marcas: {} }); return render(true);
+    case 'des-probe': { const dd = Object.assign({ id: 'desafio' }, cfg('desafio')); dd.marcas = Object.assign({}, dd.marcas); dd.marcas[v] = Object.assign({}, dd.marcas[v], { probe: true }); await put('config', dd); return render(true); }
+    case 'des-sirvio': { const dd = Object.assign({ id: 'desafio' }, cfg('desafio')); dd.marcas = Object.assign({}, dd.marcas); dd.marcas[v] = Object.assign({}, dd.marcas[v], { sirvio: t.dataset.s === '1' }); await put('config', dd); return render(true); }
+    case 'confianza': { const e = D.eventos.find(x => x.id === id); await put('eventos', Object.assign({}, e, { confianza: +v })); $$('[data-a=confianza]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return; }
+    case 'resultado': { const e = D.eventos.find(x => x.id === id); await put('eventos', Object.assign({}, e, { resultado: v })); cerrarHoja(true); verEvento(id); return; }
+    /* correo */
+    case 'correo': cerrarHoja(true); return abrirCorreo(id, t.dataset.ev);
+    case 'correo-tipo': return abrirCorreo(id, t.dataset.ev, v);
+    case 'correo-abrir': return correoAbrir(v, id);
+    /* horario */
+    case 'h-dia': S.hDia = +v; return render(true);
+    case 'h-agrega': return cambiaHorario(l => l.push(id));
+    case 'h-quita': return cambiaHorario(l => l.splice(+t.dataset.i, 1));
+    case 'h-sube': return cambiaHorario(l => { const i = +t.dataset.i; [l[i - 1], l[i]] = [l[i], l[i - 1]]; });
+    /* asignaturas */
+    case 'edit-asig': return editarAsig(id);
+    case 'a-color': S.asigEd.color = v; $$('[data-a=a-color]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return;
+    case 'a-guardar': { const x = S.asigEd; x.nombre = $('#a-nom').value.trim(); x.profe = $('#a-profe').value.trim(); x.correo = $('#a-correo').value.trim(); if (!x.nombre) return toast('Escribe el nombre.'); await put('asig', x); cerrarHoja(); return toast('Guardado'); }
+    case 'a-borrar': if (t.dataset.ok) { await borrar('asig', id); cerrarHoja(); return toast('Asignatura eliminada'); } t.dataset.ok = '1'; t.textContent = '¿Seguro? Toca otra vez'; return;
+    /* familia */
+    case 'fa-compartir': {
+      const url = location.origin + location.pathname + '#unir=' + AJ.codigo, txt = `Te invito a Ronrutina, el calendario de estudio de ${estudiante()} 🐾`;
+      try { if (navigator.share) { await navigator.share({ title: 'Ronrutina', text: txt, url }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+      try { await navigator.clipboard.writeText(url); toast('Enlace copiado. Pégalo en WhatsApp.'); } catch (e) { prompt('Copia este enlace:', url); } return;
+    }
+    case 'fa-copiar': try { await navigator.clipboard.writeText(AJ.codigo); toast('Código copiado'); } catch (e) { prompt('Copia el código:', AJ.codigo); } return;
+    case 'fa-salir': if (!confirm('¿Salir de esta familia en este teléfono? Podrás volver con el código.')) return; DB.unsubs.forEach(u => { try { u(); } catch (e) { } }); AJ = Object.assign({}, AJ0); guardarAjustes(); S.ob = null; location.hash = ''; return render(true);
+    /* ajustes */
+    case 'aj': AJ[t.dataset.k] = isNaN(+v) || v === '' ? v : +v; guardarAjustes(); return render(true);
+    case 'respaldo': {
+      const blob = new Blob([JSON.stringify({ fecha: new Date().toISOString(), datos: D }, null, 1)], { type: 'application/json' });
+      const l = document.createElement('a'); l.href = URL.createObjectURL(blob); l.download = 'ronrutina-respaldo-' + hoyYmd() + '.json'; document.body.appendChild(l); l.click(); l.remove(); return toast('Respaldo descargado');
+    }
+  }
+});
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-ron]')) { e.preventDefault(); e.target.click(); } });
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.aj) { AJ[t.dataset.aj] = t.value.trim(); guardarAjustes(); if (t.dataset.aj === 'mochilaHora' || t.dataset.aj === 'materialesHora') render(true); }
+  if (t.dataset.ajc) { AJ[t.dataset.ajc] = t.checked; guardarAjustes(); }
+  if (t.id === 'fa-est') { const n = t.value.trim(); if (n) put('config', Object.assign({}, cfg('familia'), { id: 'familia', estudiante: n })); }
+});
+
+/* ===== Arranque ===== */
+async function arrancar() {
+  cargarAjustes(); aplicarTema();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => { });
+  irVista();
+  if (AJ.codigo && AJ.rol) await conectar(AJ.codigo);
+  render(true);
+}
+window.addEventListener('load', arrancar);
+
+</script>
+</body>
+</html>
