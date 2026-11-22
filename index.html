@@ -146,6 +146,64 @@ textarea{min-height:90px;resize:vertical}
 .ron[data-acc=collar] .acc-collar,.ron[data-acc=mono] .acc-mono,.ron[data-acc=corona] .acc-corona,.ron[data-acc=lentes] .acc-lentes,.ron[data-acc=gorro] .acc-gorro{display:block}
 #ron-casa .ron{touch-action:none}
 .nav a{max-width:110px}
+.ron .ojos-feliz,.ron .rubor,.ron .boca-ab,.ron .brazo2,.ron .caja-tras,.ron .caja-frente,.ron .ombligo{display:none}
+.ron .cabeza{transform-origin:120px 150px;transition:transform .3s}
+.ron .pupila{transition:transform .12s}
+.ron.mimo .cabeza{transform:rotate(-7deg)}
+.ron.menton .cabeza{transform:rotate(6deg) translateY(-3px)}
+.ron.mimo .ojos-ab,.ron.menton .ojos-ab,.ron.barriga .ojos-ab,.ron.come .ojos-ab,.ron.bebe .ojos-ab{display:none}
+.ron.mimo .ojos-feliz,.ron.mimo .rubor,.ron.menton .ojos-feliz,.ron.menton .rubor,.ron.barriga .ojos-feliz,.ron.barriga .rubor,.ron.come .ojos-feliz,.ron.come .rubor{display:block}
+.ron.barriga svg{animation:menea .5s ease-in-out infinite;transform-origin:50% 95%}
+.ron.barriga .brazo,.ron.barriga .brazo2,.ron.barriga .ombligo,.ron.barriga .boca-ab{display:block}
+.ron.barriga .boca,.ron.barriga .pata-izq,.ron.barriga .pata-der{display:none}
+.ron.barriga .brazo{transform-origin:94px 190px;animation:patita .35s ease-in-out infinite alternate}
+.ron.barriga .brazo2>g{transform-origin:94px 190px;animation:patita .35s ease-in-out infinite alternate-reverse}
+@keyframes menea{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes patita{from{transform:rotate(0)}to{transform:rotate(-16deg)}}
+.ron.cola-toque .cola{animation:colaRapida .25s ease-in-out 6}
+@keyframes colaRapida{0%,100%{transform:rotate(0)}50%{transform:rotate(-24deg)}}
+.ron.come .boca,.ron.bebe .boca{display:none}
+.ron.come .boca-ab{display:block;transform-origin:120px 136px;animation:mastica .3s ease-in-out infinite alternate}
+@keyframes mastica{from{transform:scaleY(1)}to{transform:scaleY(.35)}}
+.ron.bebe .cabeza{transform:translateY(8px) rotate(3deg)}
+.ron.bebe .boca-ab,.ron.bebe .ojos-ce{display:block}
+.ron.en-caja .caja-tras,.ron.en-caja .caja-frente{display:block}
+.ron.en-caja .patas,.ron.en-caja .cola{display:none}
+.ron.en-caja svg{animation:salto .5s ease-in-out 2}
+.ron.zarpazo .brazo{display:block;transform-origin:94px 190px;animation:zarpa .25s ease-in-out 2}
+.ron.zarpazo .pata-izq{display:none}
+@keyframes zarpa{0%,100%{transform:rotate(0)}50%{transform:rotate(28deg)}}
+.ron[data-acc=panuelo] .acc-panuelo{display:block}
+.escena{position:relative;border-radius:24px;background:var(--sup2);padding:12px 12px 4px;overflow:hidden;user-select:none;-webkit-user-select:none}
+.escena .ron{touch-action:none}
+.bandeja{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;margin-bottom:8px}
+.item{min-height:76px;border-radius:18px;background:#fff;border:1.5px solid var(--borde);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.item .e{font-size:32px;line-height:1.1}.item small{font-size:11px;font-weight:800;color:var(--mu);text-align:center;line-height:1.2}
+.item[aria-pressed=true]{border-color:var(--ac);box-shadow:inset 0 0 0 2px var(--ac)}
+.fantasma{position:fixed;z-index:70;font-size:48px;pointer-events:none;transform:translate(-50%,-60%);filter:drop-shadow(0 4px 6px rgba(0,0,0,.2))}
+.rueda{position:absolute;font-size:34px;pointer-events:none;transition:left .9s cubic-bezier(.2,.8,.3,1),top .9s cubic-bezier(.3,1.5,.5,1),transform .9s}
+.laser{position:absolute;width:16px;height:16px;border-radius:8px;background:#F44336;box-shadow:0 0 12px 5px rgba(244,67,54,.55);pointer-events:none;transition:left .5s ease-in-out,top .5s ease-in-out}
+.pelo{position:absolute;pointer-events:none;color:#F0943F;font-weight:900;animation:cae 1s ease-in forwards}
+@keyframes cae{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(60px) rotate(40deg)}}
+.tarea{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 12px;border-radius:14px;background:var(--sup2);border:0;margin-bottom:6px;text-align:left}
+.tarea .box{width:28px;height:28px;border-radius:14px;border:2px solid var(--ac);background:#fff;flex:none;display:grid;place-items:center}
+.tarea[aria-pressed=true] .box{background:var(--ac)}.tarea[aria-pressed=true] .box::after{content:'✓';color:#fff;font-weight:900}
+.tarea small{color:var(--mu);font-weight:700}
+
+.ron.antojo .boca{display:none}.ron.antojo .boca-ab{display:block}.ron.antojo .cabeza{transform:translateY(-4px)}
+.escena{min-height:300px}
+.rueda.toc{pointer-events:auto;cursor:pointer;touch-action:none;padding:6px;z-index:2}
+.rueda.corre{transition:left 1.8s linear;font-size:30px}
+.punto-laser{display:inline-block;width:22px;height:22px;border-radius:11px;background:#F44336;box-shadow:0 0 10px 4px rgba(244,67,54,.45);margin:5px 0}
+.fantasma .laser{position:static;display:block}
+.fantasma svg{width:52px;height:52px}
+.badge.big{font-size:16px;padding:6px 12px;border-radius:14px}
+.logro{background:var(--sup2);border-radius:14px;padding:10px 6px;text-align:center;opacity:.55}.logro.si{opacity:1;box-shadow:inset 0 0 0 1.5px var(--ac2)}
+.logro span{font-size:26px;display:block}.logro b{display:block;font-size:12px;line-height:1.2;margin-top:4px}.logro small{display:block;font-size:10.5px;color:var(--mu);line-height:1.25;margin-top:3px}
+.gato-fila{padding:4px 0 12px;border-bottom:1px solid var(--borde);margin-bottom:6px}.gato-fila:last-child{border-bottom:0}
+.chip.dia{min-width:36px;min-height:36px;padding:0;justify-content:center}
+.barra-prog{height:12px;border-radius:6px;background:var(--sup2);overflow:hidden}.barra-prog i{display:block;height:100%;background:var(--ac);border-radius:6px}
+@media (prefers-reduced-motion:reduce){.rueda,.laser{transition:none!important}}
 
 </style>
 <script defer src="fb.js"></script>
@@ -372,38 +430,49 @@ const LOGROS = [
   { id: 'tecnicas', n: 'Exploradora', d: 'Probaste 3 técnicas de estudio distintas.', ic: '🧭' },
   { id: 'mochila', n: 'Mochila al día', d: 'Dejaste la mochila lista 5 veces.', ic: '🎒' },
   { id: 'cuidadora', n: 'Mejor amiga de Ron', d: 'Cuidaste a Ron en 5 pausas.', ic: '🧡' },
-  { id: 'veinte', n: '20 sesiones', d: 'Veinte sesiones de estudio.', ic: '🏆', acc: 'gorro' }
+  { id: 'veinte', n: '20 sesiones', d: 'Veinte sesiones de estudio.', ic: '🏆', acc: 'gorro' },
+  { id: 'responsable', n: 'Dueña responsable', d: '7 días cuidando a Ron de verdad: comida, agua, arenero y cariño.', ic: '🐾', acc: 'panuelo' }
 ];
-const ACCESORIOS = { collar: 'Collar rosado', mono: 'Moño', corona: 'Corona de flores', lentes: 'Lentes de estudio', gorro: 'Gorrito de fiesta' };
+const ACCESORIOS = { collar: 'Collar rosado', mono: 'Moño', corona: 'Corona de flores', lentes: 'Lentes de estudio', gorro: 'Gorrito de fiesta', panuelo: 'Pañuelo celeste' };
 
 /* ===== Ron, la mascota ===== */
 const NAR = '#F0943F', RAY = '#C46A24', OSC = '#3A2A1E', ROSA = '#F4A3B4';
+const BRAZO = `<path d="M88 194 C74 182 62 164 58 150 C56 140 68 136 74 144 C80 160 92 176 104 186 Z" fill="${NAR}"/><path d="M68 166 l9 -5 M76 178 l9 -5" stroke="${RAY}" stroke-width="3"/><circle cx="64" cy="142" r="12" fill="#fff"/><circle cx="59" cy="137" r="2.8" fill="${ROSA}" stroke="none"/><circle cx="65" cy="135" r="2.8" fill="${ROSA}" stroke="none"/><circle cx="71" cy="139" r="2.8" fill="${ROSA}" stroke="none"/><ellipse cx="65" cy="146" rx="5" ry="3.6" fill="${ROSA}" stroke="none"/>`;
 const RON_SVG = `<svg viewBox="0 0 240 262" role="img" aria-label="Ron, el gato naranja" stroke="${OSC}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
 <ellipse cx="120" cy="246" rx="98" ry="15" fill="var(--ac2)" stroke="none"/>
+<g class="caja-tras"><polygon points="44,196 70,178 196,178 222,196" fill="#8A5E34"/></g>
 <g class="cola"><path d="M150 236 C192 240 216 216 212 186 C210 174 224 172 226 186 C230 222 202 252 152 250 Z" fill="${NAR}"/><path d="M206 196 l13 -2 M210 216 l12 3 M196 236 l8 9" stroke="${RAY}" stroke-width="3.5"/></g>
 <g class="cuerpo"><ellipse cx="120" cy="196" rx="58" ry="54" fill="${NAR}"/>
 <path d="M164 172 q-10 9 -4 22 M170 200 q-12 7 -6 22 M76 172 q10 9 4 22 M70 200 q12 7 6 22" stroke="${RAY}" stroke-width="3.5" fill="none"/>
-<path d="M98 150 C88 180 92 224 104 242 L136 242 C148 224 152 180 142 150 Z" fill="#fff" stroke="none"/></g>
-<ellipse class="pata-izq" cx="103" cy="245" rx="15" ry="8" fill="#fff"/>
-<ellipse cx="137" cy="245" rx="15" ry="8" fill="#fff"/>
-<g class="brazo"><path d="M88 194 C74 182 62 164 58 150 C56 140 68 136 74 144 C80 160 92 176 104 186 Z" fill="${NAR}"/><path d="M68 166 l9 -5 M76 178 l9 -5" stroke="${RAY}" stroke-width="3"/><circle cx="64" cy="142" r="12" fill="#fff"/><circle cx="59" cy="137" r="2.8" fill="${ROSA}" stroke="none"/><circle cx="65" cy="135" r="2.8" fill="${ROSA}" stroke="none"/><circle cx="71" cy="139" r="2.8" fill="${ROSA}" stroke="none"/><ellipse cx="65" cy="146" rx="5" ry="3.6" fill="${ROSA}" stroke="none"/></g>
+<path d="M98 150 C88 180 92 224 104 242 L136 242 C148 224 152 180 142 150 Z" fill="#fff" stroke="none"/>
+<path class="ombligo" d="M112 214 q8 6 16 0" fill="none" stroke="${ROSA}" stroke-width="3"/></g>
+<g class="patas"><ellipse class="pata-izq" cx="103" cy="245" rx="15" ry="8" fill="#fff"/><ellipse class="pata-der" cx="137" cy="245" rx="15" ry="8" fill="#fff"/></g>
+<g class="brazo">${BRAZO}</g>
+<g class="brazo2" transform="translate(240 0) scale(-1 1)"><g>${BRAZO}</g></g>
+<g class="acc acc-collar"><path d="M80 152 q40 20 80 0" fill="none" stroke="#E91E63" stroke-width="7"/><circle cx="120" cy="163" r="6" fill="#FFD54F"/></g>
+<g class="acc acc-panuelo"><path d="M82 150 q38 18 76 0 L120 190 Z" fill="#81D4FA"/><circle cx="108" cy="162" r="2.5" fill="#fff" stroke="none"/><circle cx="130" cy="160" r="2.5" fill="#fff" stroke="none"/><circle cx="120" cy="174" r="2.5" fill="#fff" stroke="none"/></g>
+<g class="cabeza">
 <polygon points="66,92 70,32 106,66" fill="${NAR}"/><polygon points="74,82 74,46 96,67" fill="#F7B5C2" stroke="none"/>
 <polygon points="134,66 170,32 174,92" fill="${NAR}"/><polygon points="144,67 166,46 166,82" fill="#F7B5C2" stroke="none"/>
 <ellipse cx="120" cy="110" rx="60" ry="51" fill="${NAR}"/>
 <path d="M92 70 q6 10 4 20 M104 64 q4 10 2 18 M136 64 q-4 10 -2 18 M148 70 q-6 10 -4 20 M64 112 q10 2 16 8 M66 124 q8 0 13 4 M176 112 q-10 2 -16 8 M174 124 q-8 0 -13 4" stroke="${RAY}" stroke-width="3.2" fill="none"/>
 <path d="M116 62 Q120 60 124 62 L133 122 L107 122 Z" fill="#fff" stroke="none"/>
 <ellipse cx="120" cy="134" rx="28" ry="19" fill="#fff" stroke="none"/>
+<g class="rubor" stroke="none" fill="#F48FB1" opacity=".75"><ellipse cx="80" cy="128" rx="10" ry="6"/><ellipse cx="160" cy="128" rx="10" ry="6"/></g>
 <g class="ojos-ab"><ellipse cx="97" cy="104" rx="11.5" ry="12.5" fill="#E3A126"/><ellipse cx="143" cy="104" rx="11.5" ry="12.5" fill="#E3A126"/>
 <g class="pupila"><ellipse cx="97" cy="105" rx="4.6" ry="8.5" fill="#221A14" stroke="none"/><ellipse cx="143" cy="105" rx="4.6" ry="8.5" fill="#221A14" stroke="none"/><circle cx="100.5" cy="99.5" r="2.8" fill="#fff" stroke="none"/><circle cx="146.5" cy="99.5" r="2.8" fill="#fff" stroke="none"/></g></g>
 <g class="ojos-ce" fill="none" stroke-width="3"><path d="M86 106 q11 9 22 0"/><path d="M132 106 q11 9 22 0"/></g>
+<g class="ojos-feliz" fill="none" stroke-width="3.2"><path d="M86 108 q11 -11 22 0"/><path d="M132 108 q11 -11 22 0"/></g>
 <path d="M113 121 L127 121 L120 129 Z" fill="#F2A0AE" stroke="none"/>
-<path d="M120 129 v4 q-6 7 -11 2 M120 133 q6 7 11 2" fill="none" stroke-width="2"/>
+<path class="boca" d="M120 129 v4 q-6 7 -11 2 M120 133 q6 7 11 2" fill="none" stroke-width="2"/>
+<g class="boca-ab"><path d="M109 134 q11 16 22 0 Z" fill="#C2185B" stroke-width="2"/><path d="M114 139 q6 5 12 0" fill="#F48FB1" stroke="none"/></g>
 <path d="M94 132 L56 125 M94 139 L54 144 M146 132 L184 125 M146 139 L186 144" stroke-width="1.2" fill="none"/>
-<g class="acc acc-collar"><path d="M80 152 q40 20 80 0" fill="none" stroke="#E91E63" stroke-width="7"/><circle cx="120" cy="163" r="6" fill="#FFD54F"/></g>
 <g class="acc acc-mono"><polygon points="150,52 166,62 150,72" fill="#F06292"/><polygon points="182,52 166,62 182,72" fill="#F06292"/><circle cx="166" cy="62" r="4.5" fill="#EC407A"/></g>
 <g class="acc acc-corona" stroke-width="1.5"><circle cx="86" cy="72" r="7" fill="#F8BBD0"/><circle cx="102" cy="63" r="7" fill="#FFF"/><circle cx="120" cy="60" r="7" fill="#F8BBD0"/><circle cx="138" cy="63" r="7" fill="#FFF"/><circle cx="154" cy="72" r="7" fill="#F8BBD0"/><g fill="#FFD54F" stroke="none"><circle cx="86" cy="72" r="2.6"/><circle cx="102" cy="63" r="2.6"/><circle cx="120" cy="60" r="2.6"/><circle cx="138" cy="63" r="2.6"/><circle cx="154" cy="72" r="2.6"/></g></g>
 <g class="acc acc-lentes" fill="rgba(255,255,255,.18)" stroke="#8E24AA" stroke-width="3"><circle cx="97" cy="104" r="16"/><circle cx="143" cy="104" r="16"/><path d="M113 103 q7 -5 14 0" fill="none"/></g>
 <g class="acc acc-gorro"><polygon points="104,66 120,10 136,66" fill="#BA68C8"/><path d="M110 46 l14 -6 M107 58 l22 -8" stroke="#FFF" stroke-width="3"/><circle cx="120" cy="10" r="7" fill="#FFD54F"/></g>
+</g>
+<g class="caja-frente"><polygon points="44,196 196,196 196,256 44,256" fill="#D9A66B"/><polygon points="196,196 222,184 222,244 196,256" fill="#BF8B52"/><path d="M80 226 m-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 M150 232 m-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0" fill="#8A5E34" stroke="none"/></g>
 <g class="zzz" stroke="none" fill="#C2185B" font-weight="900" font-family="Nunito,sans-serif"><text x="168" y="54" font-size="20">z</text><text x="184" y="36" font-size="15">z</text><text x="196" y="22" font-size="11">z</text></g>
 </svg>`;
 
@@ -418,7 +487,15 @@ const RON = {
   pausa: ['Zzz… descansa un ratito, yo te espero.', 'Estírate, mira por la ventana y vuelve.'],
   noche: ['Ya es hora de descansar, {n}. Mañana seguimos 🌙', 'Bostezo… ¿a dormir? Dormir bien también es estudiar.'],
   mochilaLista: ['¡Mochila lista! Mañana partimos con todo 🎒'],
-  vacio: ['Todo tranquilo por ahora. ¿Agregamos algo?', 'Sin pendientes a la vista. ¡Disfruta tu día!']
+  vacio: ['Todo tranquilo por ahora. ¿Agregamos algo?', 'Sin pendientes a la vista. ¡Disfruta tu día!'],
+  zona: {
+    cabeza: ['Prrr… justo ahí, detrás de las orejas 🧡', 'Mmm… cariño en la cabecita', 'Prrrr… me derrito'],
+    menton: ['El mentón es mi lugar favorito… prrr', 'Mmm… sigue, sigue', 'Prrr… qué rico'],
+    barriga: ['¡Jiji! Mi pancita… ¡cosquillas! 😹', 'Prrr… pancita feliz', '¡Miau! Me encanta mi pancita… un ratito nomás'],
+    atrapa: ['¡Te atrapé la mano! 🐾 (es de juego)', '¡Ja! Mis patitas son más rápidas 😼'],
+    cola: ['¡Ey! Mi cola es delicada 😼', 'Mi cola no, por favor… ¡mejor la cabeza!'],
+    lomo: ['Prrrr… qué rico cariño', 'Prrr… sigue por el lomito']
+  }
 };
 const elige = (arr, n) => (arr[Math.floor(Math.random() * arr.length)] || '').replace(/\{n\}/g, n || '');
 
@@ -426,15 +503,34 @@ function ronHTML(tam, frase, id) {
   const acc = (typeof ronCfg === 'function' && ronCfg().accesorio) || '';
   return `<div class="ron-zona ${tam || ''}" ${id ? `id="${id}"` : ''}><div class="ron saluda" data-acc="${acc}" data-ron role="button" tabindex="0" aria-label="Hacerle cariño a Ron">${RON_SVG}</div><p class="globo" aria-live="polite">${esc(frase || '')}</p></div>`;
 }
-function ronEstado(zona, estado, frase) {
+const ESTADOS = ['saluda', 'celebra', 'duerme', 'piensa', 'mimo', 'menton', 'barriga', 'cola-toque', 'come', 'bebe', 'en-caja', 'zarpazo'];
+function ronEstado(zona, estado, frase, dur) {
   const z = typeof zona === 'string' ? document.getElementById(zona) : zona; if (!z) return;
-  const r = z.querySelector('.ron'); if (r) { r.classList.remove('saluda', 'celebra', 'duerme', 'piensa'); void r.offsetWidth; if (estado) r.classList.add(estado); if (estado === 'saluda' || estado === 'celebra') ronFin(r); }
+  const r = z.querySelector('.ron');
+  if (r) {
+    r.classList.remove(...ESTADOS); void r.offsetWidth; if (estado) r.classList.add(estado);
+    if (estado && estado !== 'duerme' && estado !== 'piensa') ronFin(r, dur);
+  }
   if (frase != null) { const g = z.querySelector('.globo'); if (g) g.textContent = frase; }
 }
-function ronCorazon(r) {
-  const c = document.createElement('span'); c.className = 'corazon'; c.textContent = '🧡'; r.appendChild(c); setTimeout(() => c.remove(), 1300);
+function ronFin(r, dur) { clearTimeout(r._t); r._t = setTimeout(() => r.classList.remove(...ESTADOS.filter(e => e !== 'duerme' && e !== 'piensa')), dur || 2800); }
+function ronCorazon(r, txt) {
+  const c = document.createElement('span'); c.className = 'corazon'; c.textContent = txt || '🧡'; c.style.left = (35 + Math.random() * 30) + '%'; r.appendChild(c); setTimeout(() => c.remove(), 1300);
 }
-function ronFin(r) { clearTimeout(r._t); r._t = setTimeout(() => r.classList.remove('saluda', 'celebra'), 2800); }
+function ronMirar(r, x, y) {
+  const p = r && r.querySelector('.pupila'); if (!p) return;
+  const b = r.getBoundingClientRect(); if (!b.width) return;
+  const ox = b.left + b.width * .5, oy = b.top + b.height * .4, dx = x - ox, dy = y - oy, d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 120);
+  p.style.transform = `translate(${(dx / d * 4 * k).toFixed(1)}px, ${(dy / d * 4 * k).toFixed(1)}px)`;
+}
+function ronZona(r, x, y) {
+  const b = r.getBoundingClientRect(), vx = (x - b.left) / b.width * 240, vy = (y - b.top) / b.height * 262;
+  if (vx > 165 && vy > 165) return 'cola';
+  if (vy < 125 && Math.hypot(vx - 120, vy - 100) < 75) return 'cabeza';
+  if (vy >= 125 && vy < 158 && Math.abs(vx - 120) < 42) return 'menton';
+  if (vy >= 158 && Math.abs(vx - 120) < 52) return 'barriga';
+  return 'lomo';
+}
 
 /* ===== Estado compartido de Ron ===== */
 const ronCfg = () => cfg('ron');
@@ -454,7 +550,7 @@ function logrosCumplidos() {
   Object.entries((cfg('desafio').marcas) || {}).forEach(([k, v]) => { if (v.probe) tec.add(k); });
   const ok = { primera: n >= 1, cinco: n >= 5, diez: n >= 10, veinte: n >= 20, racha3: rachaMax() >= 3,
     trabajo: D.eventos.some(e => (e.pasos || []).length && e.pasos.every(p => p.hecho)), reflexion: D.reflex.length > 0,
-    tecnicas: tec.size >= 3, mochila: (rc.mochilas || 0) >= 5, cuidadora: (rc.cuidados || 0) >= 5 };
+    tecnicas: tec.size >= 3, mochila: (rc.mochilas || 0) >= 5, cuidadora: (rc.cuidados || 0) >= 5, responsable: diasGatoCompletos() >= 7 };
   return LOGROS.filter(l => ok[l.id]).map(l => l.id);
 }
 let revisandoLogros = false;
@@ -464,6 +560,7 @@ async function revisarLogros() {
   if (!nuevos.length) return;
   revisandoLogros = true;
   await guardarRon({ logros: [...tiene, ...nuevos] });
+  if (S.vista === 'ron') render(true);
   const l = LOGROS.find(x => x.id === nuevos[0]);
   setTimeout(() => {
     abrirHoja(`<div style="text-align:center">${ronHTML('grande', '¡Nuevo logro! ' + l.ic, 'ron-logro')}<h2 class="mt">${l.n}</h2><p class="mt">${esc(l.d)}</p>
@@ -474,66 +571,7 @@ async function revisarLogros() {
 }
 const accDisponibles = () => LOGROS.filter(l => l.acc && (ronCfg().logros || []).includes(l.id)).map(l => l.acc);
 
-/* ===== Pestaña de Ron ===== */
-function enPausa() { return S.cuidado && Date.now() < S.cuidado.hasta; }
-function vRon() {
-  const est = AJ.rol === 'estudiante', pausa = enPausa(), disp = frutillasDisp(), rc = ronCfg();
-  const logros = new Set(rc.logros || []);
-  let h = `<div class="top"><h1>Ron</h1><span class="badge">🍓 ${disp} para darle</span></div>`;
-  h += ronHTML('grande', pausa ? '¡Es nuestra pausa! ¿Me cuidas un ratito? 🧡' : est ? 'Puedes hacerme cariño cuando quieras. Los juegos se abren en tus pausas de estudio.' : `Soy Ron, el compañero de estudio de ${estudiante()} 🐾`, 'ron-casa');
-  if (pausa) {
-    h += `<p class="sub" style="text-align:center">Pausa: <b id="p-rest">${mmss((S.cuidado.hasta - Date.now()) / 1000)}</b></p>
-    <div class="grid3 mt">${[['comer', '🍓', 'Darle frutilla'], ['agua', '💧', 'Darle agua'], ['cepillar', '🪮', 'Cepillarlo'], ['jugar', '🧶', 'Jugar'], ['caja', '📦', 'Su cajita'], ['cariño', '🧡', 'Cariño']].map(([k, e, t]) => `<button class="chip" style="flex-direction:column;justify-content:center;min-height:84px;white-space:normal;text-align:center" data-a="cuidar" data-v="${k}"><span style="font-size:28px">${e}</span>${t}</button>`).join('')}</div>
-    <div id="juego" class="mt"></div>
-    ${S.est && S.est.fase === 'corre' ? `<a class="btn pr big mt2" href="#estudiar">Volver a estudiar</a>` : `<button class="btn w mt2" data-a="fin-pausa">Terminar pausa</button>`}`;
-  } else if (est) {
-    h += `<p class="sub mt" style="text-align:center">Desliza el dedo sobre Ron para acariciarlo.</p><button class="btn w mt" data-a="pausa-ron">Tomar una pausa con Ron (5 min)</button>`;
-  }
-  const acc = accDisponibles();
-  h += `<div class="card mt2"><p class="eti">Accesorios de Ron</p>${acc.length ? `<div class="chips mt"><button class="chip" data-a="acc" data-v="" aria-pressed="${!rc.accesorio}">Ninguno</button>${acc.map(a => `<button class="chip" data-a="acc" data-v="${a}" aria-pressed="${rc.accesorio === a}" ${est ? '' : 'disabled'}>${ACCESORIOS[a]}</button>`).join('')}</div>` : `<p class="sub mt">Se desbloquean con los logros. ¡El primero llega con tu primera sesión de estudio!</p>`}</div>
-  <div class="card"><div class="fila entre"><p class="eti">Logros</p><span class="sub">${logros.size}/${LOGROS.length}</span></div><div class="grid2 mt">${LOGROS.map(l => `<div class="card ${logros.has(l.id) ? 'rosa' : ''}" style="margin:0;padding:12px;${logros.has(l.id) ? '' : 'opacity:.45;filter:grayscale(1)'}"><div style="font-size:26px">${l.ic}</div><b>${l.n}</b><p class="sub">${esc(l.d)}</p></div>`).join('')}</div></div>
-  <a class="btn w" href="#semana">Ver mi semana</a>`;
-  return h;
-}
 const mmss = s => { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + pad(s % 60); };
-setInterval(() => {
-  if (!S.cuidado) return; const p = $('#p-rest'), r = (S.cuidado.hasta - Date.now()) / 1000;
-  if (p) p.textContent = mmss(r);
-  if (r <= 0) { S.cuidado = null; if (S.vista === 'ron') { campana([660, 880]); render(true); setTimeout(() => ronEstado('ron-casa', 'saluda', '¡Gracias por cuidarme! ¿Seguimos? 🐾'), 0); } }
-}, 1000);
-function iniciarPausaRon() {
-  S.cuidado = { hasta: Date.now() + 5 * 60000 };
-  guardarRon({ cuidados: (ronCfg().cuidados || 0) + 1 });
-  location.hash = '#ron';
-}
-function cuidar(tipo) {
-  const z = 'ron-casa', j = $('#juego'), r = $('#ron-casa .ron');
-  if (tipo === 'comer') {
-    if (!frutillasDisp()) return ronEstado(z, 'piensa', 'No quedan frutillas… ¡ganas más estudiando! 🍓');
-    guardarRon({ gastadas: (ronCfg().gastadas || 0) + 1 }); ronCorazon(r); campana([523, 659]);
-    return ronEstado(z, 'celebra', elige(['¡Ñam ñam! Mi favorita 🍓', '¡Qué rica! Gracias 🧡', 'Mmm… ¡frutilla de la buena!']));
-  }
-  if (tipo === 'agua') { j.innerHTML = '<p style="text-align:center;font-size:44px" aria-hidden="true">🥣💧</p>'; return ronEstado(z, 'saluda', 'Glu glu glu… ¡ah, qué rica el agua! Tú también toma un poco 💧'); }
-  if (tipo === 'cepillar') { j.innerHTML = '<p class="sub" style="text-align:center">Pasa el dedo sobre Ron para cepillarlo.</p>'; S.modoToque = 'cepillar'; return ronEstado(z, null, '¡Sí! Me encanta que me cepilles 🪮'); }
-  if (tipo === 'cariño') { S.modoToque = 'cariño'; j.innerHTML = '<p class="sub" style="text-align:center">Desliza el dedo sobre Ron.</p>'; return ronEstado(z, null, 'Prrr… aquí, detrás de la oreja 🧡'); }
-  if (tipo === 'caja') { j.innerHTML = '<p style="text-align:center;font-size:56px" aria-hidden="true">📦</p>'; return ronEstado(z, 'celebra', '¡UNA CAJA! Es lo mejor del mundo 📦✨'); }
-  if (tipo === 'jugar') {
-    S.lana = 0;
-    j.innerHTML = `<div style="position:relative;height:120px;background:var(--sup2);border-radius:18px;overflow:hidden" id="lana-zona"><button id="lana" data-a="lana" aria-label="Lanita" style="position:absolute;left:40%;top:30%;font-size:40px;background:none;border:0">🧶</button></div><p class="sub mt" style="text-align:center">Toca la lanita para que Ron la persiga.</p>`;
-    return ronEstado(z, null, '¡Lanzámela! 🧶');
-  }
-}
-let caricia = 0;
-document.addEventListener('pointermove', e => {
-  const r = e.target.closest && e.target.closest('#ron-casa .ron'); if (!r || !e.buttons && e.pointerType === 'mouse') return;
-  caricia += Math.abs(e.movementX || 0) + Math.abs(e.movementY || 0) || 6;
-  if (caricia > 140) {
-    caricia = 0; ronCorazon(r);
-    if (S.modoToque === 'cepillar') { const p = document.createElement('span'); p.className = 'corazon'; p.textContent = '〰'; p.style.color = '#F0943F'; r.appendChild(p); setTimeout(() => p.remove(), 1300); ronEstado('ron-casa', null, elige(['¡Qué suavecito quedo!', 'Prrr… sigue, sigue', 'Ahora estoy más bonito ✨'])); }
-    else ronEstado('ron-casa', null, elige(['Prrrrrr… 🧡', 'Prrr… eres la mejor', 'Mmm… cariñito']));
-  }
-}, { passive: true });
-
 /* ===== Mi semana ===== */
 const semanaKey = (s = hoyYmd()) => { const d = deYmd(s), l = new Date(d); l.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return ymd(l); };
 function vSemana() {
@@ -610,6 +648,323 @@ function planSesiones(e) {
   return fechas.map((f, i) => ({ fecha: f, min: i === fechas.length - 1 ? 15 : 25, tec: i === fechas.length - 1 ? 'prueba' : tecs[i % tecs.length] }));
 }
 
+/* ===== La casa de Ron: cariño por zonas, arrastrar comida y juguetes ===== */
+const CEPILLO = `<svg viewBox="0 0 48 48" width="38" height="38" aria-hidden="true"><rect x="22" y="30" width="20" height="8" rx="4" transform="rotate(-35 32 34)" fill="#C2185B" stroke="#3A2A1E" stroke-width="2"/><rect x="5" y="9" width="26" height="15" rx="6" transform="rotate(-35 18 16)" fill="#F8BBD0" stroke="#3A2A1E" stroke-width="2"/><path d="M8 22l-4 5M12 25l-4 5M16 28l-4 5M20 30l-3 5" stroke="#3A2A1E" stroke-width="2" stroke-linecap="round"/></svg>`;
+const PUNTO = `<span class="punto-laser" aria-hidden="true"></span>`;
+const ITEMS = {
+  comida: [{ id: 'frutilla', e: '🍓', n: 'Frutilla' }, { id: 'pescado', e: '🐟', n: 'Pescado' }, { id: 'pollo', e: '🍗', n: 'Pollito' }, { id: 'atun', e: '🥫', n: 'Atún' }, { id: 'galleta', e: '🍪', n: 'Galletita' }, { id: 'agua', e: '💧', n: 'Agua' }],
+  juego: [{ id: 'lana', e: '🧶', n: 'Lana' }, { id: 'raton', e: '🐭', n: 'Ratón' }, { id: 'pelota', e: '🎾', n: 'Pelota' }, { id: 'cana', e: '🎣', n: 'Caña' }, { id: 'caja', e: '📦', n: 'Caja' }, { id: 'laser', e: PUNTO, n: 'Láser' }],
+  cuidado: [{ id: 'cepillo', e: CEPILLO, n: 'Cepillo' }, { id: 'agua', e: '💧', n: 'Agua' }]
+};
+const COMER = {
+  frutilla: ['¡Ñam! Frutilla dulce 🍓', 'Mmm… ¡qué jugosa! 🍓'], pescado: ['¡Pescadito! Mi favorito 🐟', 'Ñam ñam… huele a mar 🐟'],
+  pollo: ['Mmm… pollito, ¡qué rico! 🍗', '¡Pollito! Eres la mejor 🍗'], atun: ['¡ATÚN! Lo olí desde lejos 🥫', 'Atún… mi debilidad 🥫'],
+  galleta: ['Crunch, crunch… ¡galletita! 🍪', '¡Una galletita! Prrr 🍪']
+};
+const MAX_PANZA = 6;
+const itemPor = (cat, id) => (ITEMS[cat] || []).find(i => i.id === id) || ITEMS.comida.find(i => i.id === id);
+const panza = () => { try { const p = JSON.parse(localStorage.getItem('ronrutina.panza') || '{}'); return p.f === hoyYmd() ? p.n : 0; } catch (e) { return 0; } };
+const sumaPanza = () => { try { localStorage.setItem('ronrutina.panza', JSON.stringify({ f: hoyYmd(), n: panza() + 1 })); } catch (e) { } };
+const ratitoUsado = () => { try { return localStorage.getItem('ronrutina.ratito') === hoyYmd(); } catch (e) { return false; } };
+const enPausa = () => !!(S.cuidado && S.cuidado.hasta > Date.now());
+const juegoAbierto = () => AJ.rol !== 'estudiante' || enPausa();
+const ronCasa = () => $('#ron-casa .ron');
+function decir(txt) { const g = $('#ron-casa .globo'); if (g) g.textContent = txt; }
+function ronPoner(r, est, dur) {
+  if (!r) return;
+  if (!r.classList.contains(est)) { r.classList.remove(...ESTADOS); r.classList.add(est); }
+  ronFin(r, dur);
+}
+function iniciarPausaRon(min) { S.cuidado = { hasta: Date.now() + (min || 5) * 60000 }; S.bandeja = 'juego'; location.hash === '#ron' ? render(true) : (location.hash = '#ron'); }
+
+function vRon() {
+  const est = AJ.rol === 'estudiante', pausa = enPausa(), cat = S.bandeja || 'comida', rc = ronCfg(), accs = accDisponibles(), tiene = new Set(rc.logros || []);
+  const frase = pausa ? '¡Pausa! Juguemos un ratito 🧶' : est ? elige(['Acaríciame la cabecita o el mentón… prrr', '¿Me traes algo rico? Arrástralo hasta mí 🍓', '¡Hola, ' + AJ.nombre + '! ¿Me haces cariño en la pancita?']) : `¡Hola, ${AJ.nombre}! Hazme cariño 🧡`;
+  let h = `<div class="top"><div><p class="sub">${est ? 'Tu gato' : 'El gato de ' + esc(estudiante())}</p><h1>Ron</h1></div>${est ? `<span class="badge big">🍓 <b id="fr-n">${frutillasDisp()}</b></span>` : ''}</div>`;
+  if (pausa) h += `<div class="card rosa fila entre"><div><p class="eti">Pausa con Ron</p><p><b id="pausa-t">${mmss((S.cuidado.hasta - Date.now()) / 1000)}</b> <span class="sub">para jugar</span></p></div>
+    ${S.est && S.est.pausaDesde ? `<a class="btn pr sm" href="#estudiar" data-a="fin-pausa">Seguir estudiando</a>` : `<button class="btn sm" data-a="fin-pausa">Terminar</button>`}</div>`;
+  h += `<div class="escena" id="escena">${ronHTML('grande', frase, 'ron-casa')}</div>
+  <p class="sub" style="text-align:center;margin:8px 0 12px">Hazle cariño en la cabeza, el mentón o la pancita. Arrastra comida o juguetes hasta Ron.</p>
+  <div class="chips mb" role="tablist">${[['comida', '🍽️ Comida'], ['juego', '🧶 Juguetes'], ['cuidado', '✨ Cuidados']].map(([k, n]) => `<button class="chip" role="tab" data-a="bandeja" data-v="${k}" aria-selected="${cat === k}" aria-pressed="${cat === k}">${n}</button>`).join('')}</div>`;
+  if (cat === 'juego' && !juegoAbierto()) {
+    h += `<div class="card rosa" style="text-align:center"><p class="b">Los juguetes se abren en tus pausas de estudio 🧶</p><p class="sub mt">Termina una sesión de 20 minutos o más y tendrás 5 minutos para jugar con Ron.</p>
+      ${ratitoUsado() ? `<p class="sub mt">Ya usaste tu ratito de juego de hoy.</p>` : `<button class="btn pr w mt" data-a="ratito">Jugar 3 minutos ahora (1 vez al día)</button>`}</div>`;
+  } else {
+    h += `<div class="bandeja" id="bandeja">${ITEMS[cat].map(i => `<button class="item" data-it="${i.id}" data-cat="${cat}" aria-label="${i.n}"><span class="e">${i.e}</span><small>${i.n}</small></button>`).join('')}</div>`;
+    if (cat === 'comida') h += `<p class="sub" style="text-align:center">${est ? 'Cada comida cuesta 1 🍓 (las ganas estudiando). El agua es gratis.' : 'Ron come máximo ' + MAX_PANZA + ' cositas al día.'}</p>`;
+  }
+  if (typeof gatoCard === 'function') h += gatoCard();
+  h += `<div class="card mt2"><p class="eti mb">Accesorios de Ron</p>${accs.length ? `<div class="chips"><button class="chip" data-a="acc" data-v="" aria-pressed="${!rc.accesorio}">Sin nada</button>${accs.map(a => `<button class="chip" data-a="acc" data-v="${a}" aria-pressed="${rc.accesorio === a}">${ACCESORIOS[a]}</button>`).join('')}</div>` : `<p class="sub">Gana logros para desbloquear accesorios.</p>`}</div>
+  <div class="card"><p class="eti mb">Logros</p><div class="grid3">${LOGROS.map(l => `<div class="logro ${tiene.has(l.id) ? 'si' : ''}"><span>${tiene.has(l.id) ? l.ic : '🔒'}</span><b>${l.n}</b><small>${esc(l.d)}</small></div>`).join('')}</div></div>
+  <a class="mas-item" href="#semana"><span class="ic">💭</span><span>Mi semana<small>¿Qué funcionó? ¿Qué cambio?</small></span></a>`;
+  setTimeout(() => ronEstado('ron-casa', pausa ? 'celebra' : 'saluda'), 0);
+  return h;
+}
+function ronContadores() { const f = $('#fr-n'); if (f) f.textContent = frutillasDisp(); }
+
+/* ----- tiempo de la pausa ----- */
+setInterval(() => {
+  if (!S.cuidado) return;
+  const rest = (S.cuidado.hasta - Date.now()) / 1000, t = $('#pausa-t');
+  if (t) t.textContent = mmss(rest);
+  if (rest <= 0) { S.cuidado = null; if (S.vista === 'ron') { toast('¡Se acabó la pausa! Volvamos 🐾'); render(true); } }
+}, 1000);
+
+/* ----- animaciones de apoyo ----- */
+function seguirCon(el, ms) {
+  const r = ronCasa(), fin = Date.now() + ms;
+  (function paso() { if (!el.isConnected || !r || Date.now() > fin) return; const b = el.getBoundingClientRect(); ronMirar(r, b.left + b.width / 2, b.top + b.height / 2); requestAnimationFrame(paso); })();
+}
+function enEscena(html, x, y, clase) {
+  const esc0 = $('#escena'); if (!esc0) return null;
+  const j = document.createElement('div'); j.className = 'rueda ' + (clase || ''); j.innerHTML = html; j.style.left = x + 'px'; j.style.top = y + 'px'; esc0.appendChild(j); return j;
+}
+const escRect = () => $('#escena').getBoundingClientRect();
+function lugarAzar() { const b = escRect(); return [20 + Math.random() * (b.width - 70), 30 + Math.random() * (b.height * .55)]; }
+function pelitos(x, y) {
+  const esc0 = $('#escena'), b = escRect();
+  for (let i = 0; i < 2; i++) { const p = document.createElement('span'); p.className = 'pelo'; p.textContent = '~'; p.style.left = (x - b.left + (Math.random() * 30 - 15)) + 'px'; p.style.top = (y - b.top) + 'px'; esc0.appendChild(p); setTimeout(() => p.remove(), 1000); }
+}
+const vibra = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { } };
+
+/* ----- usar cada cosa ----- */
+async function comer(id) {
+  const r = ronCasa();
+  if (id === 'agua') { ronPoner(r, 'bebe', 2600); decir(elige(['Glu, glu, glu… ¡gracias! 💧', 'Agüita fresca, qué rico 💧'])); campana([440, 523]); return; }
+  if (panza() >= MAX_PANZA) { ronPoner(r, 'mimo', 1800); return decir('¡Estoy llenito! 😺 Mejor hazme cariño o juguemos.'); }
+  if (AJ.rol === 'estudiante') {
+    if (frutillasDisp() < 1) { ronPoner(r, 'piensa', 1800); setTimeout(() => r && r.classList.remove('piensa'), 1800); return decir('Las 🍓 se ganan estudiando. ¡Una sesión y me das algo rico!'); }
+    guardarRon({ gastadas: (ronCfg().gastadas || 0) + 1 });
+  }
+  sumaPanza(); ronPoner(r, 'come', 2600); decir(elige(COMER[id] || COMER.frutilla)); campana([523, 659]); vibra(20);
+  setTimeout(() => { if (r) ronCorazon(r); ronContadores(); }, 1400);
+}
+function lanzar(tipo, x, y, auto) {
+  const r = ronCasa(), b = escRect(); if (!r) return;
+  $$('#escena .rueda[data-j=' + tipo + ']').forEach(e => e.remove());
+  const rb = r.getBoundingClientRect();
+  const x0 = x != null ? x - b.left - 18 : rb.right - b.left - 10, y0 = y != null ? y - b.top - 18 : rb.bottom - b.top - 50;
+  if (tipo === 'raton') {
+    const izq = Math.random() < .5, yy = rb.bottom - b.top - 40, j = enEscena('🐭', izq ? -40 : b.width + 10, yy, 'corre'); j.dataset.j = tipo;
+    j.style.transform = izq ? 'scaleX(-1)' : '';
+    requestAnimationFrame(() => requestAnimationFrame(() => { j.style.left = (izq ? b.width + 10 : -40) + 'px'; }));
+    seguirCon(j, 1800); decir('¡Un ratón! 👀');
+    setTimeout(() => { ronPoner(r, 'zarpazo', 700); campana([880]); }, 800);
+    setTimeout(() => { j.remove(); decir(elige(['¡Casi lo atrapo! Otra vez 🐭', '¡Se escapó! La próxima es mía 😼'])); }, 1800);
+    return;
+  }
+  if (tipo === 'caja') { ronPoner(r, 'en-caja', 4500); decir(elige(['Si cabe, me quedo 📦', 'Mi caja, mi castillo 📦'])); campana([392, 523]); return; }
+  if (tipo === 'laser') {
+    const j = enEscena('', b.width / 2, b.height * .6, 'laser'); j.dataset.j = tipo; let n = 0; decir('¡¿Qué es ese puntito rojo?! 👀');
+    const t = setInterval(() => {
+      if (!j.isConnected || ++n > 12) { clearInterval(t); j.remove(); decir(elige(['¡Casi lo atrapo! ¿Dónde se fue? 🔴', 'Estoy seguro de que era un bicho mágico 🔴'])); ronPoner(r, 'celebra', 1200); return; }
+      const [lx, ly] = lugarAzar(); j.style.left = lx + 'px'; j.style.top = ly + 'px';
+      if (n % 3 === 0) { ronPoner(r, 'zarpazo', 600); vibra(15); }
+    }, 520);
+    seguirCon(j, 7000); return;
+  }
+  if (tipo === 'cana') { decir('Arrastra la caña cerca de mi cabeza 🎣'); return; }
+  // lana o pelota: aparecen donde cayeron y Ron les pega
+  const j = enEscena(tipo === 'lana' ? '🧶' : '🎾', x0, y0, 'toc'); j.dataset.j = tipo; S.golpes = 0;
+  setTimeout(() => golpear(j, tipo), auto ? 150 : 350);
+}
+function golpear(j, tipo) {
+  const r = ronCasa(); if (!r || !j.isConnected) return;
+  ronPoner(r, tipo === 'pelota' ? 'celebra' : 'zarpazo', 800); campana([660]); vibra(15);
+  const [x, y] = lugarAzar(); j.style.left = x + 'px'; j.style.top = y + 'px'; j.style.transform = `rotate(${(Math.random() * 720 - 360) | 0}deg)`;
+  seguirCon(j, 1000); S.golpes = (S.golpes || 0) + 1;
+  decir(S.golpes % 3 === 0 ? elige(['¡La atrapé! 😼', '¡Soy el mejor cazador!', '¡Otra vez, otra vez!']) : tipo === 'lana' ? elige(['¡Pum! 🧶', 'Toca la lana otra vez', '¡Mía!']) : elige(['¡Boing! 🎾', '¡Tírala otra vez!', '¡Salto!']));
+}
+
+/* ----- gestos con el dedo ----- */
+let ARR = null, CAR = null;
+const ESTADO_ZONA = { cabeza: 'mimo', menton: 'menton', barriga: 'barriga', cola: 'cola-toque', lomo: 'mimo' };
+function zonaReaccion(r, zona, conFrase) {
+  ronPoner(r, ESTADO_ZONA[zona], zona === 'cola' ? 1600 : 1300);
+  if (conFrase) decir(elige(RON.zona[zona]));
+}
+function cercaDeRon(x, y, margen) { const r = ronCasa(); if (!r) return false; const b = r.getBoundingClientRect(), m = margen || 0; return x > b.left - m && x < b.right + m && y > b.top - m && y < b.bottom + m; }
+function distCabeza(x, y) { const r = ronCasa(), b = r.getBoundingClientRect(); return Math.hypot(x - (b.left + b.width / 2), y - (b.top + b.height * .4)); }
+function fantasma(html) { const g = document.createElement('div'); g.className = 'fantasma'; g.innerHTML = html; document.body.appendChild(g); return g; }
+function moverFantasma(g, x, y) { g.style.left = x + 'px'; g.style.top = y + 'px'; }
+function tragar(g) {
+  const r = ronCasa(), b = r.getBoundingClientRect();
+  g.style.transition = 'left .3s, top .3s, transform .3s, opacity .3s'; moverFantasma(g, b.left + b.width / 2, b.top + b.height * .52);
+  g.style.transform = 'translate(-50%,-50%) scale(.3)'; g.style.opacity = '0'; setTimeout(() => g.remove(), 320);
+}
+function devolver(g, el) {
+  const b = el.getBoundingClientRect(); g.style.transition = 'left .25s, top .25s, opacity .25s';
+  moverFantasma(g, b.left + b.width / 2, b.top + b.height / 2); g.style.opacity = '0'; setTimeout(() => g.remove(), 260);
+}
+
+document.addEventListener('pointerdown', e => {
+  if (S.vista !== 'ron') return;
+  const it = e.target.closest('.item');
+  if (it) { ARR = { id: it.dataset.it, cat: it.dataset.cat, el: it, x0: e.clientX, y0: e.clientY, mov: false, rec: 0, golpes: 0, ult: 0 }; try { it.setPointerCapture(e.pointerId); } catch (x) { } return; }
+  const j = e.target.closest('#escena .rueda.toc');
+  if (j) { e.preventDefault(); return golpear(j, j.dataset.j); }
+  const r = e.target.closest('#ron-casa .ron');
+  if (r) { e.preventDefault(); CAR = { r, x: e.clientX, y: e.clientY, dist: 0, panza: 0, zona: null, ultFrase: 0, cor: 0 }; try { r.setPointerCapture(e.pointerId); } catch (x) { } }
+});
+document.addEventListener('pointermove', e => {
+  if (S.vista !== 'ron') return;
+  const x = e.clientX, y = e.clientY, r = ronCasa();
+  if (ARR) {
+    if (!ARR.mov && Math.hypot(x - ARR.x0, y - ARR.y0) > 8) {
+      ARR.mov = true; const i = itemPor(ARR.cat, ARR.id); ARR.g = fantasma(ARR.id === 'laser' ? '<span class="laser suelto"></span>' : i.e);
+      ARR.el.setAttribute('aria-pressed', 'true');
+      if (ARR.id === 'cepillo') decir('Pásame el cepillo por el lomo ✨');
+      if (ARR.id === 'cana') decir('👀 …');
+    }
+    if (!ARR.mov) return;
+    e.preventDefault(); moverFantasma(ARR.g, x, y); if (r) ronMirar(r, x, y);
+    const sobre = cercaDeRon(x, y, 10), ahora = Date.now();
+    if (ARR.cat === 'comida' || ARR.id === 'agua') r && r.classList.toggle('antojo', sobre && ARR.id !== 'agua');
+    if (ARR.id === 'cepillo' && sobre) {
+      const d = Math.hypot(x - (ARR.px || x), y - (ARR.py || y)); ARR.rec += d;
+      if (d > 4) { ronPoner(r, 'mimo', 900); if (Math.random() < .35) pelitos(x, y); }
+      if (ARR.rec > 900 && !ARR.brillo) { ARR.brillo = true; decir('¡Quedé brillante y suavecito! ✨ Prrr'); ronCorazon(r, '✨'); campana([784, 988]); }
+      else if (ARR.rec > 250 && !ARR.f1) { ARR.f1 = true; decir('Prrr… ¡qué rico el cepillo!'); }
+    }
+    if ((ARR.id === 'cana' || ARR.id === 'laser') && r && distCabeza(x, y) < 120 && ahora - ARR.ult > 650) {
+      ARR.ult = ahora; ARR.golpes++; ronPoner(r, 'zarpazo', 600); vibra(15);
+      if (ARR.golpes === 4) { decir(ARR.id === 'cana' ? '¡La atrapé! 🎣 ¡Otra vez!' : '¡Casi lo tengo! 🔴'); campana([660, 880]); }
+    }
+    ARR.px = x; ARR.py = y; return;
+  }
+  if (CAR) {
+    e.preventDefault();
+    const d = Math.hypot(x - CAR.x, y - CAR.y); CAR.dist += d; CAR.x = x; CAR.y = y; if (d < 2) return;
+    const zona = ronZona(CAR.r, x, y), ahora = Date.now(), cambio = zona !== CAR.zona;
+    if (zona === 'barriga') CAR.panza += d;
+    if (CAR.panza > 700) { CAR.panza = 0; ronPoner(CAR.r, 'zarpazo', 900); decir(elige(RON.zona.atrapa)); campana([880, 660]); vibra(40); CAR.ultFrase = ahora; CAR.zona = 'atrapa'; return; }
+    if (CAR.zona === 'atrapa' && ahora - CAR.ultFrase < 900) return;
+    zonaReaccion(CAR.r, zona, cambio || ahora - CAR.ultFrase > 2600);
+    if (cambio || ahora - CAR.ultFrase > 2600) CAR.ultFrase = ahora;
+    CAR.zona = zona;
+    if (CAR.dist - CAR.cor > 110) { CAR.cor = CAR.dist; ronCorazon(CAR.r, zona === 'cola' ? '💢' : '🧡'); }
+    return;
+  }
+  if (r && e.pointerType !== 'touch') ronMirar(r, x, y);
+}, { passive: false });
+function soltar(e) {
+  if (ARR) {
+    const a = ARR; ARR = null; a.el.removeAttribute('aria-pressed'); const r = ronCasa(); if (r) r.classList.remove('antojo');
+    if (!a.mov) return usar(a.cat, a.id, null, null, true);
+    if (e.type === 'pointercancel') { devolver(a.g, a.el); return; }
+    const x = e.clientX, y = e.clientY, sobre = cercaDeRon(x, y, 16);
+    if (a.cat === 'comida' || a.id === 'agua') { if (sobre) { tragar(a.g); comer(a.id); } else { devolver(a.g, a.el); decir('¡Acá, acá! Tráemelo hasta la boquita 😺'); } return; }
+    a.g.remove();
+    if (a.id === 'cepillo') { if (a.rec < 60) decir('Pásame el cepillo por encima, de la cabeza a la cola ✨'); else if (!a.brillo) decir('Prrr… ¡sigue cepillándome!'); return; }
+    if (a.id === 'cana') { decir(a.golpes ? '¡Qué divertido! Otra vez 🎣' : 'Acércala a mi cabeza para que la atrape 🎣'); return; }
+    if (a.id === 'laser') { if (!a.golpes) lanzar('laser'); else decir('¿Y el puntito? ¡Lo quiero! 🔴'); return; }
+    lanzar(a.id, cercaDeRon(x, y) ? null : x, cercaDeRon(x, y) ? null : y);
+    return;
+  }
+  if (CAR) {
+    const c = CAR; CAR = null;
+    if (c.dist < 10) { const z = ronZona(c.r, c.x, c.y); zonaReaccion(c.r, z, true); ronCorazon(c.r, z === 'cola' ? '💢' : '🧡'); campana([523]); }
+  }
+}
+document.addEventListener('pointerup', soltar);
+document.addEventListener('pointercancel', soltar);
+function usar(cat, id) {
+  if (cat === 'comida' || id === 'agua') return comer(id);
+  if (id === 'cepillo') { const r = ronCasa(); ronPoner(r, 'mimo', 1500); pelitos(r.getBoundingClientRect().left + 80, r.getBoundingClientRect().top + 140); return decir('Arrastra el cepillo por encima de mí ✨'); }
+  return lanzar(id, null, null, true);
+}
+
+/* ===== Ron de verdad: recordatorios para cuidar al gato real ===== */
+const GATO_T = [
+  { id: 'comida_m', n: 'Comida de la mañana', ic: '🐟', h: '08:00', f: ['¡Miau! Buenos días… ¿me das mi comida? Mi pancita hace grrr 🐟', 'Desperté con hambre. ¿Me sirves mi platito? 🐟'] },
+  { id: 'agua', n: 'Agua fresca', ic: '💧', h: '08:00', f: ['¿Me cambias el agua? Me gusta fresquita 💧', 'Mi platito de agua está triste. ¿Lo llenas? 💧'] },
+  { id: 'paseo', n: 'Salir a pasear', ic: '🌳', h: '17:30', dias: [0, 6], f: ['¿Salimos a pasear? Quiero oler el pasto 🌳', 'Hoy toca paseo. ¡Ponme el arnés y vamos! 🌳'] },
+  { id: 'arenero', n: 'Limpiar el arenero', ic: '🧹', h: '18:00', f: ['Psst… mi arenero necesita limpieza. ¡Me gusta limpiecito! 🧹', 'Mi baño está desordenado… ¿me ayudas? 🧹'] },
+  { id: 'comida_n', n: 'Comida de la tarde', ic: '🍽️', h: '19:00', f: ['¡Ya es hora de mi comida! ¿Me sirves? 🍽️', 'Miau, miau… ¿no se te olvida mi comida? 🍽️'] },
+  { id: 'juego', n: 'Jugar conmigo', ic: '🧶', h: '20:00', f: ['¿Jugamos un ratito? Te traje mi lana 🧶', 'Estoy aburrido… ¡juguemos 10 minutos! 🧶'] },
+  { id: 'regaloneo', n: 'Regaloneo', ic: '🧡', h: '21:00', f: ['Antes de dormir… ¿me regaloneas? Prrr 🧡', 'Hoy no me has hecho cariño en la cabecita. ¿Me regaloneas? 🧡'] }
+];
+const gatoCfg = () => { const g = cfg('gato'); return Object.assign({ activo: true, t: {}, hechos: {} }, g); };
+const gatoT = (id, g) => { const base = GATO_T.find(t => t.id === id), c = ((g || gatoCfg()).t || {})[id] || {}; return Object.assign({}, base, { on: c.on !== false, h: c.h || base.h, dias: c.dias || base.dias || [0, 1, 2, 3, 4, 5, 6] }); };
+function gatoTareas(fecha, g) {
+  g = g || gatoCfg(); const dia = deYmd(fecha).getDay();
+  return GATO_T.map(t => gatoT(t.id, g)).filter(t => t.on && t.dias.includes(dia)).sort((a, b) => a.h.localeCompare(b.h));
+}
+const horaAhora = () => { const d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+const hechoGato = (fecha, id, g) => (((g || gatoCfg()).hechos || {})[fecha] || {})[id];
+function gatoPendientes() {
+  const g = gatoCfg(); if (!g.activo) return [];
+  const hoy = hoyYmd(), ya = horaAhora();
+  return gatoTareas(hoy, g).filter(t => t.h <= ya && !hechoGato(hoy, t.id, g));
+}
+function diasGatoCompletos() {
+  const g = gatoCfg(); if (!g.activo) return 0;
+  return Object.keys(g.hechos || {}).filter(f => { const ts = gatoTareas(f, g), h = g.hechos[f] || {}; return ts.length && ts.every(t => h[t.id] && h[t.id].r === 'estudiante'); }).length;
+}
+async function marcarGato(id) {
+  const g = gatoCfg(), hoy = hoyYmd(), hechos = {};
+  const desde = sumaDias(hoy, -40); Object.keys(g.hechos || {}).filter(f => f >= desde).forEach(f => hechos[f] = Object.assign({}, g.hechos[f]));
+  hechos[hoy] = hechos[hoy] || {};
+  const ya = hechos[hoy][id];
+  if (ya) delete hechos[hoy][id]; else hechos[hoy][id] = { q: AJ.nombre, r: AJ.rol, t: horaAhora() };
+  await put('config', Object.assign({}, g, { id: 'gato', hechos }));
+  render(true);
+  if (!ya) {
+    const todas = gatoTareas(hoy).every(x => hechos[hoy][x.id]);
+    const z = $('#ron-hoy') ? 'ron-hoy' : 'ron-casa';
+    setTimeout(() => ronEstado(z, 'celebra', todas ? '¡Hoy me cuidaste perfecto! Te quiero mucho 🧡' : elige(['¡Gracias! Eres la mejor dueña del mundo 🧡', 'Prrr… gracias por cuidarme 🐾', '¡Miau! Ya me siento mejor.'])), 20); campana(todas ? [784, 988, 1319] : [659, 784]);
+  }
+}
+function gatoCard() {
+  const g = gatoCfg(); if (!g.activo) return '';
+  const hoy = hoyYmd(), ts = gatoTareas(hoy, g), ya = horaAhora(), n = ts.filter(t => hechoGato(hoy, t.id, g)).length;
+  if (!ts.length) return '';
+  return `<div class="card"><div class="fila entre mb"><p class="eti">🐾 Cuidar a Ron de verdad</p><span class="badge">${n}/${ts.length}</span></div>
+    ${ts.map(t => { const hh = hechoGato(hoy, t.id, g), tarde = !hh && t.h <= ya; return `<button class="tarea" data-a="gato" data-v="${t.id}" aria-pressed="${!!hh}"><span class="box"></span><span style="font-size:22px">${t.ic}</span><span class="txt" style="flex:1"><b>${t.n}</b><br><small>${hh ? '✓ ' + esc(hh.q || '') + ' a las ' + (hh.t || '') : (tarde ? 'Ya es hora · ' : '') + t.h}</small></span></button>`; }).join('')}
+    <a class="sub" href="#mas-gato">Cambiar horarios y recordatorios</a></div>`;
+}
+function fraseGato() { const p = gatoPendientes(); return p.length ? elige(p[p.length - 1].f) : ''; }
+
+/* Aviso mientras la app está abierta */
+
+setInterval(() => {
+  if (!DB.listo || !AJ.rol) return;
+  S.gatoAvisos = S.gatoAvisos || {}; const p = gatoPendientes(), k = hoyYmd(), nuevos = p.filter(t => !S.gatoAvisos[k + t.id]);
+  if (!nuevos.length) return;
+  nuevos.forEach(t => S.gatoAvisos[k + t.id] = 1);
+  if (S.est && S.est.fase === 'corre') return;
+  if (AJ.rol === 'estudiante') { toast('🐾 Ron: ' + nuevos[0].f[0]); campana([523, 659]); }
+  if (S.vista === 'hoy') render();
+}, 30000);
+
+function vGato() {
+  const g = gatoCfg(), hoy = hoyYmd();
+  let h = cabSub('Ron de verdad') + `
+  <div class="ron-zona chico">${'<div class="ron" data-ron role="button" tabindex="0" aria-label="Ron">' + RON_SVG + '</div>'}<p class="globo">Yo también existo fuera del teléfono 🐾 Te recordaré cuándo darme comida, agua, limpiar mi arenero, sacarme a pasear y regalonearme.</p></div>
+  <div class="card"><label class="sw"><span><b>Recordatorios de Ron</b><br><small class="sub">Ron te habla en Hoy cuando llega la hora.</small></span><input type="checkbox" data-gato="activo" ${g.activo ? 'checked' : ''}></label></div>`;
+  if (!g.activo) return h;
+  h += `<div class="card"><p class="eti mb">Tareas y horarios</p>${GATO_T.map(b => {
+    const t = gatoT(b.id, g);
+    return `<div class="gato-fila"><label class="sw"><span>${b.ic} <b>${b.n}</b></span><input type="checkbox" data-gato="on" data-id="${b.id}" ${t.on ? 'checked' : ''}></label>
+      ${t.on ? `<div class="fila mt wrap"><input type="time" value="${t.h}" data-gato="h" data-id="${b.id}" aria-label="Hora de ${b.n}" style="max-width:160px">
+      <div class="chips">${DIAS_C.map((d, i) => `<button class="chip dia" data-a="gato-dia" data-id="${b.id}" data-v="${i}" aria-pressed="${t.dias.includes(i)}" aria-label="${DIAS[i]}">${d}</button>`).join('')}</div></div>
+      <a class="btn sm suave mt" target="_blank" rel="noopener" href="${gatoGcal(t)}">${ic('cal')} Recordatorio en Google Calendar</a>` : ''}</div>`;
+  }).join('')}</div>
+  <div class="card rosa"><p class="sub">Los avisos dentro de la app solo aparecen con la app abierta. Para que te avise con el teléfono bloqueado, agrega el recordatorio a Google Calendar (en el calendario "Mochila" o "Estudio") con el botón de cada tarea.</p></div>`;
+  const dias = diasGatoCompletos();
+  h += `<div class="card"><p class="eti">Dueña responsable 🐾</p><p class="mt">${dias} de 7 días con todo el cuidado de Ron completo.</p><div class="barra-prog mt"><i style="width:${Math.min(100, dias / 7 * 100)}%"></i></div><p class="sub mt">Al llegar a 7 días, Ron gana un pañuelo celeste.</p></div>`;
+  return h;
+}
+function gatoGcal(t) {
+  const hoy = hoyYmd(), todos = t.dias.length === 7, BY = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+  let f = hoy; for (let i = 0; i < 7 && !t.dias.includes(deYmd(f).getDay()); i++) f = sumaDias(f, 1);
+  return gcalEnlace({ titulo: `${t.ic} Ron: ${t.n}`, fecha: f, hora: t.h, min: 15, detalles: t.f[0] + '\n\nMarca la tarea en Ronrutina cuando esté lista.', recur: todos ? 'RRULE:FREQ=DAILY' : 'RRULE:FREQ=WEEKLY;BYDAY=' + t.dias.map(d => BY[d]).join(',') });
+}
+async function gatoCambia(id, cambios) {
+  const g = gatoCfg(), t = Object.assign({}, g.t); t[id] = Object.assign({}, t[id], cambios);
+  await put('config', Object.assign({}, g, { id: 'gato', t })); render(true);
+}
+
 /* ===== Estado de la interfaz ===== */
 const S = { vista: 'hoy', filtro: '', mesOff: 0, diaSel: '', ob: null, est: null, hDia: 1 };
 
@@ -677,7 +1032,8 @@ function vHoy() {
   const prox = proximos(21).filter(e => e.tipo !== 'material'), semana = prox.filter(e => difDias(hoy, e.fecha) <= 7);
   const pruebaMan = D.eventos.find(e => e.fecha === sumaDias(hoy, 1) && ['prueba', 'control', 'disertacion'].includes(e.tipo) && !e.hecho);
   const finde = [0, 6].includes(new Date().getDay()), hobbies = (AJ.hobbies || '').split(',').map(x => x.trim()).filter(Boolean);
-  let frase = noche ? elige(RON.noche, AJ.nombre) : est && pruebaMan ? `Mañana tienes ${TIPOS[pruebaMan.tipo].toLowerCase()} de ${asigPor(pruebaMan.asig).nombre}. ¿Repasamos ${AJ.duracion || 20} minutos? 🐾`
+  const gatoF = est ? fraseGato() : '';
+  let frase = gatoF ? gatoF : noche ? elige(RON.noche, AJ.nombre) : est && pruebaMan ? `Mañana tienes ${TIPOS[pruebaMan.tipo].toLowerCase()} de ${asigPor(pruebaMan.asig).nombre}. ¿Repasamos ${AJ.duracion || 20} minutos? 🐾`
     : est && finde && hobbies.length && Math.random() < .5 ? `Hoy te ganaste un rato para ${elige(hobbies)} 🎨`
     : est && finde && AJ.aire && new Date().getHours() >= 11 && new Date().getHours() < 19 && Math.random() < .4 ? '¿Y si sales un ratito al aire libre? Yo miro por la ventana 🌤️' : !est ? (semana.length ? `Hola ${AJ.nombre}. ${estudiante()} tiene ${semana.length} ${semana.length === 1 ? 'evaluación o trabajo' : 'evaluaciones o trabajos'} esta semana.` : `Hola ${AJ.nombre}. ${estudiante()} no tiene evaluaciones ni trabajos esta semana.`) : elige(RON.saludos, AJ.nombre);
   let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
@@ -689,12 +1045,13 @@ function vHoy() {
     ${mats.length ? `<p class="eti mt">Materiales</p><div class="mt">${mats.map(e => e.materiales.split('\n').filter(Boolean).map((m, k) => { const key = e.id + k; return `<button class="check" data-a="mochila" data-dia="${man}" data-k="${key}" aria-pressed="${!!chk[key]}"><span class="box"></span><span>${esc(m)} <small class="sub">· ${esc(asigPor(e.asig).nombre)}</small></span></button>`; }).join('')).join('')}</div>` : ''}</div>`;
   const matsHoy = materialesDe(hoy);
   if (matsHoy.length && new Date().getHours() < 14) h += `<div class="card"><p class="eti">${ic('mochila')} Hoy llevar</p><ul class="mt">${matsHoy.map(e => e.materiales.split('\n').filter(Boolean).map(m => `<li>${esc(m)}</li>`).join('')).join('')}</ul></div>`;
+  h += gatoCard();
   h += `<div class="card"><div class="fila entre mb"><p class="eti">Próximas evaluaciones y trabajos</p><button class="btn sm suave" data-a="nuevo">${ic('plus')} Agregar</button></div>
     ${prox.length ? prox.slice(0, 6).map(vEvItem).join('') : `<p class="vacio">${elige(RON.vacio)}</p>`}</div>`;
   const trab = D.eventos.filter(e => (e.pasos || []).some(p => !p.hecho) && !e.hecho && e.fecha >= hoy);
   if (trab.length) h += `<div class="card"><p class="eti mb">Trabajos en curso</p>${trab.map(e => { const p = e.pasos.find(x => !x.hecho), n = e.pasos.filter(x => x.hecho).length; return `<button class="ev" data-a="ver" data-id="${e.id}"><span class="barra" style="background:${asigPor(e.asig).color}"></span><span class="txt"><b>${esc(e.titulo)}</b><small>Siguiente paso: ${esc(p.t)}${p.fecha ? ' · ' + fechaCorta(p.fecha) : ''}</small></span><span class="badge">${n}/${e.pasos.length}</span></button>`; }).join('')}</div>`;
   if (est) h += `<a class="btn pr big" href="#estudiar">${ic('libro')} Estudiar ahora</a><p class="sub mt" style="text-align:center">🍓 ${frutillas()} ${frutillas() === 1 ? 'frutilla ganada' : 'frutillas ganadas'}</p>`;
-  setTimeout(() => ronEstado('ron-hoy', noche ? 'duerme' : 'saluda'), 0);
+  setTimeout(() => ronEstado('ron-hoy', gatoF ? 'piensa' : noche ? 'duerme' : 'saluda'), 0);
   return h;
 }
 function vEvItem(e) {
@@ -874,7 +1231,7 @@ async function estGuardar() {
   if (st.duda && ev) await put('eventos', Object.assign({}, ev, { dudas: ((ev.dudas || '') + '\n' + st.duda).trim() }));
   const largo = st.min >= 20;
   S.est = null; S.estSel = null; pantallaOff(); toast('¡Sesión guardada! 🍓 ' + frutillas() + ' frutillas');
-  if (largo && AJ.rol === 'estudiante') { S.cuidado = { hasta: Date.now() + 5 * 60000 }; guardarRon({ cuidados: (ronCfg().cuidados || 0) + 1 }); location.hash = '#ron'; } else location.hash = '#hoy';
+  if (largo && AJ.rol === 'estudiante') { guardarRon({ cuidados: (ronCfg().cuidados || 0) + 1 }); iniciarPausaRon(5); } else location.hash = '#hoy';
 }
 
 /* ===== MÁS ===== */
@@ -886,10 +1243,11 @@ function vMas() {
   ${it('mas-correo', 'mail', 'Correo a profes', 'Escribe consultas o envía trabajos')}
   ${it('mas-horario', 'tabla', 'Horario de clases', 'Qué asignaturas hay cada día')}
   ${it('mas-asig', 'libro', 'Asignaturas y profes', 'Colores, profesores y correos')}
+  ${it('mas-gato', 'hoy', 'Ron de verdad 🐾', 'Comida, agua, arenero, paseo y cariño')}
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 2</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 3</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
@@ -985,7 +1343,7 @@ function vAjustes() {
 }
 
 /* ===== Navegación ===== */
-const VISTAS = { hoy: vHoy, calendario: vCalendario, estudiar: vEstudiar, ron: vRon, semana: vSemana, guia: vGuia, mas: vMas, 'mas-correo': vCorreo, 'mas-horario': vHorario, 'mas-asig': vAsignaturas, 'mas-mochila': vMochila, 'mas-familia': vFamilia, 'mas-ajustes': vAjustes };
+const VISTAS = { hoy: vHoy, calendario: vCalendario, estudiar: vEstudiar, ron: vRon, semana: vSemana, guia: vGuia, mas: vMas, 'mas-correo': vCorreo, 'mas-horario': vHorario, 'mas-asig': vAsignaturas, 'mas-mochila': vMochila, 'mas-familia': vFamilia, 'mas-ajustes': vAjustes, 'mas-gato': vGato };
 const TAB = v => v.startsWith('mas') ? 'mas' : v === 'semana' ? 'ron' : v === 'guia' ? 'estudiar' : v;
 function render(force) {
   const cont = $('#vista'); if (!cont) return;
@@ -998,6 +1356,7 @@ function render(force) {
     if (S.vista === 'estudiar' && S.est && S.est.fase === 'corre') return;
   }
   if (!DB.listo) { cont.innerHTML = ronHTML('grande', 'Un momento… estoy buscando tus cosas 🐾') ; return; }
+  if (!force && S.vista === 'ron' && $('#escena')) { ronContadores(); return; }
   const y = scrollY; cont.innerHTML = (VISTAS[S.vista] || vHoy)();
   $$('.nav a').forEach(a => a.dataset.tab === TAB(S.vista) ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
   if (!force) scrollTo(0, y);
@@ -1019,7 +1378,10 @@ window.addEventListener('hashchange', irVista);
 
 /* ===== Eventos ===== */
 document.addEventListener('click', async ev => {
+  const itb = ev.target.closest('.item[data-it]');
+  if (itb) { if (ev.detail === 0) usar(itb.dataset.cat, itb.dataset.it); return; }
   const ronEl = ev.target.closest('[data-ron]');
+  if (ronEl && ronEl.closest('#ron-casa')) { if (ev.detail === 0) { zonaReaccion(ronEl, 'cabeza', true); ronCorazon(ronEl); } return; }
   if (ronEl) { ronCorazon(ronEl); const z = ronEl.closest('.ron-zona'); if (!(S.est && S.est.fase === 'corre')) ronEstado(z, 'saluda', elige(RON.toque, AJ.nombre)); else ronEstado(z, 'saluda'); campana([523]); return; }
   const t = ev.target.closest('[data-a]'); if (!t) return;
   const a = t.dataset.a, id = t.dataset.id, v = t.dataset.v;
@@ -1079,8 +1441,10 @@ document.addEventListener('click', async ev => {
     /* Ron y v2 */
     case 'pausa-ron': if (S.est && S.est.fase === 'corre' && !S.est.pausaDesde) estPausa(); return iniciarPausaRon();
     case 'fin-pausa': S.cuidado = null; return render(true);
-    case 'cuidar': return cuidar(v);
-    case 'lana': { const z = $('#lana-zona'); t.style.left = (10 + Math.random() * 70) + '%'; t.style.top = (5 + Math.random() * 55) + '%'; S.lana = (S.lana || 0) + 1; if (S.lana % 3 === 0) { ronEstado('ron-casa', 'celebra', elige(['¡La atrapé! 🧶', '¡Otra vez, otra vez!', '¡Soy el mejor cazador!'])); campana([660]); } return; }
+    case 'bandeja': S.bandeja = v; return render(true);
+    case 'ratito': try { localStorage.setItem('ronrutina.ratito', hoyYmd()); } catch (e) { } S.cuidado = { hasta: Date.now() + 3 * 60000 }; S.bandeja = 'juego'; return render(true);
+    case 'gato': return marcarGato(v);
+    case 'gato-dia': { const tt = gatoT(id), d = +v, dias = tt.dias.includes(d) ? tt.dias.filter(x => x !== d) : [...tt.dias, d].sort(); if (!dias.length) return toast('Deja al menos un día.'); return gatoCambia(id, { dias }); }
     case 'acc': await guardarRon({ accesorio: v }); return render(true);
     case 'reflex': { await put('reflex', { id: semanaKey(), funciono: $('#r1').value, costo: $('#r2').value, cambio: $('#r3').value, compartir: $('#r-comp').checked, fecha: hoyYmd() }); toast('Reflexión guardada 💭'); return render(true); }
     case 'tec-ver': return verTecnica(v);
@@ -1126,6 +1490,12 @@ document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.aj) { AJ[t.dataset.aj] = t.value.trim(); guardarAjustes(); if (t.dataset.aj === 'mochilaHora' || t.dataset.aj === 'materialesHora') render(true); }
   if (t.dataset.ajc) { AJ[t.dataset.ajc] = t.checked; guardarAjustes(); }
+  if (t.dataset.gato) {
+    const k = t.dataset.gato;
+    if (k === 'activo') put('config', Object.assign({}, gatoCfg(), { id: 'gato', activo: t.checked })).then(() => render(true));
+    else if (k === 'on') gatoCambia(t.dataset.id, { on: t.checked });
+    else if (k === 'h' && t.value) gatoCambia(t.dataset.id, { h: t.value });
+  }
   if (t.id === 'fa-est') { const n = t.value.trim(); if (n) put('config', Object.assign({}, cfg('familia'), { id: 'familia', estudiante: n })); }
 });
 
