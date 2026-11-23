@@ -293,6 +293,18 @@ label.adjuntar{cursor:pointer;border-style:dashed}
 
 .prox-av{font-size:13px;padding:6px 0;border-bottom:1px dashed var(--borde)}.prox-av:last-child{border-bottom:0}
 
+/* v10 · tiempos de avisos */
+.av-grp{border-bottom:1px dashed var(--borde);padding:4px 0}.av-grp:last-child{border-bottom:0}
+.av-grp:has(> .sw input:not(:checked)) > .av-sub{display:none}
+.av-sub{padding:2px 0 10px 12px;margin-left:4px;border-left:3px solid var(--borde)}
+.av-t{font-size:13px;font-weight:700;color:var(--mu);margin:8px 0 6px}
+.av-chips{gap:6px}.av-chips .chip{min-height:34px;padding:0 11px;font-size:13px}
+.av-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;font-size:14px}
+.av-h span{flex:1;min-width:0}.av-h input,.av-h select{width:auto;max-width:150px;flex:none;margin:0}
+.av-h.col{flex-direction:column;align-items:stretch;gap:4px;min-width:0}.av-h.col select,.av-h.col input{max-width:none;width:100%}
+.av-ck{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px}.av-ck input{width:20px;height:20px;margin:0;accent-color:var(--ac)}
+details summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ac)}
+
 </style>
 <script defer src="fb.js"></script>
 </head>
@@ -1868,7 +1880,7 @@ function vYoMas() {
   ${it('mas-gato', '🐾', 'Ron de verdad', 'Comida, agua, arenero, paseo y cariño')}
   ${it('mas-familia', '👨‍👩‍👧', 'Familia', 'Código y enlace de la familia')}
   ${it('mas-ajustes', '⚙️', 'Ajustes', 'Fondo, colores, hora de corte y sonido')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 9</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 10</p>`;
 }
 /* Navegación según el modo */
 const NAV_IC = { hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>', gato: '<path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/>', mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>', maletin: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>' };
@@ -2212,7 +2224,7 @@ async function moverAtrasadas() {
 /* ===== Avisos de Ron: notificaciones push con la app cerrada =====
    El teléfono calcula sus avisos de los próximos 7 días y se los entrega
    al servidor de avisos (Cloudflare Worker), que los envía a su hora. */
-const AV0 = { animo: true, misiones: true, gato: true, evaluaciones: true, estudio: true, mochila: true, dormir: true, trabajo: true, agenda: true, habitos: true, cuentas: true, corte: true, emy: false };
+const AV0 = { animo: true, misiones: true, gato: true, evaluaciones: true, estudio: true, mochila: true, dormir: true, trabajo: true, agenda: true, habitos: true, cuentas: true, corte: true, emy: false, noche: false };
 const avCfg = () => Object.assign({}, AV0, { gato: AJ.rol === 'estudiante' }, AJ.av || {});
 const pushLS = () => { try { return JSON.parse(localStorage.getItem('ronrutina.push') || 'null'); } catch (e) { return null; } };
 const guardarPushLS = o => { try { o ? localStorage.setItem('ronrutina.push', JSON.stringify(o)) : localStorage.removeItem('ronrutina.push'); } catch (e) { } };
@@ -2224,35 +2236,98 @@ const restaMin = (hm, min) => { const [h, m] = hm.split(':').map(Number), t = h 
 const ub64App = s => { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; const b = atob(s), o = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) o[i] = b.charCodeAt(i); return o; };
 const hashTxt = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = (h * 33 ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
 
+/* Tiempos de cada aviso (cada teléfono tiene los suyos) */
+const AVT0 = { misAnt: [0], habAnt: [0], trabAnt: [30], agAnt: [30], evalDias: [1], evalHora: '19:00', evalHoy: '07:00', entDias: [1], entHora: '18:00', resumen: '08:00', cuentasDias: [1, 0], cuentasHora: '10:00', cumpleDias: [1], cumpleHora: '19:00', emyDias: [1], emyHora: '20:00', nocheHora: '21:00', dormirAnt: 0, animoSem: false, rep: 0, repVeces: 2, silencio: false, silDe: '22:00', silA: '07:00', discreto: false };
+const avtCfg = () => Object.assign({}, AVT0, AJ.avt || {});
+const ANT_MIN = [[0, 'A la hora'], [5, '5 min'], [10, '10 min'], [15, '15 min'], [30, '30 min'], [60, '1 hora'], [120, '2 horas'], [1440, '1 día']];
+const ANT_MIS = [[0, 'A la hora'], [5, '5 min'], [10, '10 min'], [15, '15 min'], [30, '30 min']];
+const DIAS_AV = [[0, 'El mismo día'], [1, '1 día'], [2, '2 días'], [3, '3 días'], [5, '5 días'], [7, '1 semana']];
+const avPausado = () => (+AJ.avPausa || 0) > Date.now();
+const hmDe = t => { const d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+/* "En 15 minutos", "En 2 horas", "Mañana a las 9:00"… según cuánto falte de verdad */
+function cuantoFalta(ev, t) {
+  const dif = Math.round((ev - t) / 60000), fe = ymd(new Date(ev)), fa = ymd(new Date(t)), d = difDias(fa, fe), hm = hmDe(ev);
+  if (dif <= 0) return 'Ahora';
+  if (dif < 60) return `En ${dif} minutos`;
+  if (d === 0) return dif % 60 === 0 && dif <= 180 ? (dif === 60 ? 'En 1 hora' : `En ${dif / 60} horas`) : `Hoy a las ${hm}`;
+  if (d === 1) return `Mañana a las ${hm}`;
+  return `El ${DIAS[deYmd(fe).getDay()]} a las ${hm}`;
+}
+/* "Hoy", "Mañana", "En 3 días (el jueves)" según el día del aviso */
+function cuandoDia(fe, t) { const d = difDias(ymd(new Date(t)), fe); return d <= 0 ? 'Hoy' : d === 1 ? 'Mañana' : `En ${d} días (el ${DIAS[deYmd(fe).getDay()]})`; }
+const guardarAjSW = () => { try { if (window.caches) caches.open('ronrutina-ajustes').then(c => c.put('ajustes-avisos', new Response(JSON.stringify({ discreto: !!avtCfg().discreto }), { headers: { 'Content-Type': 'application/json' } }))).catch(() => { }); } catch (e) { } };
+
 /* ----- qué avisos tocan esta semana ----- */
 function generarAvisos() {
-  const av = avCfg(), hoy = hoyYmd(), ahora = Date.now() + 60000, l = [], n = AJ.nombre || '', R = '🐾 Ron';
-  const add = (f, hm, cuerpo, tag, url, titulo) => { const t = enMin(f, hm); if (t > ahora) l.push({ t, titulo: titulo || R, cuerpo, tag: tag || '', url: url || '#hoy' }); };
+  const av = avCfg(), T = avtCfg(), hoy = hoyYmd(), ahora = Date.now() + 60000, pausa = +AJ.avPausa || 0, l = [], n = AJ.nombre || '';
+  /* x: { ev: hora del evento, mk: t => texto (se rehace si el aviso se mueve), fijo: no lo toca el silencio, rep: es una insistencia } */
+  const push = (t, cuerpo, tag, url, x) => { if (t) l.push(Object.assign({ t, cuerpo, tag: tag || '', url: url || '#hoy' }, x || {})); };
+  const add = (f, hm, cuerpo, tag, url, x) => push(enMin(f, hm), cuerpo, tag, url, x);
+  const conMk = (t, mk, tag, url, x) => push(t, mk(t), tag, url, Object.assign({ mk }, x || {}));
+  const antes = (f, hm, lista, ic, txt, tag, url) => { const ev = enMin(f, hm); (lista || []).forEach(m => conMk(ev - m * 60000, t => `${ic} ${cuantoFalta(ev, t)}: ${txt}`, tag, url, { ev })); return ev; };
+  const insistir = (f, t0, cuerpo, tag, url) => { if (!+T.rep) return; const fin = enMin(f, '23:59'), txt = '🔁 ¿Ya lo hiciste? ' + cuerpo.replace(/^\S+\s/, ''); for (let i = 1; i <= (+T.repVeces || 1); i++) { const t = t0 + i * T.rep * 60000; if (t < fin) push(t, txt, tag, url, { rep: true }); } };
   const animo = AJ.avAnimo || '07:30';
-  for (let k = 0; k < 7; k++) {
+  for (let k = 0; k < 8; k++) {
     const f = sumaDias(hoy, k), dw = deYmd(f).getDay(), man = sumaDias(f, 1);
-    if (av.animo) add(f, animo, `☀️ ¡Buenos días${n ? ', ' + n : ''}! ¿Cómo te sientes hoy? Cuéntamelo en Ronrutina`, 'animo', '#hoy');
-    if (av.gato && cfg('gato').activo !== false) gatoTareas(f).filter(t => !(f === hoy && hechoGato(hoy, t.id))).forEach(t => add(f, t.h, t.f[0], 'gato-' + t.id, '#hoy'));
+    if (av.animo && !(T.animoSem && (dw === 0 || dw === 6))) add(f, animo, `☀️ ¡Buenos días${n ? ', ' + n : ''}! ¿Cómo te sientes hoy? Cuéntamelo en Ronrutina`, 'animo', '#hoy', { fijo: true });
+    if (av.gato && cfg('gato').activo !== false) gatoTareas(f).filter(t => !(f === hoy && hechoGato(hoy, t.id))).forEach(t => { add(f, t.h, t.f[0], 'gato-' + t.id, '#hoy'); insistir(f, enMin(f, t.h), t.f[0], 'gato-' + t.id, '#hoy'); });
     if (AJ.rol === 'estudiante') {
-      if (av.misiones) { const c = misCfg(); if (c.activo !== false) { const ms = misionesDe(f, c).filter(m => !(f === hoy && misHecha(hoy, m.id, c))); ms.filter(m => m.hora).forEach(m => add(f, m.hora, `⭐ Misión: ${m.ic} ${m.n}`, 'mision-' + m.id)); const sh = ms.filter(m => !m.hora); if (sh.length) add(f, AJ.avMisiones || '18:00', `⭐ Tus misiones de hoy: ${sh.map(m => m.n.toLowerCase()).join(', ')}`, 'misiones'); } }
-      if (av.evaluaciones) D.eventos.filter(e => !e.hecho && e.fecha === man).forEach(e => { if (['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) || String(e.tipo).startsWith('c_')) add(f, '19:00', `📚 Mañana tienes ${tipoN(e.tipo).toLowerCase()} de ${asigPor(e.asig).nombre}. ¡Repasemos un ratito!`, 'ev-' + e.id, '#calendario'); else if (e.tipo === 'trabajo') add(f, '18:00', `📝 Mañana entregas: ${e.titulo || 'trabajo'} (${asigPor(e.asig).nombre}).`, 'ev-' + e.id, '#calendario'); });
+      if (av.misiones) {
+        const c = misCfg();
+        if (c.activo !== false) {
+          const ms = misionesDe(f, c).filter(m => !(f === hoy && misHecha(hoy, m.id, c)));
+          ms.filter(m => m.hora).forEach(m => { const ev = antes(f, m.hora, T.misAnt, '⭐', `misión ${m.ic} ${m.n}`, 'mision-' + m.id); insistir(f, ev, `⭐ Misión: ${m.ic} ${m.n}`, 'mision-' + m.id); });
+          const sh = ms.filter(m => !m.hora), hm = AJ.avMisiones || '18:00';
+          if (sh.length) { const txt = `⭐ Tus misiones de hoy: ${sh.map(m => m.n.toLowerCase()).join(', ')}`; add(f, hm, txt, 'misiones'); insistir(f, enMin(f, hm), txt, 'misiones'); }
+        }
+      }
+      if (av.evaluaciones) {
+        const esPrueba = e => ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) || String(e.tipo).startsWith('c_');
+        (T.evalDias || []).forEach(d => { const fe = sumaDias(f, d); D.eventos.filter(e => !e.hecho && e.fecha === fe && esPrueba(e)).forEach(e => conMk(enMin(f, d ? T.evalHora : T.evalHoy), t => { const q = cuandoDia(fe, t); return `📚 ${q} tienes ${tipoN(e.tipo).toLowerCase()} de ${asigPor(e.asig).nombre}. ${q === 'Hoy' ? '¡Tú puedes! 💪' : '¡Repasemos un ratito!'}`; }, 'ev-' + e.id, '#calendario', { ev: enMin(fe, '08:00') })); });
+        (T.entDias || []).forEach(d => { const fe = sumaDias(f, d); D.eventos.filter(e => !e.hecho && e.fecha === fe && e.tipo === 'trabajo').forEach(e => conMk(enMin(f, d ? T.entHora : T.evalHoy), t => `📝 ${cuandoDia(fe, t)} entregas: ${e.titulo || 'trabajo'} (${asigPor(e.asig).nombre}).`, 'ev-' + e.id, '#calendario', { ev: enMin(fe, '08:00') })); });
+      }
       if (av.estudio) {
-        D.eventos.filter(e => !e.hecho && ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) && e.fecha > f && difDias(hoy, e.fecha) <= 14).forEach(e => { const p = planSesiones(e).find(x => x.fecha === f); if (p && !(f === hoy && D.sesiones.some(s => s.evento === e.id && s.fecha === hoy))) add(f, AJ.horaEstudio || '17:00', `📚 Hoy toca estudiar ${asigPor(e.asig).nombre} ${p.min} minutos. ¡Yo te acompaño!`, 'plan-' + e.id, '#estudiar'); });
-        D.eventos.filter(e => !e.hecho).forEach(e => (e.pasos || []).filter(p => !p.hecho && p.fecha === f).forEach(p => add(f, AJ.horaEstudio || '17:00', `✅ Paso de hoy: ${p.t} (${e.titulo || asigPor(e.asig).nombre})`, 'paso-' + e.id)));
+        const he = AJ.horaEstudio || '17:00';
+        D.eventos.filter(e => !e.hecho && ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) && e.fecha > f && difDias(hoy, e.fecha) <= 14).forEach(e => { const p = planSesiones(e).find(x => x.fecha === f); if (p && !(f === hoy && D.sesiones.some(s => s.evento === e.id && s.fecha === hoy))) { const txt = `📚 Hoy toca estudiar ${asigPor(e.asig).nombre} ${p.min} minutos. ¡Yo te acompaño!`; add(f, he, txt, 'plan-' + e.id, '#estudiar'); insistir(f, enMin(f, he), txt, 'plan-' + e.id, '#estudiar'); } });
+        D.eventos.filter(e => !e.hecho).forEach(e => (e.pasos || []).filter(p => !p.hecho && p.fecha === f).forEach(p => add(f, he, `✅ Paso de hoy: ${p.t} (${e.titulo || asigPor(e.asig).nombre})`, 'paso-' + e.id)));
       }
       if (av.mochila && dw >= 0 && dw <= 4) { const asg = asigDelDia(man), mats = materialesDe(man); if (asg.length || mats.length) add(f, AJ.mochilaHora || '20:00', `🎒 Prepara la mochila para mañana${asg.length ? ': ' + asg.map(a => a.nombre).join(', ') : ''}${mats.length ? '. Lleva: ' + mats.map(e => e.materiales.split('\n').filter(Boolean).join(', ')).join(', ') : ''}`, 'mochila', '#hoy'); }
       if (av.mochila) { const mats = materialesDe(f); if (mats.length) add(f, AJ.materialesHora || '07:00', `🎒 Hoy llevar: ${mats.map(e => e.materiales.split('\n').filter(Boolean).join(', ')).join(', ')}`, 'materiales'); }
-      if (av.dormir && AJ.dormir) add(f, AJ.dormir, `🌙 Ya es hora de dormir${n ? ', ' + n : ''}. Mañana seguimos 🐾`, 'dormir');
+      if (av.dormir && AJ.dormir) {
+        const td = enMin(f, AJ.dormir);
+        if (+T.dormirAnt) push(td - T.dormirAnt * 60000, `🌙 En ${T.dormirAnt} minutos es hora de dormir. Ve dejando el celular 📵`, 'dormir', '#hoy', { fijo: true });
+        push(td, `🌙 Ya es hora de dormir${n ? ', ' + n : ''}. Mañana seguimos 🐾`, 'dormir', '#hoy', { fijo: true });
+      }
     } else if (AJ.rol === 'apoderado') {
-      if (av.trabajo) { const ts = tareasYo().filter(t => !t.hecho && t.fecha === f); ts.filter(t => t.hora).forEach(t => { const h = restaMin(t.hora, 30); if (h) add(f, h, `💼 En 30 minutos: ${t.t}`, 'tarea-' + t.id, '#trabajo'); }); const sh = ts.filter(t => !t.hora); if (sh.length) add(f, '08:00', `💼 Hoy en el trabajo: ${sh.map(t => t.t).join(', ')}`, 'trabajo', '#trabajo'); }
-      if (av.agenda) ['yo', 'hogar'].forEach(es => ED(es, 'agenda').filter(e => e.fecha === f).forEach(e => { const t = tipoA(e.tipo); if (e.hora) { const h = restaMin(e.hora, 30); if (h) add(f, h, `${t.ic} En 30 minutos: ${e.t}`, 'ag-' + e.id, '#calendario'); } else add(f, '08:00', `${t.ic} Hoy: ${e.t}`, 'ag-' + e.id, '#calendario'); if (e.tipo === 'cumple') add(sumaDias(f, -1), '19:00', `🎂 Mañana: ${e.t}. ¿Ya tienes el regalo?`, 'cumple-' + e.id, '#calendario'); }));
-      if (av.habitos) { const c = habCfg(); habDe(f, c).filter(m => m.hora && !(f === hoy && habHecho(hoy, m.id, c))).forEach(m => add(f, m.hora, `⭐ ${m.ic} ${m.n}`, 'hab-' + m.id)); }
-      if (av.cuentas) { const dm = deYmd(f).getDate(), mk = f.slice(0, 7); ED('hogar', 'cuentas').filter(c => c.dia === dm && !(c.pagado || {})[mk]).forEach(c => { add(sumaDias(f, -1), '10:00', `💳 Mañana vence: ${c.n}${c.monto ? ' ($' + Number(c.monto).toLocaleString('es-CL') + ')' : ''}`, 'cuenta-' + c.id, '#mas-hogar'); add(f, '10:00', `💳 Hoy vence: ${c.n}`, 'cuenta-' + c.id, '#mas-hogar'); }); }
-      if (av.corte && AJ.corte && dw >= 1 && dw <= 5) add(f, AJ.corte, '🌙 Hora de cortar con el trabajo. Lo que quedó, mañana tendrá su momento 🧡', 'corte');
-      if (av.emy) D.eventos.filter(e => !e.hecho && e.fecha === man && ['prueba', 'test', 'control', 'disertacion', 'trabajo'].includes(e.tipo)).forEach(e => add(f, '20:00', `🎒 Mañana ${estudiante()} tiene ${tipoN(e.tipo).toLowerCase()} de ${asigPor(e.asig).nombre}.`, 'emy-' + e.id));
+      if (av.trabajo) { const ts = tareasYo().filter(t => !t.hecho && t.fecha === f); ts.filter(t => t.hora).forEach(t => antes(f, t.hora, T.trabAnt, '💼', t.t, 'tarea-' + t.id, '#trabajo')); const sh = ts.filter(t => !t.hora); if (sh.length) add(f, T.resumen, `💼 Hoy en el trabajo: ${sh.map(t => t.t).join(', ')}`, 'trabajo', '#trabajo'); }
+      if (av.agenda) {
+        ['yo', 'hogar'].forEach(es => ED(es, 'agenda').filter(e => e.fecha === f && e.tipo !== 'cumple').forEach(e => { const t = tipoA(e.tipo); if (e.hora) antes(f, e.hora, T.agAnt, t.ic, e.t, 'ag-' + e.id, '#calendario'); else add(f, T.resumen, `${t.ic} Hoy: ${e.t}`, 'ag-' + e.id, '#calendario'); }));
+        (T.cumpleDias || []).forEach(d => { const fe = sumaDias(f, d); ['yo', 'hogar'].forEach(es => ED(es, 'agenda').filter(e => e.fecha === fe && e.tipo === 'cumple').forEach(e => conMk(enMin(f, d ? T.cumpleHora : T.resumen), t => { const q = cuandoDia(fe, t); return q === 'Hoy' ? `🎂 Hoy: ${e.t} 🎉` : `🎂 ${q}: ${e.t}. ¿Ya tienes el regalo?`; }, 'cumple-' + e.id, '#calendario', { ev: enMin(fe, '09:00') }))); });
+      }
+      if (av.habitos) { const c = habCfg(); habDe(f, c).filter(m => m.hora && !(f === hoy && habHecho(hoy, m.id, c))).forEach(m => { const ev = antes(f, m.hora, T.habAnt, '⭐', `${m.ic} ${m.n}`, 'hab-' + m.id); insistir(f, ev, `⭐ ${m.ic} ${m.n}`, 'hab-' + m.id); }); }
+      if (av.cuentas) (T.cuentasDias || []).forEach(d => {
+        const fe = sumaDias(f, d), x = deYmd(fe), dm = x.getDate(), ult = new Date(x.getFullYear(), x.getMonth() + 1, 0).getDate(), mk = fe.slice(0, 7);
+        ED('hogar', 'cuentas').filter(c => (c.dia === dm || (dm === ult && c.dia > ult)) && !(c.pagado || {})[mk]).forEach(c => { const monto = c.monto ? ' ($' + Number(c.monto).toLocaleString('es-CL') + ')' : ''; conMk(enMin(f, T.cuentasHora), t => { const q = cuandoDia(fe, t); return q === 'Hoy' ? `💳 Hoy vence: ${c.n}${monto}` : `💳 ${q} vence: ${c.n}${monto}`; }, 'cuenta-' + c.id, '#mas-hogar', { ev: enMin(fe, '12:00') }); });
+      });
+      if (av.corte && AJ.corte && dw >= 1 && dw <= 5) add(f, AJ.corte, '🌙 Hora de cortar con el trabajo. Lo que quedó, mañana tendrá su momento 🧡', 'corte', '#hoy', { fijo: true });
+      if (av.noche) {
+        const it = [...tareasYo().filter(t => !t.hecho && t.fecha === man).map(t => (t.hora ? t.hora + ' ' : '') + t.t), ...['yo', 'hogar'].flatMap(es => ED(es, 'agenda').filter(e => e.fecha === man).map(e => (e.hora ? e.hora + ' ' : '') + e.t))].sort();
+        if (it.length) add(f, T.nocheHora, `📋 Mañana tienes ${it.length === 1 ? '1 cosa' : it.length + ' cosas'}: ${it.slice(0, 4).join(' · ')}${it.length > 4 ? '…' : ''}`, 'noche', '#calendario', { fijo: true });
+      }
+      if (av.emy) (T.emyDias || []).forEach(d => { const fe = sumaDias(f, d); D.eventos.filter(e => !e.hecho && e.fecha === fe && ['prueba', 'test', 'control', 'disertacion', 'trabajo'].includes(e.tipo)).forEach(e => conMk(enMin(f, T.emyHora), t => `🎒 ${cuandoDia(fe, t)} ${estudiante()} tiene ${tipoN(e.tipo).toLowerCase()} de ${asigPor(e.asig).nombre}.`, 'emy-' + e.id, '#hoy', { ev: enMin(fe, '08:00') })); });
     }
   }
-  return l.sort((a, b) => a.t - b.t).slice(0, 250);
+  /* horario de silencio: lo que cae dentro se adelanta (si el evento es antes de que termine) o se corre al final */
+  if (T.silencio && T.silDe && T.silA && T.silDe !== T.silA) {
+    const [dh, dmi] = T.silDe.split(':').map(Number), [ah, ami] = T.silA.split(':').map(Number), de = dh * 60 + dmi, a = ah * 60 + ami;
+    const dentro = t => { const d = new Date(t), x = d.getHours() * 60 + d.getMinutes(); return de < a ? x >= de && x < a : x >= de || x < a; };
+    const fin = t => { const d = new Date(t); d.setHours(ah, ami, 0, 0); if (d.getTime() <= t) d.setDate(d.getDate() + 1); return d.getTime(); };
+    const ini = t => { const d = new Date(t); d.setHours(dh, dmi, 0, 0); if (d.getTime() > t) d.setDate(d.getDate() - 1); return d.getTime() - 60000; };
+    l.forEach(x => { if (x.fijo || !dentro(x.t)) return; if (x.rep) { x.t = 0; return; } const tarde = fin(x.t), temprano = ini(x.t), cambiaDia = ymd(new Date(tarde)) !== ymd(new Date(x.t)); x.t = ((x.ev && x.ev < tarde) || cambiaDia) && temprano > ahora ? temprano : tarde; if (x.ev && x.t > x.ev) x.t = 0; else if (x.mk) x.cuerpo = x.mk(x.t); });
+  }
+  const vistos = new Set();
+  return l.filter(x => x.t > ahora && x.t >= pausa).sort((a, b) => a.t - b.t).filter(x => { const k = x.tag + '|' + x.t; if (vistos.has(k)) return false; vistos.add(k); return true; })
+    .slice(0, 250).map(x => ({ t: x.t, titulo: '🐾 Ron', cuerpo: x.cuerpo, tag: x.tag, url: x.url }));
 }
 
 /* ----- activar, sincronizar, probar ----- */
@@ -2276,6 +2351,7 @@ async function activarAvisos() {
 }
 async function sincronizarAvisos(forzar) {
   const st = pushLS(); if (!st || !soportaPush() || !DB.listo) return false;
+  guardarAjSW();
   const avisos = generarAvisos(), h = hashTxt(JSON.stringify(avisos.map(a => [a.t, a.cuerpo])));
   if (!forzar && h === st.hash && Date.now() - st.ult < 12 * 3600e3) return true;
   try {
@@ -2297,20 +2373,71 @@ async function desactivarAvisos() {
   guardarPushLS(null); toast('Avisos desactivados en este teléfono.'); render(true);
 }
 
+/* ----- pausar ----- */
+function pausarAvisos(v) {
+  if (v === '0') { AJ.avPausa = 0; toast('Avisos reanudados 🔔'); }
+  else { const d = new Date(); d.setDate(d.getDate() + (v === 'manana' ? 1 : +v)); d.setHours(5, 0, 0, 0); AJ.avPausa = d.getTime(); toast(`⏸️ Ron no te avisará hasta el ${DIAS[d.getDay()]} ${d.getDate()}.`); }
+  guardarAjustes(); sincronizarAvisos(true); render(true);
+}
+function cambiaDiaAv(btn) {
+  const k = btn.dataset.k, v = +btn.dataset.v, T = avtCfg(), l = (T[k] || []).slice(), i = l.indexOf(v);
+  if (i >= 0) { if (l.length === 1) return toast('Deja al menos una opción marcada (o apaga ese aviso).'); l.splice(i, 1); } else l.push(v);
+  AJ.avt = Object.assign({}, T, { [k]: l.sort((a, b) => b - a) }); guardarAjustes();
+  btn.setAttribute('aria-pressed', i < 0); refrescarAvisos();
+}
+function cambiaAvt(el) {
+  const k = el.dataset.avt, val = el.type === 'checkbox' ? el.checked : el.type === 'time' ? el.value : +el.value;
+  if (el.type === 'time' && !val) return;
+  AJ.avt = Object.assign({}, avtCfg(), { [k]: val }); guardarAjustes(); if (k === 'discreto') guardarAjSW();
+  refrescarAvisos();
+}
+/* recalcula, vuelve a mandar al servidor y actualiza la lista de la pantalla */
+function refrescarAvisos() {
+  clearTimeout(refrescarAvisos._t);
+  refrescarAvisos._t = setTimeout(() => { sincronizarAvisos(true); const p = $('#av-prox'); if (p) p.innerHTML = proxAvisosHTML(); }, 300);
+}
+function proxAvisosHTML() {
+  const l = generarAvisos(), fila = a => { const d = new Date(a.t); return `<p class="prox-av"><b>${cap(fechaCorta(ymd(d)))} ${pad(d.getHours())}:${pad(d.getMinutes())}</b> · ${esc(a.cuerpo)}</p>`; };
+  if (!l.length) return `<p class="eti mb">Próximos avisos</p><p class="sub">${avPausado() ? 'Los avisos están en pausa.' : 'No hay avisos para los próximos días.'}</p>`;
+  return `<p class="eti mb">Próximos avisos (${l.length})</p>${l.slice(0, 8).map(fila).join('')}${l.length > 8 ? `<details class="mt"><summary>Ver todos</summary>${l.slice(8).map(fila).join('')}</details>` : ''}`;
+}
+
 /* ----- pantalla de ajustes ----- */
 function vAvisos() {
-  const st = pushLS(), av = avCfg(), sop = soportaPush(), perm = sop ? Notification.permission : 'no', est = AJ.rol === 'estudiante';
+  const st = pushLS(), av = avCfg(), T = avtCfg(), sop = soportaPush(), perm = sop ? Notification.permission : 'no', est = AJ.rol === 'estudiante';
   const prox = generarAvisos(), sw = (k, t) => `<label class="sw"><span>${t}</span><input type="checkbox" data-av="${k}" ${av[k] ? 'checked' : ''}></label>`;
+  const swT = (k, t) => `<label class="sw"><span>${t}</span><input type="checkbox" data-avt="${k}" ${T[k] ? 'checked' : ''}></label>`;
+  const chips = (k, op) => `<div class="chips av-chips">${op.map(([v, t]) => `<button class="chip" data-a="avt-dia" data-k="${k}" data-v="${v}" aria-pressed="${(T[k] || []).includes(v)}">${t}</button>`).join('')}</div>`;
+  const hora = (txt, k, aj, def) => `<label class="av-h"><span>${txt}</span><input type="time" ${aj ? `data-aj="${k}" value="${AJ[k] || def || ''}"` : `data-avt="${k}" value="${T[k]}"`}></label>`;
+  const sel = (k, op) => `<select data-avt="${k}">${op.map(([v, t]) => `<option value="${v}" ${+T[k] === v ? 'selected' : ''}>${t}</option>`).join('')}</select>`;
+  const p = t => `<p class="av-t">${t}</p>`, g = (k, t, sub) => `<div class="av-grp">${sw(k, t)}${sub ? `<div class="av-sub">${sub}</div>` : ''}</div>`;
   let h = cabSub('Avisos de Ron 🔔');
-  h += `<div class="card ${st ? 'rosa' : ''}"><p class="eti">Estado en este teléfono</p><p class="mt"><b>${st ? '🔔 Avisos activados' : !sop ? (esIOS && !esStandalone() ? '📱 Falta instalar la app' : '🚫 Este navegador no permite notificaciones') : perm === 'denied' ? '🔕 Notificaciones bloqueadas' : '🔕 Avisos apagados'}</b></p>
-    <p class="sub mt">${st ? `Ron tiene <b>${prox.length}</b> avisos programados para los próximos 7 días. Se actualizan solos cada vez que abres la app.` : !sop && esIOS ? 'En iPhone: abre Ronrutina en Safari, toca Compartir → "Agregar a inicio" y luego entra desde el ícono. Ahí podrás activar los avisos.' : perm === 'denied' ? 'Desbloquéalas en los ajustes del teléfono (Notificaciones → Ronrutina) y vuelve aquí.' : 'Activa los avisos para que Ron te recuerde tus responsabilidades aunque la app esté cerrada.'}</p>
-    ${st ? `<div class="grid2 mt"><button class="btn sm pr" data-a="av-probar">Enviar aviso de prueba</button><button class="btn sm" data-a="av-off">Desactivar</button></div>` : sop ? `<label class="lbl" for="av-url">Dirección del servidor de avisos</label><input type="url" id="av-url" value="${esc(urlAvisos())}" placeholder="https://ronrutina-avisos.tu-cuenta.workers.dev" autocapitalize="off" spellcheck="false"><p class="sub mt">Se configura una sola vez y queda guardada para toda la familia.</p><button class="btn pr big mt" data-a="av-on">🔔 Activar avisos en este teléfono</button>` : ''}</div>`;
-  h += `<div class="card"><p class="eti mb">¿De qué quieres que te avise Ron?</p>
-    ${sw('animo', '☀️ Saludo de la mañana: ¿cómo te sientes?')}<label class="lbl" for="av-animo">Hora del saludo</label><input type="time" id="av-animo" data-aj="avAnimo" value="${AJ.avAnimo || '07:30'}" style="max-width:160px">
-    ${est ? sw('misiones', '⭐ Misiones del día') + sw('evaluaciones', '📚 Pruebas y entregas (el día antes)') + sw('estudio', '📖 Plan de estudio y pasos de trabajos') + sw('mochila', '🎒 Mochila y materiales') + sw('dormir', '🌙 Hora de dormir')
-      : sw('trabajo', '💼 Tareas del trabajo') + sw('agenda', '📅 Eventos del calendario (30 min antes)') + sw('habitos', '⭐ Hábitos con hora') + sw('cuentas', '💳 Cuentas por vencer') + sw('corte', '🌙 Hora de cortar con el trabajo') + sw('emy', '🎒 Evaluaciones de ' + esc(estudiante()))}
-    ${sw('gato', '🐾 Cuidar a Ron de verdad')}</div>`;
-  if (st && prox.length) h += `<div class="card"><p class="eti mb">Próximos avisos</p>${prox.slice(0, 6).map(a => { const d = new Date(a.t); return `<p class="prox-av"><b>${cap(fechaCorta(ymd(d)))} ${pad(d.getHours())}:${pad(d.getMinutes())}</b> · ${esc(a.cuerpo)}</p>`; }).join('')}</div>`;
+  h += `<div class="card ${st ? 'rosa' : ''}"><p class="eti">Estado en este teléfono</p><p class="mt"><b>${st ? (avPausado() ? '⏸️ Avisos en pausa' : '🔔 Avisos activados') : !sop ? (esIOS && !esStandalone() ? '📱 Falta instalar la app' : '🚫 Este navegador no permite notificaciones') : perm === 'denied' ? '🔕 Notificaciones bloqueadas' : '🔕 Avisos apagados'}</b></p>
+    <p class="sub mt">${st ? (avPausado() ? `Ron vuelve a avisarte el ${(d => DIAS[d.getDay()] + ' ' + d.getDate() + ' a las ' + hmDe(d))(new Date(+AJ.avPausa))}.` : `Ron tiene <b>${prox.length}</b> avisos programados para los próximos días. Se actualizan solos cada vez que abres la app.`) : !sop && esIOS ? 'En iPhone: abre Ronrutina en Safari, toca Compartir → "Agregar a inicio" y luego entra desde el ícono. Ahí podrás activar los avisos.' : perm === 'denied' ? 'Desbloquéalas en los ajustes del teléfono (Notificaciones → Ronrutina) y vuelve aquí.' : 'Activa los avisos para que Ron te recuerde tus responsabilidades aunque la app esté cerrada.'}</p>
+    ${st ? `<div class="grid2 mt"><button class="btn sm pr" data-a="av-probar">Enviar aviso de prueba</button><button class="btn sm" data-a="av-off">Desactivar</button></div>
+      <p class="av-t mt">${avPausado() ? '' : 'Pausar avisos'}</p><div class="chips">${avPausado() ? `<button class="chip" data-a="av-pausa" data-v="0">▶️ Reanudar avisos</button>` : `<button class="chip" data-a="av-pausa" data-v="manana">⏸️ Hasta mañana</button><button class="chip" data-a="av-pausa" data-v="3">3 días</button><button class="chip" data-a="av-pausa" data-v="7">1 semana</button>`}</div>`
+      : sop ? `<label class="lbl" for="av-url">Dirección del servidor de avisos</label><input type="url" id="av-url" value="${esc(urlAvisos())}" placeholder="https://ronrutina-avisos.tu-cuenta.workers.dev" autocapitalize="off" spellcheck="false"><p class="sub mt">Se configura una sola vez y queda guardada para toda la familia.</p><button class="btn pr big mt" data-a="av-on">🔔 Activar avisos en este teléfono</button>` : ''}</div>`;
+  h += `<div class="card"><p class="eti">¿De qué y cuándo te avisa Ron?</p><p class="sub mt mb">Toca varias opciones si quieres más de un aviso. Esta configuración es solo de este teléfono.</p>
+    ${g('animo', '☀️ Saludo de la mañana', hora('Hora del saludo', 'avAnimo', true, '07:30') + `<label class="av-ck"><input type="checkbox" data-avt="animoSem" ${T.animoSem ? 'checked' : ''}> Solo de lunes a viernes</label>`)}
+    ${est ? g('misiones', '⭐ Misiones del día', p('Misiones con hora: avisar') + chips('misAnt', ANT_MIS) + hora('Misiones sin hora: recordatorio a las', 'avMisiones', true, '18:00'))
+        + g('evaluaciones', '📚 Pruebas y entregas', p('Pruebas, controles y disertaciones: avisar antes') + chips('evalDias', DIAS_AV) + hora('Hora del aviso', 'evalHora') + p('Entregas de trabajos: avisar antes') + chips('entDias', DIAS_AV) + hora('Hora del aviso', 'entHora') + hora('Si eliges «el mismo día», a las', 'evalHoy'))
+        + g('estudio', '📖 Plan de estudio y pasos de trabajos', hora('Hora de estudio', 'horaEstudio', true, '17:00'))
+        + g('mochila', '🎒 Mochila y materiales', hora('Mochila (la noche anterior)', 'mochilaHora', true, '20:00') + hora('Materiales (en la mañana)', 'materialesHora', true, '07:00'))
+        + g('dormir', '🌙 Hora de dormir', hora('Hora de dormir', 'dormir', true, '22:00') + `<label class="av-h"><span>Aviso previo</span>${sel('dormirAnt', [[0, 'No'], [10, '10 min antes'], [15, '15 min antes'], [30, '30 min antes']])}</label>`)
+      : g('trabajo', '💼 Tareas del trabajo', p('Tareas con hora: avisar antes') + chips('trabAnt', ANT_MIN) + hora('Tareas y eventos sin hora: resumen a las', 'resumen'))
+        + g('agenda', '📅 Eventos del calendario', p('Eventos con hora: avisar antes') + chips('agAnt', ANT_MIN) + p('Cumpleaños: avisar antes') + chips('cumpleDias', DIAS_AV) + hora('Hora del aviso de cumpleaños', 'cumpleHora'))
+        + g('habitos', '⭐ Hábitos con hora', p('Avisar') + chips('habAnt', ANT_MIS))
+        + g('cuentas', '💳 Cuentas por vencer', p('Avisar antes del vencimiento') + chips('cuentasDias', DIAS_AV) + hora('Hora del aviso', 'cuentasHora'))
+        + g('corte', '🌙 Hora de cortar con el trabajo', hora('De lunes a viernes a las', 'corte', true, '19:00'))
+        + g('noche', '📋 Resumen de mañana (la noche anterior)', hora('Hora del resumen', 'nocheHora'))
+        + g('emy', '🎒 Evaluaciones de ' + esc(estudiante()), p('Avisar antes') + chips('emyDias', DIAS_AV) + hora('Hora del aviso', 'emyHora'))}
+    ${g('gato', '🐾 Cuidar a Ron de verdad', p('Las horas se cambian en la pestaña del gato.'))}</div>`;
+  h += `<div class="card"><p class="eti">🔁 Insistir si no lo marcas</p><p class="sub mt mb">Para ${est ? 'misiones, plan de estudio' : 'hábitos'} y cuidados de Ron. Cuando lo marcas como hecho en la app, Ron deja de insistir.</p>
+    <div class="grid2"><label class="av-h col"><span>Repetir</span>${sel('rep', [[0, 'No repetir'], [10, 'Cada 10 min'], [15, 'Cada 15 min'], [30, 'Cada 30 min'], [60, 'Cada 1 hora']])}</label><label class="av-h col"><span>Hasta</span>${sel('repVeces', [[1, '1 vez más'], [2, '2 veces más'], [3, '3 veces más']])}</label></div></div>`;
+  h += `<div class="card"><div class="av-grp">${swT('silencio', '🌙 Horario de silencio')}<div class="av-sub"><div class="grid2"><label class="av-h col"><span>Desde</span><input type="time" data-avt="silDe" value="${T.silDe}"></label><label class="av-h col"><span>Hasta</span><input type="time" data-avt="silA" value="${T.silA}"></label></div>
+    <p class="sub mt">Ron no avisa en ese horario: lo que cae ahí se adelanta o llega al terminar el silencio. ${est ? 'El saludo y la hora de dormir' : 'El saludo, el corte y el resumen de mañana'} siempre llegan a su hora.</p></div></div>
+    ${swT('discreto', '🔕 Avisos sin sonido ni vibración')}<p class="sub">Funciona en Android. En iPhone se elige en Ajustes → Notificaciones → Ronrutina.</p></div>`;
+  if (st) h += `<div class="card" id="av-prox">${proxAvisosHTML()}</div>`;
   h += `<p class="sub" style="text-align:center">Ron programa los avisos de la próxima semana. Abre la app al menos una vez por semana para que sigan llegando.</p>`;
   return h;
 }
@@ -2642,7 +2769,7 @@ function vMas() {
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 9</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 10</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
@@ -2849,6 +2976,8 @@ document.addEventListener('click', async ev => {
     case 'av-on': return activarAvisos();
     case 'av-off': return desactivarAvisos();
     case 'av-probar': return probarAviso();
+    case 'av-pausa': return pausarAvisos(v);
+    case 'avt-dia': return cambiaDiaAv(t);
     /* asistente */
     case 'as-ir': return asistenteIr();
     case 'as-ej': { const i = $('#as-txt'); if (i) i.value = v; return asistenteIr(); }
@@ -2994,10 +3123,10 @@ document.addEventListener('input', e => { if (e.target.id === 'deco-op') { AJ.de
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'as-txt') { e.preventDefault(); return asistenteIr(); } if (e.key === 'Enter' && e.target.id === 'hc-n') { e.preventDefault(); const b = $('[data-a=hc-add]'); if (b) b.click(); return; } if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-ron]')) { e.preventDefault(); e.target.click(); } });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (t.dataset.aj) { AJ[t.dataset.aj] = t.value.trim(); guardarAjustes(); if (t.dataset.aj === 'mochilaHora' || t.dataset.aj === 'materialesHora') render(true); }
+  if (t.dataset.aj) { AJ[t.dataset.aj] = t.value.trim(); guardarAjustes(); if (/^(av|mochilaHora|materialesHora|dormir|corte|horaEstudio)/.test(t.dataset.aj)) refrescarAvisos(); if ((t.dataset.aj === 'mochilaHora' || t.dataset.aj === 'materialesHora') && S.vista !== 'mas-avisos') render(true); }
   if (t.dataset.ajc) { AJ[t.dataset.ajc] = t.checked; guardarAjustes(); }
-  if (t.dataset.av) { AJ.av = Object.assign({}, avCfg(), { [t.dataset.av]: t.checked }); guardarAjustes(); sincronizarAvisos(true); return; }
-  if (t.dataset.aj === 'avAnimo') setTimeout(() => sincronizarAvisos(true), 50);
+  if (t.dataset.av) { AJ.av = Object.assign({}, avCfg(), { [t.dataset.av]: t.checked }); guardarAjustes(); refrescarAvisos(); return; }
+  if (t.dataset.avt) return cambiaAvt(t);
   if (t.id === 'deco-op') { AJ.decoOp = +t.value; guardarAjustes(); return; }
   if (t.id === 'f-archivo' && t.files && t.files[0]) { const f = t.files[0]; t.value = ''; subirArchivo(f, t.dataset.ev); return; }
   if (t.dataset.mis === 'activo') { put('config', Object.assign({}, misCfg(), { id: 'misiones', activo: t.checked })).then(() => render(true)); return; }

@@ -1,7 +1,7 @@
-const CACHE = 'ronrutina-v9';
+const CACHE = 'ronrutina-v10';
 const ARCHIVOS = ['./', './index.html', './fb.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting())); });
-self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== 'ronrutina-ajustes').map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== location.origin) return;
@@ -13,7 +13,11 @@ self.addEventListener('push', e => {
   try { d = e.data ? e.data.json() : {}; } catch (x) { d = { cuerpo: e.data ? e.data.text() : '' }; }
   const op = { body: d.cuerpo || '¡Miau! Tienes algo pendiente 🐾', icon: 'icon-192.png', badge: 'icon-192.png', data: { url: d.url || '#hoy' } };
   if (d.tag) { op.tag = d.tag; op.renotify = true; }
-  e.waitUntil(self.registration.showNotification(d.titulo || '🐾 Ron', op));
+  /* ajustes del teléfono (modo sin sonido) que guarda la app */
+  e.waitUntil(caches.open('ronrutina-ajustes').then(c => c.match('ajustes-avisos')).then(r => r ? r.json() : {}).catch(() => ({})).then(aj => {
+    if (aj && aj.discreto) { op.silent = true; op.renotify = false; }
+    return self.registration.showNotification(d.titulo || '🐾 Ron', op);
+  }));
 });
 self.addEventListener('notificationclick', e => {
   e.notification.close();
