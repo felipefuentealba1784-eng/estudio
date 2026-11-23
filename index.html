@@ -305,6 +305,12 @@ label.adjuntar{cursor:pointer;border-style:dashed}
 .av-ck{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px}.av-ck input{width:20px;height:20px;margin:0;accent-color:var(--ac)}
 details summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ac)}
 .av-err{margin-top:10px;padding:10px 12px;border-radius:12px;background:#FFF0F0;border:1.5px solid #F2B8B8;color:#8E2A2A;font-size:13px;word-break:break-word}
+/* v11 · bienestar */
+.bien-sem{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.bien-d{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:12px;background:var(--sup2)}.bien-d small{font-size:11px;color:var(--mu);font-weight:700}.bien-d b{font-size:22px;line-height:1.1}.bien-d.hoy{outline:2px solid var(--ac2)}
+.alerta-riesgo{background:#FFF6EC;border:2px solid #F2B279}.alerta-riesgo h3{color:#9A4A12}.alerta-riesgo ul,.alerta-suave ul{padding-left:20px;margin-bottom:0}.alerta-riesgo li,.alerta-suave li{margin-top:6px}
+.alerta-suave{background:#FFF8FB;border:2px solid var(--ac2)}
+.nota-priv{background:var(--sup2)}
 
 </style>
 <script defer src="fb.js"></script>
@@ -384,7 +390,7 @@ function aplicarTema() { document.documentElement.dataset.tema = AJ.tema; docume
 
 /* ===== Datos compartidos (Firebase o local) ===== */
 const FB_CONFIG = { apiKey: 'AIzaSyB_Z7YOYFsR-Br2FJLCFBf2SVyUg7TtCPE', authDomain: 'app-estudio-2027.firebaseapp.com', projectId: 'app-estudio-2027', storageBucket: 'app-estudio-2027.firebasestorage.app', messagingSenderId: '532112907706', appId: '1:532112907706:web:4a27001a73fe4ca8325183' };
-const COLS = ['asig', 'eventos', 'sesiones', 'config', 'reflex', 'archivos'];
+const COLS = ['asig', 'eventos', 'sesiones', 'config', 'reflex', 'archivos', 'bienestar', 'alertas', 'receptores'];
 const D = { asig: [], eventos: [], sesiones: [], config: [], reflex: [], archivos: [] };
 const DB = { modo: 'cargando', fs: null, unsubs: [], listo: false };
 const cfg = id => D.config.find(c => c.id === id) || {};
@@ -1843,6 +1849,7 @@ function vYoHoy() {
     : hr < 13 ? EMOS[a.emo][2][a.i] || '' : elige(SALUDO_YO[hr < 19 ? 'tarde' : 'noche'], AJ.nombre);
   let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
   h += ronHTML('', frase, 'ron-hoy');
+  h += alertasEmyCard();
   if (!cfgE('yo', 'bienvenida').visto) h += `<div class="card rosa"><p><b>¡Bienvenida a Mi vida! 🐾</b> Este es tu espacio: tus tareas, tu trabajo, tus hábitos y tus recompensas. Es privado: ${esc(estudiante())} no lo ve.</p><button class="btn sm mt" data-a="yo-bienvenida">¡Entendido!</button></div>`;
   h += animoCard() + asistenteCard() + sugiereCard();
   if (regalosInfo().pend) h += `<a class="card regalo-aviso" href="#ron"><span style="font-size:30px">🎁</span><span><b>¡Ron tiene ${regalosInfo().pend === 1 ? 'un regalo misterioso' : regalosInfo().pend + ' regalos'} para ti!</b><br><small class="sub">Toca para abrir</small></span></a>`;
@@ -1856,7 +1863,7 @@ function vYoHoy() {
   h += habitosCard();
   const cu = cuentasPendientes(), nc = ED('hogar', 'compras').filter(c => !c.ok).length;
   if (cu.length || nc) h += `<a class="card hogar-card" href="#mas-hogar"><p class="eti">🏠 Hogar</p>${cu.map(x => `<p class="mt">💳 <b>${esc(x.c.n)}</b> · ${x.dias < 0 ? `<span style="color:#E53935">venció hace ${-x.dias} ${-x.dias === 1 ? 'día' : 'días'}</span>` : x.dias === 0 ? 'vence hoy' : `vence en ${x.dias} ${x.dias === 1 ? 'día' : 'días'}`}</p>`).join('')}${nc ? `<p class="mt">🛒 ${nc} ${nc === 1 ? 'cosa' : 'cosas'} en la lista de compras</p>` : ''}</a>`;
-  h += emyResumen();
+  h += emyResumen() + bienestarCard();
   h += gatoCard();
   setTimeout(() => ronEstado('ron-hoy', corte ? 'mimo' : 'saluda'), 0);
   return h;
@@ -1881,7 +1888,7 @@ function vYoMas() {
   ${it('mas-gato', '🐾', 'Ron de verdad', 'Comida, agua, arenero, paseo y cariño')}
   ${it('mas-familia', '👨‍👩‍👧', 'Familia', 'Código y enlace de la familia')}
   ${it('mas-ajustes', '⚙️', 'Ajustes', 'Fondo, colores, hora de corte y sonido')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 10.1</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 11</p>`;
 }
 /* Navegación según el modo */
 const NAV_IC = { hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>', gato: '<path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/>', mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>', maletin: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>' };
@@ -1935,18 +1942,18 @@ async function elegirAnimoEst(emo) {
   const l = EMOS_EST[emo], k = 'ronrutina.ultAnimoEst.' + emo; let i, prev = +(localStorage.getItem(k) || -1);
   do { i = Math.floor(Math.random() * l.length); } while (i === prev && l.length > 1);
   try { localStorage.setItem(k, i); } catch (e) { }
-  await putE('yo', 'animo', { id: hoyYmd(), emo, i }); S.verConsejos = true;
+  await putE('yo', 'animo', { id: hoyYmd(), emo, i }); S.verConsejos = true; compartirAnimo(emo);
   render(true); setTimeout(() => ronDice('ron-hoy', l[i], 7000), 30);
   sonido(POSITIVAS.includes(emo) ? 'miau' : 'prrr');
 }
 function animoCardEst() {
   const a = animoEst(hoyYmd());
-  if (!a) return `<div class="card animo"><p class="eti">¿Cómo te sientes hoy?</p><div class="grid3 mt">${Object.entries(EMOS).map(([k, e]) => `<button class="emo" data-a="animo-est" data-v="${k}"><span>${e[0]}</span>${e[1]}</button>`).join('')}</div></div>`;
+  if (!a) return `<div class="card animo"><p class="eti">¿Cómo te sientes hoy?</p><div class="grid3 mt">${Object.entries(EMOS).map(([k, e]) => `<button class="emo" data-a="animo-est" data-v="${k}"><span>${e[0]}</span>${e[1]}</button>`).join('')}</div><p class="sub mt">🔒 Tu mamá ve solo el emoji de cada día, nunca lo que escribes.</p></div>`;
   const e = EMOS[a.emo], c = CONSEJOS[a.emo];
   return `<div class="fila entre animo-ok"><span class="sub">Hoy te sientes: <b>${e[0]} ${e[1]}</b></span><button class="btn sm suave" data-a="animo-est-cambiar">Cambiar</button></div>
     <details class="card consejos" ${S.verConsejos ? 'open' : ''}><summary><b>💡 ${c.t}</b></summary><ul class="mt">${c.l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
     <a class="btn sm w mt" href="#diario">✍️ Escribir en mi diario</a></details>
-    ${rachaTristeEst() >= 3 ? `<div class="card cuidado"><p>🧡 <b>Llevas algunos días con tristeza.</b> Conversa hoy con tu mamá, tu profesor o profesora jefe, o la orientadora del colegio. Contarlo ayuda mucho y no tienes que enfrentarlo en soledad.</p></div>` : ''}`;
+    ${rachaTristeEst() >= 3 || rachaNegativa(animoEst) >= 3 ? `<div class="card cuidado"><p>🧡 <b>Llevas algunos días difíciles.</b> Conversa hoy con tu mamá, tu profesor o profesora jefe, o la orientadora del colegio. Contarlo ayuda mucho y no tienes que enfrentarlo en soledad.</p>${botonHablar()}</div>` : ''}`;
 }
 
 /* ----- diario privado ----- */
@@ -1961,6 +1968,7 @@ function vDiario() {
     <button class="btn pr big mt" data-a="d-guardar">Guardar en mi diario</button></div>
   ${l.length ? `<h3 class="mb">Lo que has escrito</h3>${l.slice(0, 40).map(x => { const e = EMOS[x.emo] || ['📝', '']; return `<div class="card entrada"><div class="fila entre"><b>${e[0]} ${esc(e[1])}</b><span class="sub">${cap(fechaCorta(x.fecha))}${x.hora ? ' · ' + x.hora : ''}</span></div>${x.txt ? `<p class="pre mt">${esc(x.txt)}</p>` : ''}${x.ayuda ? `<p class="sub mt">💡 ${esc(x.ayuda)}</p>` : ''}<button class="link-sub" data-a="d-borrar" data-id="${x.id}">Borrar</button></div>`; }).join('')}` : `<p class="vacio">Aquí guardarás lo que sientes. Escribir ayuda a entenderse 🐾</p>`}
   <p class="sub mt2" style="text-align:center">Al final de la semana, en <a href="#semana">Mi semana</a> verás lo que aprendiste de tus emociones.</p>
+  ${notaPrivacidad()}
   <details class="mt"><summary class="sub">Si cambias de teléfono</summary><p class="sub mt">Tu diario se guarda con este código privado. Anótalo en un lugar seguro:</p><p class="mt"><b class="codigo">${esc(AJ.codigoYo || '')}</b></p>
     <label class="lbl" for="d-rest">Recuperar mi diario con un código</label><div class="fila"><input type="text" id="d-rest" placeholder="Pega tu código" autocapitalize="off" style="flex:1"><button class="btn sm" data-a="d-restaurar">Recuperar</button></div></details>`;
 }
@@ -1969,15 +1977,16 @@ async function guardarDiario() {
   if (!emo && !txt) return toast('Elige cómo te sientes o escribe algo.');
   const d = new Date();
   await putE('yo', 'diario', { fecha: hoyYmd(), hora: pad(d.getHours()) + ':' + pad(d.getMinutes()), emo: emo || '', txt, ayuda });
-  if (emo && !animoEst(hoyYmd())) await putE('yo', 'animo', { id: hoyYmd(), emo, i: 0 });
+  if (emo && !animoEst(hoyYmd())) { await putE('yo', 'animo', { id: hoyYmd(), emo, i: 0 }); compartirAnimo(emo); }
   S.dEmo = null; render(true);
-  if (ALERTA_RE.test(txt)) return alertaCuidado();
+  if (ALERTA_RE.test(txt)) { alertaCuidado(); avisarAdulto('riesgo'); return; }
   toast('Guardado en tu diario 🧡'); sonido('prrr');
 }
 function alertaCuidado() {
   abrirHoja(`<div style="text-align:center">${ronHTML('chico', '')}<h2 class="mt">Gracias por contármelo 🧡</h2></div>
     <p class="mt">Lo que sientes importa mucho, y no tienes que enfrentarlo en soledad. Cuéntale hoy a tu mamá o a un adulto de confianza.</p>
     <p class="mt">Si sientes que podrías hacerte daño, llama ahora al <b>*4141</b>: es gratis, confidencial y atiende las 24 horas. Ahí te escucha una persona que sabe ayudar.</p>
+    <p class="mt">🧡 Ron le avisó a tu mamá para que te acompañe hoy. No le mostró lo que escribiste.</p>
     <div class="col mt2"><a class="btn pr big" href="tel:*4141">📞 Llamar al *4141</a><button class="btn w" data-a="cerrar">Volver</button></div>`);
 }
 
@@ -2042,6 +2051,104 @@ async function guardarPlantilla(id) {
   if (i >= 0) l[i] = p; else l.push(p);
   await guardarPlantillas(l); cerrarHoja(true); toast('Plantilla guardada ✉️'); render(true);
 }
+
+/* ===== Bienestar de la estudiante: señales para acompañarla, sin abrir su diario =====
+   - Su diario sigue siendo privado (código propio).
+   - A la familia solo llega el emoji de cada día (colección "bienestar").
+   - Rachas difíciles, frases de riesgo o "Necesito hablar con mamá" crean una alerta
+     (colección "alertas", sin texto del diario) y un aviso push a los teléfonos de apoderado
+     que lo tengan activado (colección "receptores"). */
+const NEGATIVAS = ['tristeza', 'estres', 'cansancio', 'singanas'];
+const bienCfg = () => Object.assign({ racha: 3 }, cfg('bienestar'));
+const animoFam = f => (D.bienestar || []).find(b => b.id === f);
+/* días con emociones difíciles seguidos; un día sin registro no corta la racha (mirando hasta 10 días atrás) */
+function rachaNegativa(fn) {
+  let n = 0, d = hoyYmd();
+  for (let k = 0; k < 10; k++, d = sumaDias(d, -1)) { const a = fn(d); if (!a) continue; if (!NEGATIVAS.includes(a.emo)) break; n++; }
+  return n;
+}
+const MSG_ALERTA = {
+  riesgo: n => ({ titulo: `🧡 Ron · ${n} necesita tu compañía hoy`, cuerpo: `${n} escribió algo que muestra que lo está pasando muy mal. Es importante que hoy busques un momento para estar con ella y conversar con calma. Tu presencia es lo que más ayuda. Abre Ronrutina para ver cómo acercarte.` }),
+  racha: (n, x) => ({ titulo: '🧡 Ron', cuerpo: `${n} lleva ${x.dias} días con emociones difíciles. Esta semana sería bueno buscar un momento tranquilo para conversar con ella 🧡` }),
+  hablar: n => ({ titulo: `🧡 Ron · ${n} quiere hablar contigo`, cuerpo: `${n} tocó «Necesito hablar con mamá». Cuando puedas hoy, búscala para conversar 🧡` })
+};
+
+/* ----- lado de la estudiante ----- */
+async function compartirAnimo(emo) {
+  if (AJ.rol !== 'estudiante' || !emo) return;
+  await put('bienestar', { id: hoyYmd(), emo });
+  const c = bienCfg(), n = rachaNegativa(f => animoEst(f) || animoFam(f));
+  if (n >= c.racha && !D.alertas.some(a => a.tipo === 'racha' && a.fecha >= sumaDias(hoyYmd(), -6))) avisarAdulto('racha', { dias: n });
+}
+async function avisarAdulto(tipo, extra) {
+  const hoy = hoyYmd(), d = new Date(), hora = pad(d.getHours()) + ':' + pad(d.getMinutes());
+  await put('alertas', Object.assign({ id: tipo === 'hablar' ? 'hablar-' + Date.now() : tipo + '-' + hoy, tipo, fecha: hoy, hora }, extra || {}));
+  const url = urlAvisos(), ids = (D.receptores || []).map(r => r.id).filter(Boolean).slice(0, 6);
+  if (!url || !ids.length) return false;
+  const m = MSG_ALERTA[tipo](AJ.nombre || estudiante(), extra || {});
+  try { const r = await fetch(url + '/alertar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids, titulo: m.titulo, cuerpo: m.cuerpo, tag: 'bienestar-' + tipo, url: '#hoy' }) }); return r.ok; }
+  catch (e) { return false; }
+}
+async function pedirHablar() {
+  const hace = Date.now() - 30 * 60000;
+  if (D.alertas.some(a => a.tipo === 'hablar' && (a.act || 0) > hace)) return toast('Ya le avisé a tu mamá hace un ratito 🧡 Si es urgente, búscala o llámala.');
+  const ok = await avisarAdulto('hablar');
+  toast(ok ? 'Le avisé a tu mamá 🧡 Pronto te buscará para conversar.' : 'Le dejé tu mensaje a tu mamá en Ronrutina 🧡 Si es urgente, búscala o llámala.');
+  sonido('prrr');
+}
+const botonHablar = () => `<button class="btn w mt" data-a="bien-hablar">🧡 Necesito hablar con mamá</button>`;
+const notaPrivacidad = () => `<div class="card nota-priv"><p>🔒 <b>Lo que escribes es solo tuyo.</b> Nadie más puede leer tu diario, ni siquiera tu mamá.</p>
+  <p class="sub mt">Tu mamá ve solo el emoji de cómo te sentiste cada día. Si Ron nota que lo estás pasando muy mal, le avisará para que te acompañe, sin mostrarle tus palabras.</p>${botonHablar()}</div>`;
+
+/* ----- lado del apoderado ----- */
+function bienestarCard() {
+  if (AJ.rol !== 'apoderado' || !(D.bienestar || []).length) return '';
+  const hoy = hoyYmd(), r = rachaNegativa(animoFam), c = bienCfg(), dias = [];
+  for (let k = 6; k >= 0; k--) { const f = sumaDias(hoy, -k), b = animoFam(f); dias.push(`<span class="bien-d${f === hoy ? ' hoy' : ''}"><small>${DIAS_C[deYmd(f).getDay()]}</small><b>${b && EMOS[b.emo] ? EMOS[b.emo][0] : '·'}</b></span>`); }
+  return `<div class="card"><p class="eti">🧡 Cómo se ha sentido ${esc(estudiante())}</p><div class="bien-sem mt">${dias.join('')}</div>
+    <p class="sub mt">${r >= c.racha ? `Lleva <b>${r} días</b> con emociones difíciles. Es un buen momento para acompañarla.` : 'Ves solo el emoji de cada día. Su diario es privado.'}</p></div>`;
+}
+function alertasEmyCard() {
+  if (AJ.rol !== 'apoderado') return '';
+  const P = { riesgo: 0, hablar: 1, racha: 2 }, hoy = hoyYmd();
+  const l = (D.alertas || []).filter(a => !a.visto && difDias(a.fecha, hoy) <= 14).sort((a, b) => (P[a.tipo] - P[b.tipo]) || ((b.act || 0) - (a.act || 0)));
+  return l.map(alertaCardApo).join('');
+}
+function alertaCardApo(a) {
+  const n = esc(estudiante()), cuando = `${cap(fechaCorta(a.fecha))}${a.hora ? ' · ' + a.hora : ''}`, ok = `<button class="btn w mt" data-a="alerta-visto" data-id="${a.id}">Ya conversamos ✓</button>`;
+  if (a.tipo === 'riesgo') return `<div class="card alerta-riesgo"><p class="eti">${cuando}</p><h3 class="mt">🧡 ${n} necesita tu compañía hoy</h3>
+    <p class="mt">${n} escribió en su diario algo que muestra que lo está pasando muy mal. Su diario sigue siendo privado y no verás lo que escribió, pero esta señal es importante: <b>conviene que hoy mismo busques un momento para estar con ella</b>, con calma y sin apuro.</p>
+    <p class="mt">No necesitas tener todas las respuestas. Lo que más ayuda es que esté acompañada y se sienta escuchada.</p>
+    <p class="mt"><b>Cómo acercarte</b></p><ul class="mt">
+      <li>Busca un momento a solas hoy, sin pantallas ni apuro.</li>
+      <li>Empieza desde el cariño: «Te he notado más callada estos días. ¿Cómo estás? Estoy aquí para ti».</li>
+      <li>Escucha más de lo que hablas y valida lo que siente: «Entiendo que te sientas así».</li>
+      <li>Evita retos, sermones o frases como «no es para tanto».</li>
+      <li>Si te cuenta que ha pensado en hacerse daño, pregúntale con calma y de forma directa. Hablarlo no aumenta el riesgo: la ayuda a sentirse acompañada.</li>
+      <li>No tienes que hacerlo en soledad: en el <b>*4141</b> te orientan psicólogos, gratis y las 24 horas. También puedes contarle al profesor jefe o a la psicóloga del colegio.</li>
+    </ul>
+    <p class="sub mt">Si alguna vez hay un peligro inmediato, llama al 131 (SAMU). Ron detecta palabras y a veces se equivoca; aun así, una conversación cariñosa nunca está de más.</p>
+    <div class="col mt"><a class="btn pr w" href="tel:*4141">📞 Llamar al *4141 para orientarme</a>${ok}</div></div>`;
+  if (a.tipo === 'hablar') return `<div class="card alerta-suave"><p class="eti">${cuando}</p><h3 class="mt">🧡 ${n} quiere hablar contigo</h3>
+    <p class="mt">Tocó «Necesito hablar con mamá» en Ronrutina. Cuando puedas hoy, búscala para conversar. Que lo haya pedido es una muy buena señal de confianza.</p>${ok}</div>`;
+  return `<div class="card alerta-suave"><p class="eti">${cuando}</p><h3 class="mt">🧡 ${n} ha tenido varios días difíciles</h3>
+    <p class="mt">Lleva ${a.dias || 'varios'} días marcando emociones como tristeza, estrés o cansancio. No es una emergencia, pero sí un buen momento para acompañarla.</p>
+    <ul class="mt"><li>Busca un rato tranquilo para conversar o hacer algo juntas.</li><li>Pregúntale con interés cómo ha estado, sin presionar.</li><li>Ofrece ayuda concreta: ordenar sus tareas, descansar o salir un rato.</li></ul>
+    <p class="sub mt">Si esto se mantiene por varias semanas, conversa con el colegio o con un profesional.</p>${ok}</div>`;
+}
+async function alertaVista(id) {
+  const a = D.alertas.find(x => x.id === id); if (!a) return;
+  await put('alertas', Object.assign({}, a, { visto: hoyYmd(), vistoPor: AJ.nombre || '' }));
+  toast('Gracias por acompañarla 🧡'); render(true);
+}
+/* este teléfono recibe (o deja de recibir) los avisos de bienestar */
+function revisarReceptor() {
+  if (AJ.rol !== 'apoderado' || !DB.listo) return;
+  const st = pushLS(), ya = st && (D.receptores || []).find(r => r.id === st.id);
+  if (st && avCfg().bienestar && !ya) put('receptores', { id: st.id, nombre: AJ.nombre || '' });
+  if (st && !avCfg().bienestar && ya) borrar('receptores', st.id);
+}
+async function cambiaRacha(v) { await put('config', Object.assign({}, cfg('bienestar'), { id: 'bienestar', racha: +v })); render(true); }
 
 /* ===== Asistente de Ron (sin IA): entiende frases simples y sugiere acciones ===== */
 const sinTilde = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -2225,8 +2332,8 @@ async function moverAtrasadas() {
 /* ===== Avisos de Ron: notificaciones push con la app cerrada =====
    El teléfono calcula sus avisos de los próximos 7 días y se los entrega
    al servidor de avisos (Cloudflare Worker), que los envía a su hora. */
-const AV0 = { animo: true, misiones: true, gato: true, evaluaciones: true, estudio: true, mochila: true, dormir: true, trabajo: true, agenda: true, habitos: true, cuentas: true, corte: true, emy: false, noche: false };
-const avCfg = () => Object.assign({}, AV0, { gato: AJ.rol === 'estudiante' }, AJ.av || {});
+const AV0 = { animo: true, misiones: true, gato: true, evaluaciones: true, estudio: true, mochila: true, dormir: true, trabajo: true, agenda: true, habitos: true, cuentas: true, corte: true, emy: false, noche: false, bienestar: false };
+const avCfg = () => Object.assign({}, AV0, { gato: AJ.rol === 'estudiante', bienestar: AJ.rol === 'apoderado' }, AJ.av || {});
 const pushLS = () => { try { return JSON.parse(localStorage.getItem('ronrutina.push') || 'null'); } catch (e) { return null; } };
 const guardarPushLS = o => { try { o ? localStorage.setItem('ronrutina.push', JSON.stringify(o)) : localStorage.removeItem('ronrutina.push'); } catch (e) { } };
 const urlAvisos = () => (cfg('avisos').url || '').replace(/\/+$/, '');
@@ -2364,12 +2471,12 @@ async function sincronizarAvisos(forzar) {
   const st = pushLS(); if (!st || !soportaPush() || !DB.listo) return false;
   guardarAjSW();
   const avisos = generarAvisos(), h = hashTxt(JSON.stringify(avisos.map(a => [a.t, a.cuerpo])));
-  if (!forzar && h === st.hash && Date.now() - st.ult < 12 * 3600e3) return true;
+  if (!forzar && h === st.hash && Date.now() - st.ult < 12 * 3600e3) { revisarReceptor(); return true; }
   try {
     const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (!sub) { guardarPushLS(null); return false; }
     const r = await fetch(st.url + '/registrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: st.id, sub: sub.toJSON(), avisos }) });
     if (!r.ok) throw new Error('estado ' + r.status);
-    guardarPushLS(Object.assign(st, { hash: h, ult: Date.now(), n: avisos.length })); return true;
+    guardarPushLS(Object.assign(st, { hash: h, ult: Date.now(), n: avisos.length })); revisarReceptor(); return true;
   } catch (e) { console.warn(e); if (forzar) avisoError('Paso 3: el servidor no guardó los avisos (' + (e.message || e) + ').'); return false; }
 }
 async function probarAviso() {
@@ -2379,6 +2486,7 @@ async function probarAviso() {
 }
 async function desactivarAvisos() {
   const st = pushLS();
+  if (st && (D.receptores || []).some(r => r.id === st.id)) borrar('receptores', st.id);
   try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) { }
   if (st) fetch(st.url + '/borrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: st.id }) }).catch(() => { });
   guardarPushLS(null); toast('Avisos desactivados en este teléfono.'); render(true);
@@ -2441,7 +2549,8 @@ function vAvisos() {
         + g('cuentas', '💳 Cuentas por vencer', p('Avisar antes del vencimiento') + chips('cuentasDias', DIAS_AV) + hora('Hora del aviso', 'cuentasHora'))
         + g('corte', '🌙 Hora de cortar con el trabajo', hora('De lunes a viernes a las', 'corte', true, '19:00'))
         + g('noche', '📋 Resumen de mañana (la noche anterior)', hora('Hora del resumen', 'nocheHora'))
-        + g('emy', '🎒 Evaluaciones de ' + esc(estudiante()), p('Avisar antes') + chips('emyDias', DIAS_AV) + hora('Hora del aviso', 'emyHora'))}
+        + g('emy', '🎒 Evaluaciones de ' + esc(estudiante()), p('Avisar antes') + chips('emyDias', DIAS_AV) + hora('Hora del aviso', 'emyHora'))
+        + g('bienestar', '🧡 Bienestar de ' + esc(estudiante()), `<p class="sub mt">Ron te avisa al instante si ${esc(estudiante())} escribe algo que muestra que lo está pasando muy mal, si pide hablar contigo o si lleva varios días difíciles. Nunca verás su diario: solo el emoji de cada día y estos avisos.</p>` + p('Avisar si lleva estos días seguidos con emociones difíciles (para toda la familia)') + `<div class="chips av-chips">${[3, 4, 5, 7].map(x => `<button class="chip" data-a="bien-racha" data-v="${x}" aria-pressed="${bienCfg().racha === x}">${x} días</button>`).join('')}</div>`)}
     ${g('gato', '🐾 Cuidar a Ron de verdad', p('Las horas se cambian en la pestaña del gato.'))}</div>`;
   h += `<div class="card"><p class="eti">🔁 Insistir si no lo marcas</p><p class="sub mt mb">Para ${est ? 'misiones, plan de estudio' : 'hábitos'} y cuidados de Ron. Cuando lo marcas como hecho en la app, Ron deja de insistir.</p>
     <div class="grid2"><label class="av-h col"><span>Repetir</span>${sel('rep', [[0, 'No repetir'], [10, 'Cada 10 min'], [15, 'Cada 15 min'], [30, 'Cada 30 min'], [60, 'Cada 1 hora']])}</label><label class="av-h col"><span>Hasta</span>${sel('repVeces', [[1, '1 vez más'], [2, '2 veces más'], [3, '3 veces más']])}</label></div></div>`;
@@ -2528,6 +2637,7 @@ function vHoy() {
     : est && finde && AJ.aire && new Date().getHours() >= 11 && new Date().getHours() < 19 && Math.random() < .4 ? '¿Y si sales un ratito al aire libre? Yo miro por la ventana 🌤️' : !est ? (semana.length ? `Hola ${AJ.nombre}. ${estudiante()} tiene ${semana.length} ${semana.length === 1 ? 'evaluación o trabajo' : 'evaluaciones o trabajos'} esta semana.` : `Hola ${AJ.nombre}. ${estudiante()} no tiene evaluaciones ni trabajos esta semana.`) : elige(RON.saludos, AJ.nombre);
   let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
   h += ronHTML('', frase, 'ron-hoy');
+  if (!est) h += alertasEmyCard() + bienestarCard();
   if (est && regalosInfo().pend) h += `<a class="card regalo-aviso" href="#ron"><span style="font-size:30px">🎁</span><span><b>¡Ron tiene ${regalosInfo().pend === 1 ? 'un regalo misterioso' : regalosInfo().pend + ' regalos misteriosos'}!</b><br><small class="sub">Toca para abrir</small></span></a>`;
   if (est) h += animoCardEst() + asistenteCard() + sugiereCard();
   if (est && [0, 5, 6].includes(new Date().getDay())) h += `<a class="card hogar-card" href="#semana"><p>💗 <b>Mira lo que aprendiste de tus emociones esta semana</b></p><p class="sub mt">Y guarda tus aprendizajes en Mi semana.</p></a>`;
@@ -2780,7 +2890,7 @@ function vMas() {
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 10.1</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 11</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
@@ -2988,6 +3098,9 @@ document.addEventListener('click', async ev => {
     case 'av-off': return desactivarAvisos();
     case 'av-probar': return probarAviso();
     case 'av-pausa': return pausarAvisos(v);
+    case 'bien-hablar': return pedirHablar();
+    case 'alerta-visto': return alertaVista(id);
+    case 'bien-racha': return cambiaRacha(v);
     case 'avt-dia': return cambiaDiaAv(t);
     /* asistente */
     case 'as-ir': return asistenteIr();
