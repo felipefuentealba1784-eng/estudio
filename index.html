@@ -109,7 +109,7 @@ svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke
 .dia[aria-pressed=true]{background:var(--ac);color:#fff}
 .puntos{display:flex;gap:2px;margin-top:3px;height:6px}.puntos i{width:6px;height:6px;border-radius:3px;display:block}
 label.lbl{display:block;font-weight:800;font-size:14px;margin:14px 0 6px}
-input[type=text],input[type=email],input[type=date],input[type=time],input[type=number],select,textarea{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--borde);background:var(--sup);color:var(--tx)}
+input[type=text],input[type=url],input[type=email],input[type=date],input[type=time],input[type=number],select,textarea{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--borde);background:var(--sup);color:var(--tx)}
 textarea{min-height:90px;resize:vertical}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:6px 0;border-bottom:1px solid var(--borde)}
 .sw:last-child{border-bottom:0}
@@ -281,6 +281,18 @@ label.adjuntar{cursor:pointer;border-style:dashed}
 
 .grid3>input,.grid2>input,.fila>input{min-width:0}
 
+.consejos summary{cursor:pointer;list-style:none}.consejos summary::-webkit-details-marker{display:none}.consejos ul{padding-left:20px}.consejos li{margin-bottom:6px}
+.entrada{position:relative}.link-sub{background:none;border:0;color:var(--mu);font-size:12px;text-decoration:underline;padding:6px 0 0;font-weight:700}
+.semana-emo{display:grid;grid-template-columns:repeat(7,1fr);text-align:center}.semana-emo span{font-size:26px;display:block}.semana-emo small{font-size:11px;font-weight:800;color:var(--mu)}
+.insights{padding-left:20px}.insights li{margin-bottom:6px}
+.codigo{font-family:ui-monospace,monospace;font-size:13px;word-break:break-all;background:var(--sup2);padding:6px 8px;border-radius:8px;display:inline-block}
+
+.asistente input{min-width:0}.chip.ej{font-size:12px;min-height:32px;font-weight:700;color:var(--mu)}
+.sug{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--borde);font-size:14px}.sug:last-child{border-bottom:0}.sug .btn{flex:none}
+.interp p{margin:4px 0}
+
+.prox-av{font-size:13px;padding:6px 0;border-bottom:1px dashed var(--borde)}.prox-av:last-child{border-bottom:0}
+
 </style>
 <script defer src="fb.js"></script>
 </head>
@@ -348,12 +360,6 @@ const TECNICAS = [
   ['Mézclalo', 'Alterna ejercicios o temas distintos en vez de repetir el mismo.'],
   ['Anota la duda', 'Escríbela para preguntarle a tu profe. ¡Preguntar también es estudiar!']
 ];
-const PLANTILLAS = {
-  consulta: ['Consulta sobre {asig}', 'Estimado/a profesor/a {profe}:\n\nLe escribo para consultarle sobre {tema}.\n\n\nMuchas gracias.\nSaludos cordiales,\n{nombre}\n7° básico'],
-  trabajo: ['Envío de trabajo: {tema}', 'Estimado/a profesor/a {profe}:\n\nLe adjunto mi trabajo "{tema}" de {asig}.\n\nQuedo atenta a sus comentarios.\nSaludos cordiales,\n{nombre}\n7° básico'],
-  justificacion: ['Justificación de inasistencia', 'Estimado/a profesor/a {profe}:\n\nLe escribo para informarle que no pude asistir a clases el día {fecha} por el siguiente motivo: \n\n\nSaludos cordiales,\n{nombre}\n7° básico'],
-  libre: ['', 'Estimado/a profesor/a {profe}:\n\n\n\nSaludos cordiales,\n{nombre}']
-};
 
 /* ===== Ajustes de este teléfono ===== */
 const AJ0 = { rol: '', nombre: '', codigo: '', tema: 'chicle', deco: true, ronFreq: 15, sonido: true, agua: 45, dormir: '22:00', mochilaHora: '20:00', materialesHora: '07:00', duracion: 25, estirar: true, hobbies: '', aire: true, horaEstudio: '17:00', corte: '19:00', decoEl: { fr: true, fl: true, gi: false }, decoOp: 16, modoApo: 'yo', verEmy: true };
@@ -766,6 +772,7 @@ function vSemana() {
   <div class="card"><p class="eti">Esta semana</p><p class="mt">${evs.length} ${evs.length === 1 ? 'evaluación o trabajo' : 'evaluaciones o trabajos'} · ${pasos} ${pasos === 1 ? 'paso cumplido' : 'pasos cumplidos'}</p>
   ${evs.map(e => `<p class="sub mt">${e.resultado ? { bien: '😊', regular: '😐', costo: '😣' }[e.resultado] : '·'} ${esc(e.titulo || tipoN(e.tipo))} (${esc(asigPor(e.asig).nombre)})${e.confianza && e.resultado ? ` — te sentías ${['', 'nada', 'poco', 'algo', 'bastante', 'muy'][e.confianza]} preparada` : ''}</p>`).join('')}</div>`;
   if (Object.keys(tecs).length) h += `<div class="card"><p class="eti">Tus técnicas</p>${Object.entries(tecs).sort((a, b) => b[1].n - a[1].n).map(([k, v]) => `<div class="fila entre mt"><span>${tecPor(k)?.ic || ''} ${esc(tecPor(k)?.n || k)}</span><span class="sub">${v.n} ${v.n === 1 ? 'vez' : 'veces'}${v.bien ? ' · ' + v.bien + ' 😊' : ''}</span></div>`).join('')}</div>`;
+  if (est) h += bloqueEmocionesSemana(ini);
   if (est) h += `<div class="card rosa"><p class="eti">Reflexión de 2 minutos</p>
     <label class="lbl" for="r1">¿Qué te funcionó esta semana?</label><textarea id="r1" style="min-height:70px">${esc(r.funciono || '')}</textarea>
     <label class="lbl" for="r2">¿Qué te costó?</label><textarea id="r2" style="min-height:70px">${esc(r.costo || '')}</textarea>
@@ -1121,7 +1128,7 @@ setInterval(() => {
 }, 30000);
 
 function vGato() {
-  const g = gatoCfg(), hoy = hoyYmd();
+  const g = gatoCfg();
   let h = cabSub('Ron de verdad') + `
   <div class="ron-zona chico"><div class="ron" data-ron data-pelo="${ronEq().pelaje || 'naranjo'}" role="button" tabindex="0" aria-label="Ron">${ronSVG(ronEq())}</div><p class="globo">Yo también existo fuera del teléfono 🐾 Te recordaré cuándo darme comida, agua, limpiar mi arenero, sacarme a pasear y regalonearme.</p></div>
   <div class="card"><label class="sw"><span><b>Recordatorios de Ron</b><br><small class="sub">Ron te habla en Hoy cuando llega la hora.</small></span><input type="checkbox" data-gato="activo" ${g.activo ? 'checked' : ''}></label></div>`;
@@ -1504,7 +1511,7 @@ function areneroEscena() { const id = ronEq().arenero || 'ar_clasico', x = itemC
    Cada espacio es otro código de 28 letras con su propia ruta familias/{codigo}/…,
    así las reglas de Firebase no cambian y Emy no ve lo privado. */
 const ESP = {
-  yo: { cols: ['tareas', 'agenda', 'config', 'animo'], D: {}, unsubs: [], listo: false, codigo: '' },
+  yo: { cols: ['tareas', 'agenda', 'config', 'animo', 'diario'], D: {}, unsubs: [], listo: false, codigo: '' },
   hogar: { cols: ['compras', 'cuentas', 'agenda', 'config'], D: {}, unsubs: [], listo: false, codigo: '' }
 };
 Object.values(ESP).forEach(e => e.cols.forEach(c => e.D[c] = []));
@@ -1544,6 +1551,7 @@ async function borrarE(n, col, id) {
   else { guardarLocalE(n); render(); }
 }
 async function prepararMiVida() {
+  if (AJ.rol === 'estudiante') { if (!AJ.codigoYo) { AJ.codigoYo = nuevoCodigo(); guardarAjustes(); } return conectarEsp('yo', AJ.codigoYo); }
   if (AJ.rol !== 'apoderado') return;
   let cambio = false;
   if (!AJ.codigoYo) { AJ.codigoYo = nuevoCodigo(); cambio = true; }
@@ -1639,21 +1647,16 @@ function vTrabajo() {
   if (!p.length) h += `<p class="vacio">${elige(['Nada pendiente. ¡A disfrutar! 🐾', 'Todo al día. Eres admirable 🧡'])}</p>`;
   const hechas = tareasYo().filter(t => t.hecho).sort((a, b) => (b.hechoEn || 0) - (a.hechoEn || 0));
   if (hechas.length) h += `<details class="mt"><summary class="sub" style="padding:10px 0">Terminadas (${hechas.length})</summary>${hechas.slice(0, 30).map(vTareaItem).join('')}</details>`;
-  h += `<div class="card mt2"><p class="eti mb">✉️ Plantillas de correo</p>${PLANT_T.map((x, i) => `<button class="mas-item" data-a="t-correo" data-v="${i}"><span class="ic">${x.ic}</span><span>${x.n}<small>${x.s}</small></span></button>`).join('')}</div>`;
+  const pl = plantillas();
+  h += `<div class="card mt2"><div class="fila entre mb"><p class="eti">✉️ Mis plantillas de correo</p><a class="btn sm suave" href="#mas-plantillas">Configurar</a></div>${pl.length ? pl.map(x => `<button class="mas-item" data-a="t-correo" data-v="${x.id}"><span class="ic">✉️</span><span>${esc(x.n)}<small>${esc(x.as || '')}</small></span></button>`).join('') : `<p class="sub mb">Aún no tienes plantillas. Crea las que más usas (citaciones, avisos, justificaciones…).</p>`}<button class="btn sm w" data-a="t-correo" data-v="">Escribir un correo en blanco</button></div>`;
   return h;
 }
-const PLANT_T = [
-  { n: 'Citación a apoderado', ic: '📣', s: 'Para pedir una reunión', a: 'Citación a reunión', c: 'Estimado/a apoderado/a:\n\nJunto con saludar, le cito a una reunión el día [fecha] a las [hora] para conversar sobre [tema].\n\nQuedo atenta a su confirmación.\n\nSaludos cordiales,\n{n}' },
-  { n: 'Aviso de reunión', ic: '👥', s: 'Para colegas o equipo', a: 'Reunión [tema] – [fecha]', c: 'Hola a todos:\n\nLes recuerdo que tenemos reunión el [fecha] a las [hora] en [lugar]. Temas: [temas].\n\nSaludos,\n{n}' },
-  { n: 'Justificación', ic: '📄', s: 'Ausencia o atraso', a: 'Justificación', c: 'Estimado/a:\n\nJunto con saludar, informo que [motivo] el día [fecha].\n\nAgradezco su comprensión.\n\nSaludos,\n{n}' },
-  { n: 'Correo libre', ic: '✉️', s: 'Empieza en blanco', a: '', c: '\n\nSaludos,\n{n}' }
-];
-function correoTrabajo(i) {
-  const p = PLANT_T[i];
-  abrirHoja(`${cabHoja(p.n)}<label class="lbl" for="tc-para">Para</label><input type="email" id="tc-para" placeholder="correo@colegio.cl" autocapitalize="off">
-    <label class="lbl" for="tc-as">Asunto</label><input type="text" id="tc-as" value="${esc(p.a)}">
-    <label class="lbl" for="tc-cu">Mensaje</label><textarea id="tc-cu" style="min-height:180px">${esc(p.c.replace('{n}', AJ.nombre))}</textarea>
-    <p class="sub mt">Reemplaza lo que está entre [corchetes].</p><div class="grid2 mt"><button class="btn pr" data-a="tc-abrir" data-v="app">Abrir en correo</button><button class="btn" data-a="tc-abrir" data-v="web">Gmail web</button></div>`);
+function correoTrabajo(id) {
+  const p = plantillas().find(x => x.id === id) || { n: 'Correo en blanco', as: '', cu: '' }, rel = x => (x || '').replace(/\{nombre\}/g, AJ.nombre).replace(/\{fecha\}/g, fechaLarga(hoyYmd()));
+  abrirHoja(`${cabHoja(esc(p.n))}<label class="lbl" for="tc-para">Para</label><input type="email" id="tc-para" placeholder="correo@colegio.cl" autocapitalize="off">
+    <label class="lbl" for="tc-as">Asunto</label><input type="text" id="tc-as" value="${esc(rel(p.as))}">
+    <label class="lbl" for="tc-cu">Mensaje</label><textarea id="tc-cu" style="min-height:180px">${esc(rel(p.cu))}</textarea>
+    <div class="grid2 mt"><button class="btn pr" data-a="tc-abrir" data-v="app">Abrir en correo</button><button class="btn" data-a="tc-abrir" data-v="web">Gmail web</button></div>`);
 }
 function formTarea(t, pre = {}) {
   t = t ? JSON.parse(JSON.stringify(t)) : { t: '', cat: pre.cat || 'planif', fecha: pre.fecha || sumaDias(hoyYmd(), 1), hora: '', notas: '', pasos: [], rep: false };
@@ -1702,7 +1705,7 @@ const tiposA = () => Object.entries(TIPO_A).map(([k, v]) => ({ id: k, ic: v[0], 
 const tipoA = id => tiposA().find(t => t.id === id) || { id, ic: '📍', n: 'Evento', c: '#78909C' };
 function itemsCal(desde, hasta) {
   const r = [], en = f => f && f >= desde && f <= hasta;
-  ['yo', 'hogar'].forEach(n => ED(n, 'agenda').filter(e => en(e.fecha)).forEach(e => { const t = tipoA(e.tipo); r.push({ f: e.fecha, h: e.hora, t: e.t, c: t.c, ic: t.ic, tn: t.n + (n === 'hogar' ? ' · 🏠' : ''), a: 'a-ver', id: e.id, esp: n }); }));
+  ['yo', 'hogar'].forEach(n => ED(n, 'agenda').filter(e => en(e.fecha)).forEach(e => { const t = tipoA(e.tipo); r.push({ f: e.fecha, h: e.hora, t: e.t, c: t.c, ic: t.ic, tn: t.n + (n === 'hogar' ? ' · 🏠' : ''), a: 'ag-ver', id: e.id, esp: n }); }));
   tareasYo().filter(t => !t.hecho && en(t.fecha)).forEach(t => { const c = CAT_T[t.cat] || CAT_T.otro; r.push({ f: t.fecha, h: t.hora, t: t.t, c: c[2], ic: c[0], tn: 'Trabajo · ' + c[1], a: 't-ver', id: t.id }); });
   if (AJ.verEmy !== false) D.eventos.filter(e => en(e.fecha) && !e.hecho && e.tipo !== 'material').forEach(e => r.push({ f: e.fecha, h: e.hora, t: (e.titulo || tipoN(e.tipo)) + ' · ' + asigPor(e.asig).nombre, c: tipoC(e.tipo), ic: '🎒', tn: estudiante() + ' · ' + tipoN(e.tipo), a: 'ver', id: e.id }));
   return r.sort((a, b) => (a.f + (a.h || '')).localeCompare(b.f + (b.h || '')));
@@ -1710,7 +1713,7 @@ function itemsCal(desde, hasta) {
 const itemCalHTML = x => `<button class="ev" data-a="${x.a}" data-id="${x.id}" ${x.esp ? `data-esp="${x.esp}"` : ''}><span class="barra" style="background:${x.c}"></span><span class="txt"><span class="tipo"><span class="tp" style="background:${x.c}">${x.ic} ${esc(x.tn)}</span></span><b>${esc(x.t)}</b><small>${cap(fechaCorta(x.f))}${x.h ? ' · ' + x.h : ''}</small></span><span class="der"><b style="color:${x.c}">${cuando(x.f)}</b></span></button>`;
 function vYoCal() {
   const vista = AJ.calVistaYo || 'mes', hoy = hoyYmd();
-  let h = `<div class="top"><h1>Calendario</h1><button class="btn pr sm" data-a="a-nuevo">${ic('plus')} Agregar</button></div>
+  let h = `<div class="top"><h1>Calendario</h1><button class="btn pr sm" data-a="ag-nuevo">${ic('plus')} Agregar</button></div>
   <div class="seg mb"><button data-a="ycal" data-v="mes" aria-selected="${vista === 'mes'}">Mes</button><button data-a="ycal" data-v="semana" aria-selected="${vista === 'semana'}">Semana</button></div>
   <div class="chips mb"><button class="chip" data-a="ver-emy-cal" aria-pressed="${AJ.verEmy !== false}">🎒 Ver lo de ${esc(estudiante())}</button></div>`;
   if (vista === 'mes') {
@@ -1721,14 +1724,14 @@ function vYoCal() {
       celdas += `<button class="dia ${d.getMonth() !== m ? 'otro' : ''} ${s === hoy ? 'hoy' : ''}" data-a="ydia" data-v="${s}" aria-pressed="${S.yDia === s}">${d.getDate()}<span class="puntos">${ev.map(x => `<i style="background:${x.c}"></i>`).join('')}</span></button>`; }
     h += `<div class="card"><div class="fila entre mb"><button class="icono" data-a="ymes" data-v="-1" aria-label="Mes anterior">${ic('back')}</button><h3>${cap(MESES[m])} ${y}</h3><button class="icono" data-a="ymes" data-v="1" aria-label="Mes siguiente" style="transform:scaleX(-1)">${ic('back')}</button></div>
       <div class="mes">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(x => `<span class="cab">${x}</span>`).join('')}${celdas}</div></div>`;
-    if (S.yDia) { const l = itemsCal(S.yDia, S.yDia); h += `<div class="fila entre mb"><h3>${cap(fechaLarga(S.yDia))}</h3><button class="btn sm suave" data-a="ydia" data-v="">Ver próximos</button></div>${l.length ? l.map(itemCalHTML).join('') : '<p class="vacio">Nada este día.</p>'}<button class="btn w mt" data-a="a-nuevo" data-fecha="${S.yDia}">${ic('plus')} Agregar para este día</button>`; }
+    if (S.yDia) { const l = itemsCal(S.yDia, S.yDia); h += `<div class="fila entre mb"><h3>${cap(fechaLarga(S.yDia))}</h3><button class="btn sm suave" data-a="ydia" data-v="">Ver próximos</button></div>${l.length ? l.map(itemCalHTML).join('') : '<p class="vacio">Nada este día.</p>'}<button class="btn w mt" data-a="ag-nuevo" data-fecha="${S.yDia}">${ic('plus')} Agregar para este día</button>`; }
     else { const l = itemsCal(hoy, sumaDias(hoy, 45)); h += `<h3 class="mb">Próximos</h3>${l.length ? l.slice(0, 25).map(itemCalHTML).join('') : '<p class="vacio">Nada agendado todavía.</p>'}`; }
   } else {
     const lun = sumaDias(hoy, -((deYmd(hoy).getDay() + 6) % 7) + 7 * (S.ySem || 0)), dom = sumaDias(lun, 6), its = itemsCal(lun, dom);
     h += `<div class="card"><div class="fila entre"><button class="icono" data-a="ysem" data-v="-1" aria-label="Semana anterior">${ic('back')}</button><h3>${deYmd(lun).getDate()} ${MESES[deYmd(lun).getMonth()].slice(0, 3)} – ${deYmd(dom).getDate()} ${MESES[deYmd(dom).getMonth()].slice(0, 3)}</h3><button class="icono" data-a="ysem" data-v="1" aria-label="Semana siguiente" style="transform:scaleX(-1)">${ic('back')}</button></div>
       ${S.ySem ? `<button class="btn sm suave w mt" data-a="ysem" data-v="0">Volver a esta semana</button>` : ''}</div>`;
     for (let k = 0; k < 7; k++) { const d = sumaDias(lun, k), l = its.filter(x => x.f === d);
-      h += `<div class="sem-dia ${d === hoy ? 'hoy' : ''} ${d < hoy ? 'pasado' : ''}"><div class="fila entre"><p class="sem-cab"><b>${cap(DIAS[deYmd(d).getDay()])}</b> ${deYmd(d).getDate()}${d === hoy ? ' <span class="badge">Hoy</span>' : ''}</p><button class="icono chico" data-a="a-nuevo" data-fecha="${d}" aria-label="Agregar">${ic('plus')}</button></div>${l.length ? l.map(itemCalHTML).join('') : '<p class="sub">Libre 🐾</p>'}</div>`; }
+      h += `<div class="sem-dia ${d === hoy ? 'hoy' : ''} ${d < hoy ? 'pasado' : ''}"><div class="fila entre"><p class="sem-cab"><b>${cap(DIAS[deYmd(d).getDay()])}</b> ${deYmd(d).getDate()}${d === hoy ? ' <span class="badge">Hoy</span>' : ''}</p><button class="icono chico" data-a="ag-nuevo" data-fecha="${d}" aria-label="Agregar">${ic('plus')}</button></div>${l.length ? l.map(itemCalHTML).join('') : '<p class="sub">Libre 🐾</p>'}</div>`; }
   }
   return h;
 }
@@ -1748,7 +1751,7 @@ function formAgenda(e, esp, pre = {}) {
 function leerAgenda() { const f = S.aForm, v = id => ($('#' + id) || {}).value; if (!f || v('af-t') === undefined) return; f.e.t = v('af-t').trim(); f.e.fecha = v('af-f'); f.e.hora = v('af-h'); f.e.notas = v('af-n'); f.esp = $('#af-hogar').checked ? 'hogar' : 'yo'; }
 async function guardarAgenda() {
   leerAgenda(); const f = S.aForm; if (!f.e.t) return toast('Escribe un título.'); if (!f.e.fecha) return toast('Elige la fecha.');
-  if (f.espOrig && f.espOrig !== f.esp) await borrarE(f.espOrig, 'agenda', f.e.id);
+  if (f.espOrig && f.espOrig !== f.esp && f.e.id) await borrarE(f.espOrig, 'agenda', f.e.id);
   await putE(f.esp, 'agenda', f.e); S.aForm = null; cerrarHoja(); toast('Guardado 🐾'); render(true);
 }
 function verAgenda(id, esp) {
@@ -1756,7 +1759,7 @@ function verAgenda(id, esp) {
   abrirHoja(`<div class="fila entre mb"><div><span class="tipo"><span class="tp" style="background:${t.c}">${t.ic} ${esc(t.n)}</span>${esp === 'hogar' ? ' 🏠 Compartido' : ''}</span><h2>${esc(e.t)}</h2></div><button class="icono" data-a="cerrar" aria-label="Cerrar">${ic('x')}</button></div>
     <p><b>${cap(fechaLarga(e.fecha))}</b>${e.hora ? ' · ' + e.hora : ''} <span class="badge">${cuando(e.fecha)}</span></p>${e.notas ? `<p class="pre mt">${esc(e.notas)}</p>` : ''}
     <div class="col mt2"><a class="btn pr sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: t.ic + ' ' + e.t, fecha: e.fecha, hora: e.hora, min: 60, detalles: e.notas || '' })}">${ic('cal')} Recordatorio en Google Calendar</a>
-    <div class="grid2"><button class="btn sm" data-a="a-editar" data-id="${e.id}" data-esp="${esp}">${ic('lapiz')} Editar</button><button class="btn sm" data-a="a-borrar" data-id="${e.id}" data-esp="${esp}">Eliminar</button></div></div>`);
+    <div class="grid2"><button class="btn sm" data-a="ag-editar" data-id="${e.id}" data-esp="${esp}">${ic('lapiz')} Editar</button><button class="btn sm" data-a="ag-borrar" data-id="${e.id}" data-esp="${esp}">Eliminar</button></div></div>`);
 }
 
 /* ----- hogar: compras y cuentas ----- */
@@ -1766,7 +1769,6 @@ function cuentasPendientes() {
 }
 function vHogar() {
   const comp = ED('hogar', 'compras').sort((a, b) => (a.ok ? 1 : 0) - (b.ok ? 1 : 0) || (a.act || 0) - (b.act || 0)), m = mesKey();
-  const url = location.origin + location.pathname + '#hogar=' + AJ.codigoHogar;
   return cabSub('Hogar compartido') + `<div class="card rosa"><p>🏠 Compras, cuentas y la agenda marcada como "hogar" se comparten con tu pareja.</p><button class="btn pr w mt" data-a="hogar-compartir">Invitar a mi pareja</button><p class="sub mt">Tu pareja abre el enlace en su Ronrutina (como apoderado/a) y listo.</p></div>
   <div class="card"><p class="eti mb">🛒 Lista de compras</p><div class="fila"><input type="text" id="hc-n" placeholder="Agregar algo… (pan, leche)" style="flex:1"><button class="btn pr sm" data-a="hc-add">${ic('plus')}</button></div>
     <div class="mt">${comp.length ? comp.map(c => `<div class="fila"><button class="check" data-a="hc-ok" data-id="${c.id}" aria-pressed="${!!c.ok}" style="flex:1;margin-bottom:6px"><span class="box"></span><span>${esc(c.n)}</span></button><button class="icono chico" data-a="hc-del" data-id="${c.id}" aria-label="Quitar">${ic('x')}</button></div>`).join('') : '<p class="sub">La lista está vacía.</p>'}</div>
@@ -1829,10 +1831,10 @@ function vYoHoy() {
   let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
   h += ronHTML('', frase, 'ron-hoy');
   if (!cfgE('yo', 'bienvenida').visto) h += `<div class="card rosa"><p><b>¡Bienvenida a Mi vida! 🐾</b> Este es tu espacio: tus tareas, tu trabajo, tus hábitos y tus recompensas. Es privado: ${esc(estudiante())} no lo ve.</p><button class="btn sm mt" data-a="yo-bienvenida">¡Entendido!</button></div>`;
-  h += animoCard();
+  h += animoCard() + asistenteCard() + sugiereCard();
   if (regalosInfo().pend) h += `<a class="card regalo-aviso" href="#ron"><span style="font-size:30px">🎁</span><span><b>¡Ron tiene ${regalosInfo().pend === 1 ? 'un regalo misterioso' : regalosInfo().pend + ' regalos'} para ti!</b><br><small class="sub">Toca para abrir</small></span></a>`;
   const ag = itemsCal(hoy, hoy).filter(x => x.a !== 't-ver');
-  h += `<div class="card"><div class="fila entre mb"><p class="eti">📅 Hoy</p><button class="btn sm suave" data-a="a-nuevo" data-fecha="${hoy}">${ic('plus')} Evento</button></div>${ag.length ? ag.map(itemCalHTML).join('') : '<p class="sub">Sin eventos para hoy.</p>'}</div>`;
+  h += `<div class="card"><div class="fila entre mb"><p class="eti">📅 Hoy</p><button class="btn sm suave" data-a="ag-nuevo" data-fecha="${hoy}">${ic('plus')} Evento</button></div>${ag.length ? ag.map(itemCalHTML).join('') : '<p class="sub">Sin eventos para hoy.</p>'}</div>`;
   const urg = tareasPend().filter(t => t.fecha && t.fecha <= sumaDias(hoy, 1)), lista = estr ? urg.slice(0, 3) : urg;
   h += `<div class="card ${corte ? 'apagada' : ''}"><div class="fila entre mb"><p class="eti">💼 Trabajo ${corte ? '· ya cortaste por hoy 🌙' : 'urgente'}</p><button class="btn sm suave" data-a="t-nueva">${ic('plus')} Tarea</button></div>
     ${estr && urg.length > 3 ? `<p class="sub mb">🧡 Hoy solo las 3 más importantes. Las demás pueden esperar.</p>` : ''}
@@ -1861,10 +1863,12 @@ function vYoMas() {
   ${it('mas-hogar', '🏠', 'Hogar compartido', 'Compras, cuentas y agenda con tu pareja')}
   ${it('mas-habitos', '⭐', 'Hábitos y misiones', 'Agua, pausas, caminata, cantar y más')}
   ${it('mas-recompensas', '🎀', 'Mis recompensas', 'Premios reales que canjeas con estrellas')}
+  ${it('mas-avisos', '🔔', 'Avisos de Ron', 'Notificaciones aunque la app esté cerrada')}
+  ${it('mas-plantillas', '✉️', 'Mis plantillas de correo', 'Crea tus correos frecuentes')}
   ${it('mas-gato', '🐾', 'Ron de verdad', 'Comida, agua, arenero, paseo y cariño')}
   ${it('mas-familia', '👨‍👩‍👧', 'Familia', 'Código y enlace de la familia')}
   ${it('mas-ajustes', '⚙️', 'Ajustes', 'Fondo, colores, hora de corte y sonido')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 6</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 9</p>`;
 }
 /* Navegación según el modo */
 const NAV_IC = { hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>', gato: '<path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/>', mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>', maletin: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>' };
@@ -1873,7 +1877,7 @@ function pintarNav() {
   const L = yo ? [['hoy', 'Hoy', 'hoy'], ['trabajo', 'Trabajo', 'maletin'], ['calendario', 'Calendario', 'cal'], ['ron', 'Ron', 'gato'], ['mas', 'Más', 'mas']] : [['hoy', 'Hoy', 'hoy'], ['calendario', 'Calendario', 'cal'], ['estudiar', 'Estudiar', 'libro'], ['ron', 'Ron', 'gato'], ['mas', 'Más', 'mas']];
   n.innerHTML = L.map(([h, t, i]) => `<a href="#${h}" data-tab="${h}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true">${NAV_IC[i]}</svg>${t}</a>`).join(''); n.dataset.modo = k;
 }
-const VISTAS_YO = { hoy: vYoHoy, trabajo: vTrabajo, calendario: vYoCal, mas: vYoMas, 'mas-hogar': vHogar, 'mas-habitos': vHabitos, 'mas-recompensas': vRecompensas };
+const VISTAS_YO = { 'mas-plantillas': vPlantillas, hoy: vYoHoy, trabajo: vTrabajo, calendario: vYoCal, mas: vYoMas, 'mas-hogar': vHogar, 'mas-habitos': vHabitos, 'mas-recompensas': vRecompensas };
 const bannerEmy = () => AJ.rol === 'apoderado' && !enMiVida() ? `<div class="banner-emy"><span>👀 Viendo lo de ${esc(estudiante())}</span><button class="btn sm" data-a="volver-yo">Volver a Mi vida</button></div>` : '';
 
 /* ----- Fondo decorativo configurable ----- */
@@ -1892,6 +1896,423 @@ function fondoAjustes() {
   return `<div class="card"><p class="eti">Fondo decorativo</p><div class="chips mt">${[['fr', '🍓 Frutillas'], ['fl', '🌸 Flores'], ['gi', '🌻 Girasoles']].map(([k, n]) => `<button class="chip" data-a="deco-el" data-v="${k}" aria-pressed="${!!el[k] && AJ.deco}">${n}</button>`).join('')}</div>
     <label class="lbl" for="deco-op">Visibilidad: <span id="deco-txt">${op < 14 ? 'muy suave' : op < 28 ? 'suave' : op < 44 ? 'media' : 'bien visible'}</span></label><input type="range" id="deco-op" min="5" max="60" value="${op}" style="width:100%;accent-color:var(--ac)">
     <p class="sub mt">Desmarca todos para un fondo liso.</p></div>`;
+}
+
+/* ===== Emociones de la estudiante: ánimo diario, consejos, diario privado y aprendizajes ===== */
+const EMOS_EST = {
+  energia: ["¡Qué buena energía traes hoy! Aprovechémosla 🐾", "Hoy es un gran día para avanzar en eso que te importa.", "Con ese ánimo, ¡hasta las fracciones se ven fáciles! 😹", "Me encanta verte así. ¡Contagias alegría!", "Hoy puedes empezar ese trabajo que venías dejando. ¡Tú puedes!", "Usa esta energía también en algo que te guste mucho 🎨", "Tu buen ánimo alegra a tu familia y a tu curso.", "¡Prrr! Hoy vamos con todo, pero sin olvidar tomar agua 💧", "Cuando te sientes así, recuerda lo capaz que eres.", "Elige tu tarea más importante y hazla primero. ¡Vamos!", "Qué rico empezar el día así. Va a ser un buen día.", "Te has cuidado mucho y se nota. ¡Bien hecho!", "Hoy es buen día para ayudar a alguien del curso.", "¡Modo imparable activado! Yo te acompaño desde mi cojín 🐾", "Dile algo lindo a alguien hoy. Empieza por ti.", "Mira todo lo que logras cuando te sientes así. ¡Increíble!", "Celebra este ánimo: este día es tuyo.", "Con esa sonrisa, hasta el lunes se ve bonito.", "Haz tu lista del día y táchala con estilo. ¡A darle!", "Me haces ronronear de orgullo. ¡Que tengas un día precioso!"],
+  calma: ["La calma también es una fuerza. Hoy vamos paso a paso 🐾", "Qué rico empezar así. Respira hondo y disfruta.", "No todo tiene que ser rápido. Lo importante es avanzar.", "Prrr… la calma te queda muy bien.", "Con esta tranquilidad se estudia mucho mejor.", "Un paso a la vez. Así también se llega lejos.", "Aprovecha esta paz para ordenar tu mochila y tus pendientes.", "Hoy puedes hacer las cosas con calma y hacerlas bien.", "La tranquilidad te ayuda a pensar con claridad.", "Toma un vaso de agua y empieza sin apuro 💧", "Cuando estás en calma, tomas buenas decisiones.", "Hoy no hay apuro. Tienes un día entero.", "Mira por la ventana un ratito. El día también empieza tranquilo.", "Me encanta acompañarte en días así. Yo también estoy muy tranquilo.", "Cuidar tu calma es cuidarte a ti.", "Elige tres cosas para hoy y deja que el resto espere.", "Respirar, sonreír, comenzar. Así de simple 🌿", "Estás justo donde necesitas estar.", "Que este día fluya suave como mi siesta de la tarde.", "Hoy cuida esa paz: es tuya."],
+  cansancio: ["Está bien sentir cansancio. Hoy vamos con lo importante 🧡", "Descansar también es parte de estudiar.", "Hoy vamos despacito. Lo justo y necesario.", "Tu cuerpo te está hablando. Escúchalo con cariño.", "No tienes que poder con todo hoy.", "Estudia en ratitos cortos con pausas. ¿Trato hecho? 🐾", "Mereces descansar, no sentir culpa.", "Hoy acuéstate temprano. Yo te cuido el sueño 😴", "Has hecho mucho últimamente. Es normal sentirse así.", "Un vaso de agua y un poco de aire fresco hacen magia.", "Haz lo que puedas. Eso será suficiente.", "Incluso con cansancio, aquí estás. Eso es valiente.", "Elige lo más urgente y deja lo demás para mañana.", "Si necesitas ayuda, pídela. Para eso está tu familia.", "Un gato sabio dice: las siestas son estrategia 😸", "Hoy sé amable contigo, como lo eres con tus amistades.", "Lo que no alcances hoy, mañana tendrá su momento.", "Respira profundo tres veces. Ya, un poquito mejor.", "Vales mucho, hagas mucho o poco hoy.", "Prrr… hoy te acompaño en modo suave."],
+  estres: ["Respira conmigo: inhala… exhala. Vamos a ordenar esto 🐾", "No tienes que resolverlo todo ahora. Solo el siguiente paso.", "Escribe lo que te preocupa y elige una sola cosa para empezar.", "Ya has pasado por pruebas difíciles. Esta también la vas a pasar.", "Lo que sientes es válido. Y eres más capaz de lo que crees.", "Hoy, tres tareas clave. El resto puede esperar.", "Una pausa de 5 minutos no te atrasa: te ordena la cabeza.", "Enfócate en lo que sí depende de ti: prepararte un poquito.", "Estás haciendo lo mejor que puedes. Y eso es muchísimo.", "Pedir ayuda al profe o a tu familia es de valientes.", "Divide el estudio en partes chiquitas. Así asusta menos.", "Suelta los hombros, toma agua, respira. Mucho mejor.", "Una nota no dice quién eres. Eres mucho más que eso 🧡", "Paso a paso. Yo te aviso cuando sea hora de descansar.", "Está bien decir «ahora no» a algunas cosas para cuidarte.", "Mira todo lo que ya aprendiste. ¡Puedes con esto!", "Asómate un minuto a la ventana y respira aire fresco.", "No tiene que salir perfecto. Tiene que salir con calma.", "Celebra cada tarea terminada. Todas cuentan.", "Prrr… aquí estoy contigo. Vamos de a poquito."],
+  tristeza: ["Siento que hoy estés así. Puedes ir más lento, aquí estoy 🧡", "Está bien no estar bien. Lo que sientes es válido.", "Hoy solo lo mínimo. Lo demás puede esperar.", "Mereces el mismo cariño que das a los demás.", "Los días grises pasan. Este no es para siempre.", "Cuéntale a tu mamá o a alguien de confianza cómo te sientes.", "Llorar está bien. No tienes que esconder lo que sientes.", "Eres importante, aunque hoy no lo sientas.", "Abraza fuerte a alguien que quieras… o a mí 🐾", "Me acurruco a tu lado un ratito. Prrr…", "Escribir lo que sientes en tu diario puede ayudar ✍️", "Tienes más fuerza de la que crees.", "Pequeños pasos: comer algo rico, tomar agua, respirar.", "Tu familia te quiere en los días buenos y en los difíciles.", "Escuchar tu música favorita puede abrigar el corazón 🎵", "Hoy no se trata de rendir, sino de cuidarte.", "Lo que sientes ahora no es todo lo que eres.", "Mañana puede ser un poquito más liviano. Yo voy a estar aquí.", "Gracias por seguir adelante, aunque cueste.", "Hablar con un adulto de confianza ayuda mucho. No tienes que cargarlo en soledad."],
+  singanas: ["No hace falta tener ganas para empezar: bastan 5 minutos 🐾", "Hoy hagamos una sola cosa pequeña. Después vemos.", "Las ganas muchas veces llegan después de empezar.", "Está bien tener días así. No significa que no puedas.", "Empieza por la tarea más fácil y gánate esa primera victoria.", "Pon música que te guste y avancemos un poquito 🎵", "Recuerda para qué estudias. Esa razón sigue ahí.", "No tiene que ser perfecto. Solo hay que empezar.", "Un pasito hoy vale más que un gran plan para mañana.", "Prrr… yo tampoco quiero dejar mi cojín. ¡Pero vamos juntos!", "Cada sesión que termines es una 🍓 para mí. ¡Ayúdame! 😹", "Cambia de lugar, abre la ventana, toma agua. A veces ayuda.", "Tus metas te esperan con paciencia.", "Hoy basta con avanzar un poquito.", "Divide lo difícil en partes chiquititas.", "Tener pocas ganas no te hace menos capaz.", "Haz la primera tarea y date un premio pequeño.", "Un día con pocas ganas también puede terminar con orgullo.", "Confío en ti, incluso cuando las ganas no aparecen.", "Empieza con algo que te dé alegría. Las ganas vienen detrás."]
+};
+const CONSEJOS = {
+  energia: { t: 'Para aprovechar este buen ánimo', l: ['Anota en tu diario qué te hizo sentir así, para repetirlo.', 'Usa la energía en tu tarea más difícil primero.', 'Comparte tu alegría: ayuda a alguien o cuéntale algo lindo a tu familia.', 'Muévete: baila una canción o sal a caminar.', 'Antes de dormir, piensa en tres cosas buenas del día.'] },
+  calma: { t: 'Para cuidar esta calma', l: ['Disfruta el momento: respira y fíjate en lo que te rodea.', 'Planifica con calma: elige 3 cosas importantes para hoy.', 'Aprovecha para leer, dibujar o hacer algo creativo.', 'Fíjate qué te ayudó a sentirte así (dormir bien, ordenar…) y repítelo.', 'Recuerda esta respiración tranquila para los días movidos.'] },
+  cansancio: { t: 'Para recuperar energía', l: ['Estudia 25 minutos y descansa 5. Repite.', 'Toma agua y come algo nutritivo.', 'Sal 5 minutos al aire libre o abre la ventana.', 'Deja para mañana lo que no es urgente.', 'Esta noche, pantallas fuera una hora antes de dormir.'] },
+  estres: { t: 'Para enfrentar el estrés', l: ['Respira 4-4-6: inhala en 4, aguanta 4 y bota el aire en 6. Repite 3 veces.', 'Escribe todo lo que te preocupa y elige solo una cosa para empezar.', 'Divide la tarea grande en pasos pequeños.', 'Muévete un poco: estírate o salta un minuto.', 'Pide ayuda: al profe, a tu familia o a alguien del curso.'] },
+  tristeza: { t: 'Para sobrellevar la tristeza', l: ['Ponle nombre a lo que sientes: decir «estoy triste» ya ayuda.', 'Cuéntale a alguien de confianza: tu mamá, tu profe jefe o la orientadora.', 'Escríbelo en tu diario: sacarlo de la cabeza alivia.', 'Haz algo que te reconforte: música, dibujar o regalonear a Ron 🐾', 'Si la tristeza dura muchos días, pide ayuda a un adulto. No es para enfrentarlo en soledad.'] },
+  singanas: { t: 'Para encontrar las ganas', l: ['Regla de los 5 minutos: empieza, y si quieres paras después.', 'Elige la tarea más fácil para partir.', 'Cambia de lugar u ordena tu escritorio.', 'Ponte una recompensa pequeña al terminar.', 'Recuerda una meta que te importa y para qué la quieres.'] }
+};
+const POSITIVAS = ['energia', 'calma'];
+const animoEst = f => ED('yo', 'animo').find(a => a.id === f);
+function rachaTristeEst() { let n = 0, d = hoyYmd(); while (n < 30) { const a = animoEst(d); if (!a || a.emo !== 'tristeza') break; n++; d = sumaDias(d, -1); } return n; }
+async function elegirAnimoEst(emo) {
+  const l = EMOS_EST[emo], k = 'ronrutina.ultAnimoEst.' + emo; let i, prev = +(localStorage.getItem(k) || -1);
+  do { i = Math.floor(Math.random() * l.length); } while (i === prev && l.length > 1);
+  try { localStorage.setItem(k, i); } catch (e) { }
+  await putE('yo', 'animo', { id: hoyYmd(), emo, i }); S.verConsejos = true;
+  render(true); setTimeout(() => ronDice('ron-hoy', l[i], 7000), 30);
+  sonido(POSITIVAS.includes(emo) ? 'miau' : 'prrr');
+}
+function animoCardEst() {
+  const a = animoEst(hoyYmd());
+  if (!a) return `<div class="card animo"><p class="eti">¿Cómo te sientes hoy?</p><div class="grid3 mt">${Object.entries(EMOS).map(([k, e]) => `<button class="emo" data-a="animo-est" data-v="${k}"><span>${e[0]}</span>${e[1]}</button>`).join('')}</div></div>`;
+  const e = EMOS[a.emo], c = CONSEJOS[a.emo];
+  return `<div class="fila entre animo-ok"><span class="sub">Hoy te sientes: <b>${e[0]} ${e[1]}</b></span><button class="btn sm suave" data-a="animo-est-cambiar">Cambiar</button></div>
+    <details class="card consejos" ${S.verConsejos ? 'open' : ''}><summary><b>💡 ${c.t}</b></summary><ul class="mt">${c.l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    <a class="btn sm w mt" href="#diario">✍️ Escribir en mi diario</a></details>
+    ${rachaTristeEst() >= 3 ? `<div class="card cuidado"><p>🧡 <b>Llevas algunos días con tristeza.</b> Conversa hoy con tu mamá, tu profesor o profesora jefe, o la orientadora del colegio. Contarlo ayuda mucho y no tienes que enfrentarlo en soledad.</p></div>` : ''}`;
+}
+
+/* ----- diario privado ----- */
+const ALERTA_RE = /(quiero morir|me quiero morir|matarme|suicid|hacerme da[ñn]o|cortarme|no quiero vivir|no quiero existir|desaparecer para siempre|lastimarme)/i;
+const diario = () => ED('yo', 'diario').slice().sort((a, b) => (b.fecha + (b.hora || '')).localeCompare(a.fecha + (a.hora || '')));
+function vDiario() {
+  const sel = S.dEmo || (animoEst(hoyYmd()) || {}).emo || '', l = diario();
+  return `<div class="top"><a class="icono" href="#hoy" aria-label="Volver">${ic('back')}</a><div style="flex:1"><p class="sub">🔒 Solo tú puedes leerlo</p><h1>Mi diario</h1></div></div>
+  <div class="card"><p class="eti">¿Cómo te sientes?</p><div class="chips mt">${Object.entries(EMOS).map(([k, e]) => `<button class="chip" data-a="d-emo" data-v="${k}" aria-pressed="${sel === k}">${e[0]} ${e[1]}</button>`).join('')}</div>
+    <label class="lbl" for="d-txt">Cuéntale a tu diario</label><textarea id="d-txt" style="min-height:130px" placeholder="¿Qué pasó hoy? ¿Por qué crees que te sientes así?"></textarea>
+    <label class="lbl" for="d-ayuda">¿Qué te ayudó o qué podría ayudarte? (opcional)</label><input type="text" id="d-ayuda" placeholder="Hablar con mi mamá, escuchar música…">
+    <button class="btn pr big mt" data-a="d-guardar">Guardar en mi diario</button></div>
+  ${l.length ? `<h3 class="mb">Lo que has escrito</h3>${l.slice(0, 40).map(x => { const e = EMOS[x.emo] || ['📝', '']; return `<div class="card entrada"><div class="fila entre"><b>${e[0]} ${esc(e[1])}</b><span class="sub">${cap(fechaCorta(x.fecha))}${x.hora ? ' · ' + x.hora : ''}</span></div>${x.txt ? `<p class="pre mt">${esc(x.txt)}</p>` : ''}${x.ayuda ? `<p class="sub mt">💡 ${esc(x.ayuda)}</p>` : ''}<button class="link-sub" data-a="d-borrar" data-id="${x.id}">Borrar</button></div>`; }).join('')}` : `<p class="vacio">Aquí guardarás lo que sientes. Escribir ayuda a entenderse 🐾</p>`}
+  <p class="sub mt2" style="text-align:center">Al final de la semana, en <a href="#semana">Mi semana</a> verás lo que aprendiste de tus emociones.</p>
+  <details class="mt"><summary class="sub">Si cambias de teléfono</summary><p class="sub mt">Tu diario se guarda con este código privado. Anótalo en un lugar seguro:</p><p class="mt"><b class="codigo">${esc(AJ.codigoYo || '')}</b></p>
+    <label class="lbl" for="d-rest">Recuperar mi diario con un código</label><div class="fila"><input type="text" id="d-rest" placeholder="Pega tu código" autocapitalize="off" style="flex:1"><button class="btn sm" data-a="d-restaurar">Recuperar</button></div></details>`;
+}
+async function guardarDiario() {
+  const txt = $('#d-txt').value.trim(), ayuda = $('#d-ayuda').value.trim(), emo = S.dEmo || (animoEst(hoyYmd()) || {}).emo;
+  if (!emo && !txt) return toast('Elige cómo te sientes o escribe algo.');
+  const d = new Date();
+  await putE('yo', 'diario', { fecha: hoyYmd(), hora: pad(d.getHours()) + ':' + pad(d.getMinutes()), emo: emo || '', txt, ayuda });
+  if (emo && !animoEst(hoyYmd())) await putE('yo', 'animo', { id: hoyYmd(), emo, i: 0 });
+  S.dEmo = null; render(true);
+  if (ALERTA_RE.test(txt)) return alertaCuidado();
+  toast('Guardado en tu diario 🧡'); sonido('prrr');
+}
+function alertaCuidado() {
+  abrirHoja(`<div style="text-align:center">${ronHTML('chico', '')}<h2 class="mt">Gracias por contármelo 🧡</h2></div>
+    <p class="mt">Lo que sientes importa mucho, y no tienes que enfrentarlo en soledad. Cuéntale hoy a tu mamá o a un adulto de confianza.</p>
+    <p class="mt">Si sientes que podrías hacerte daño, llama ahora al <b>*4141</b>: es gratis, confidencial y atiende las 24 horas. Ahí te escucha una persona que sabe ayudar.</p>
+    <div class="col mt2"><a class="btn pr big" href="tel:*4141">📞 Llamar al *4141</a><button class="btn w" data-a="cerrar">Volver</button></div>`);
+}
+
+/* ----- aprendizajes de la semana ----- */
+function emocionesSemana(ini) {
+  const fin = sumaDias(ini, 6), dias = [];
+  for (let k = 0; k < 7; k++) { const f = sumaDias(ini, k), a = animoEst(f), ent = ED('yo', 'diario').filter(x => x.fecha === f); dias.push({ f, emo: a ? a.emo : (ent[0] || {}).emo || '', ent }); }
+  const cnt = {}; dias.forEach(d => { if (d.emo) cnt[d.emo] = (cnt[d.emo] || 0) + 1; });
+  const ins = [], top = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+  if (top) ins.push(`La emoción que más sentiste fue <b>${EMOS[top[0]][0]} ${EMOS[top[0]][1].toLowerCase()}</b> (${top[1]} ${top[1] === 1 ? 'día' : 'días'}).`);
+  const pos = dias.filter(d => POSITIVAS.includes(d.emo)).length, neg = dias.filter(d => d.emo && !POSITIVAS.includes(d.emo)).length;
+  if (pos + neg) ins.push(pos >= neg ? `Tuviste <b>${pos}</b> ${pos === 1 ? 'día' : 'días'} con buen ánimo. ¿Qué los hizo especiales?` : `Fue una semana exigente: <b>${neg}</b> ${neg === 1 ? 'día' : 'días'} con emociones difíciles. Igual seguiste adelante 🧡`);
+  const evD = new Set(D.eventos.filter(e => e.fecha >= ini && e.fecha <= fin && ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo)).map(e => e.fecha));
+  const conEv = dias.filter(d => evD.has(d.f) || evD.has(sumaDias(d.f, 1))), tens = conEv.filter(d => ['estres', 'cansancio'].includes(d.emo)).length;
+  if (conEv.length && tens) ins.push(`Cerca de tus evaluaciones te sentiste con <b>estrés o cansancio</b>. Estudiar con más días de anticipación puede ayudarte.`);
+  const sesD = new Set(D.sesiones.filter(s => s.fecha >= ini && s.fecha <= fin).map(s => s.fecha)), estPos = dias.filter(d => sesD.has(d.f) && POSITIVAS.includes(d.emo)).length;
+  if (estPos) ins.push(`Los días que estudiaste, ${estPos === 1 ? 'uno lo terminaste' : estPos + ' los terminaste'} con buen ánimo. ¡Avanzar se siente bien!`);
+  const ayudas = ED('yo', 'diario').filter(x => x.fecha >= ini && x.fecha <= fin && x.ayuda).map(x => x.ayuda);
+  if (ayudas.length) ins.push(`Lo que te ayudó: <i>${ayudas.slice(0, 3).map(esc).join(' · ')}</i>.`);
+  return { dias, ins };
+}
+function bloqueEmocionesSemana(ini) {
+  const { dias, ins } = emocionesSemana(ini), ap = cfgE('yo', 'aprendizaje-' + ini);
+  return `<div class="card"><p class="eti">💗 Mis emociones de la semana</p><div class="semana-emo mt">${dias.map(d => `<div><span>${d.emo ? EMOS[d.emo][0] : '·'}</span><small>${DIAS_C[deYmd(d.f).getDay()]}</small></div>`).join('')}</div>
+    ${ins.length ? `<ul class="mt insights">${ins.map(x => `<li>${x}</li>`).join('')}</ul>` : `<p class="sub mt">Cuenta cada día cómo te sientes en Hoy o en tu <a href="#diario">diario</a>, y aquí verás lo que aprendes.</p>`}
+    <p class="eti mt2">Lo que aprendí de mis emociones</p>
+    <label class="lbl" for="ap1">¿Qué me hizo sentir bien esta semana?</label><textarea id="ap1" style="min-height:60px">${esc(ap.q1 || '')}</textarea>
+    <label class="lbl" for="ap2">¿Qué me costó y cómo lo enfrenté?</label><textarea id="ap2" style="min-height:60px">${esc(ap.q2 || '')}</textarea>
+    <label class="lbl" for="ap3">¿Qué haré la próxima semana para cuidarme?</label><textarea id="ap3" style="min-height:60px">${esc(ap.q3 || '')}</textarea>
+    <button class="btn pr w mt" data-a="ap-guardar" data-v="${ini}">Guardar mis aprendizajes</button><p class="sub mt">🔒 Solo tú lo ves.</p></div>`;
+}
+
+/* ----- plantillas de correo configurables (sin plantillas por defecto) ----- */
+const plantEsp = () => enMiVida() ? 'yo' : 'fam';
+const plantillas = () => (plantEsp() === 'yo' ? cfgE('yo', 'plantillas') : cfg('plantillas')).lista || [];
+async function guardarPlantillas(lista) { if (plantEsp() === 'yo') await putE('yo', 'config', { id: 'plantillas', lista }); else await put('config', { id: 'plantillas', lista }); }
+const CAMPOS_P = () => enMiVida() ? [['{nombre}', 'mi nombre'], ['{fecha}', 'fecha de hoy']] : [['{profe}', 'profe'], ['{asig}', 'asignatura'], ['{tema}', 'tema o trabajo'], ['{nombre}', 'mi nombre'], ['{fecha}', 'fecha de hoy']];
+function vPlantillas() {
+  const l = plantillas();
+  return cabSub('Mis plantillas de correo') + `<p class="sub mb">Crea los correos que más escribes y úsalos con un toque. ${enMiVida() ? '' : 'Al escribirle a un profe, se completan solos el nombre del profe, la asignatura y el tema.'}</p>
+  ${l.length ? l.map(p => `<button class="ev" data-a="pl-editar" data-id="${p.id}"><span class="txt"><b>${esc(p.n)}</b><small>${esc(p.as || '(sin asunto)')}</small></span>${ic('lapiz')}</button>`).join('') : '<p class="vacio">Aún no tienes plantillas.</p>'}
+  <button class="btn pr w mt" data-a="pl-editar" data-id="">${ic('plus')} Nueva plantilla</button>`;
+}
+function editarPlantilla(id) {
+  const p = id ? Object.assign({}, plantillas().find(x => x.id === id)) : { id: '', n: '', as: '', cu: '' };
+  abrirHoja(`${cabHoja(id ? 'Editar plantilla' : 'Nueva plantilla')}
+    <label class="lbl" for="pl-n">Nombre de la plantilla</label><input type="text" id="pl-n" value="${esc(p.n)}" placeholder="${enMiVida() ? 'Por ejemplo, citación a apoderado' : 'Por ejemplo, consulta sobre una tarea'}">
+    <label class="lbl" for="pl-as">Asunto</label><input type="text" id="pl-as" value="${esc(p.as)}">
+    <label class="lbl" for="pl-cu">Mensaje</label><textarea id="pl-cu" style="min-height:180px">${esc(p.cu)}</textarea>
+    <p class="eti mt">Toca para insertar un dato automático</p><div class="chips mt">${CAMPOS_P().map(([k, n]) => `<button class="chip" data-a="pl-campo" data-v="${k}">${n}</button>`).join('')}</div>
+    <button class="btn pr big mt2" data-a="pl-guardar" data-id="${id}">Guardar</button>${id ? `<button class="btn w mt" data-a="pl-borrar" data-id="${id}">Eliminar</button>` : ''}`);
+  S.plUlt = 'pl-cu';
+}
+function insertarCampo(k) {
+  const el = $('#' + (S.plUlt || 'pl-cu')) || $('#pl-cu'); if (!el) return;
+  const a = el.selectionStart ?? el.value.length, b = el.selectionEnd ?? el.value.length;
+  el.value = el.value.slice(0, a) + k + el.value.slice(b); el.focus(); try { el.setSelectionRange(a + k.length, a + k.length); } catch (e) { }
+}
+async function guardarPlantilla(id) {
+  const n = $('#pl-n').value.trim(); if (!n) return toast('Ponle un nombre a la plantilla.');
+  const p = { id: id || 'p_' + uid().slice(0, 8), n, as: $('#pl-as').value, cu: $('#pl-cu').value }, l = plantillas().slice(), i = l.findIndex(x => x.id === p.id);
+  if (i >= 0) l[i] = p; else l.push(p);
+  await guardarPlantillas(l); cerrarHoja(true); toast('Plantilla guardada ✉️'); render(true);
+}
+
+/* ===== Asistente de Ron (sin IA): entiende frases simples y sugiere acciones ===== */
+const sinTilde = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const DIAS_N = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+const MESES_N = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+const MES_CORTO = { ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5, jul: 6, ago: 7, sep: 8, set: 8, oct: 9, nov: 10, dic: 11 };
+
+/* Busca fecha y hora en el texto. Devuelve {fecha, hora, resto} */
+function leerFechaHora(txt) {
+  let t = ' ' + sinTilde(txt) + ' ', fecha = null, hora = null; const usados = [];
+  const hoy = hoyYmd(), quita = re => { usados.push(String(re)); t = t.replace(re, ' '); };
+  const m0 = t.match(/\b(en|por) la (manana|tarde|noche)\b/);
+  if (m0) { hora = { manana: '09:00', tarde: '16:00', noche: '20:00' }[m0[2]]; quita(m0[0]); }
+  let m = t.match(/\b(?:a las |a la |las )?(\d{1,2})(?:[:.h](\d{2}))\s*(am|pm|hrs?|h)?\b/) || t.match(/\ba las? (\d{1,2})\s*(am|pm|hrs?|h)?\b/) || t.match(/\b(\d{1,2})\s*(am|pm|hrs?)\b/);
+  if (m) {
+    let h = +m[1], mi = 0, suf = '';
+    if (m.length === 4) { mi = +(m[2] || 0); suf = m[3] || ''; } else suf = m[2] || '';
+    if (suf === 'pm' && h < 12) h += 12; if (suf === 'am' && h === 12) h = 0;
+    if (!suf && h >= 1 && h <= 7) h += 12;
+    if (h <= 23 && mi <= 59) { hora = pad(h) + ':' + pad(mi); quita(m[0]); }
+  }
+  if ((m = t.match(/\bpasado manana\b/))) { fecha = sumaDias(hoy, 2); quita(m[0]); }
+  else if ((m = t.match(/\bmanana\b/))) { fecha = sumaDias(hoy, 1); quita(m[0]); }
+  else if ((m = t.match(/\bhoy\b/))) { fecha = hoy; quita(m[0]); }
+  if (!fecha && (m = t.match(/\ben (\d{1,2}) (dias?|semanas?)\b/))) { fecha = sumaDias(hoy, +m[1] * (m[2].startsWith('semana') ? 7 : 1)); quita(m[0]); }
+  if (!fecha && (m = t.match(/\b(?:la )?(?:proxima|otra) semana\b|\bla semana que viene\b/))) { const dw = deYmd(hoy).getDay(); fecha = sumaDias(hoy, ((8 - dw) % 7) || 7); quita(m[0]); }
+  if (!fecha && (m = t.match(/\b(\d{1,2})\s*(?:de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre|ene|feb|mar|abr|may|jun|jul|ago|sep|set|oct|nov|dic)\b/))) {
+    const mes = MESES_N.indexOf(m[2] === 'setiembre' ? 'septiembre' : m[2]) >= 0 ? MESES_N.indexOf(m[2] === 'setiembre' ? 'septiembre' : m[2]) : MES_CORTO[m[2]];
+    let d = new Date(deYmd(hoy).getFullYear(), mes, +m[1]); if (ymd(d) < hoy) d = new Date(d.getFullYear() + 1, mes, +m[1]);
+    if (d.getDate() === +m[1]) fecha = ymd(d); quita(m[0]);
+  }
+  if (!fecha && (m = t.match(/\b(\d{1,2})[\/-](\d{1,2})(?:[\/-](\d{2,4}))?\b/))) {
+    const y0 = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : deYmd(hoy).getFullYear(); let d = new Date(y0, +m[2] - 1, +m[1]);
+    if (!m[3] && ymd(d) < hoy) d = new Date(y0 + 1, +m[2] - 1, +m[1]);
+    if (d.getDate() === +m[1]) fecha = ymd(d); quita(m[0]);
+  }
+  if (!fecha && (m = t.match(/\b(?:el |este |proximo |el proximo )?(domingo|lunes|martes|miercoles|jueves|viernes|sabado)( que viene| proximo)?\b/))) {
+    const obj = DIAS_N.indexOf(m[1]), dw = deYmd(hoy).getDay(); let k = (obj - dw + 7) % 7; if (k === 0) k = 7;
+    fecha = sumaDias(hoy, k); quita(m[0]);
+  }
+  if (!fecha && (m = t.match(/\bel (?:dia )?(\d{1,2})\b/))) {
+    const b = deYmd(hoy); let d = new Date(b.getFullYear(), b.getMonth(), +m[1]); if (ymd(d) < hoy) d = new Date(b.getFullYear(), b.getMonth() + 1, +m[1]);
+    if (d.getDate() === +m[1]) { fecha = ymd(d); quita(m[0]); }
+  }
+  return { fecha, hora, resto: t, usados: usados.join(' ').split(/\s+/).filter(Boolean) };
+}
+/* Recorta del texto original las palabras que ya se interpretaron */
+const CONECT = new Set(['de', 'del', 'para', 'el', 'la', 'los', 'las', 'un', 'una', 'y', 'que', 'en', 'a', 'al', 'por', 'lo', 'este', 'esta', 'con']);
+function limpiarTitulo(orig, quitar) {
+  const q = new Set(quitar.map(sinTilde).filter(w => !CONECT.has(w)));
+  let p = orig.trim().split(/\s+/).filter(x => { const r0 = sinTilde(x).replace(/[,;!?¿¡]+$/g, ''), s = r0.replace(/[.,;:!?¿¡]/g, ''); return s && !q.has(s) && !q.has(r0); });
+  while (p.length && CONECT.has(sinTilde(p[0]).replace(/[.,;:]/g, '')) && !(/^[A-ZÁÉÍÓÚ]/.test(p[0]) && p[1] && /^[A-ZÁÉÍÓÚ]/.test(p[1]))) p.shift();
+  while (p.length && CONECT.has(sinTilde(p[p.length - 1]).replace(/[.,;:]/g, ''))) p.pop();
+  const r = p.join(' ').replace(/\s+/g, ' ').trim();
+  return r ? cap(r) : '';
+}
+const STOP_FECHA = ['hoy', 'mañana', 'manana', 'pasado', 'próximo', 'proximo', 'próxima', 'proxima', 'viene', 'hrs', 'hr', 'h', 'am', 'pm', 'dias', 'días', 'día', 'dia', 'semana', 'semanas', 'otra', 'tarde', 'noche', ...DIAS_N, 'miércoles', 'sábado', ...MESES_N, 'setiembre', 'ene', 'feb', 'abr', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+/* ----- interpretación para la estudiante ----- */
+const ALIAS_ASIG = [[/\b(mate|matematicas?)\b/, 'matem'], [/\b(lenguaje|lengua|literatura|castellano)\b/, 'lengua'], [/\b(historia|sociales|geografia)\b/, 'historia'], [/\b(ciencias?|biologia|quimica|fisica|naturales)\b/, 'ciencias'], [/\b(ingles)\b/, 'ingl'], [/\b(ed\.? fisica|educacion fisica|deporte|gimnasia|ef)\b/, 'educaci'], [/\b(artes?|visuales|dibujo)\b/, 'artes'], [/\b(musica)\b/, 'musica'], [/\b(tecnologia|tecno)\b/, 'tecnolog'], [/\b(religion)\b/, 'religi'], [/\b(orientacion)\b/, 'orientaci']];
+function buscarAsig(t) {
+  const st = sinTilde(t);
+  for (const a of D.asig) { const n = sinTilde(a.nombre); if (st.includes(n)) return { a, w: a.nombre.split(/\s+/) }; }
+  for (const [re, clave] of ALIAS_ASIG) { const m = st.match(re); if (m) { const a = D.asig.find(x => sinTilde(x.nombre).includes(clave)); if (a) return { a, w: m[0].split(/\s+/) }; } }
+  for (const a of D.asig) { const w = sinTilde(a.nombre).split(/\s+/).find(x => x.length >= 4 && new RegExp('\\b' + x + '\\b').test(st)); if (w) return { a, w: [w] }; }
+  return null;
+}
+function interpretarEst(txt) {
+  const { fecha, hora, usados } = leerFechaHora(txt), st = sinTilde(txt);
+  let tipo = null, kw = [];
+  const reglas = [[/\b(control de lectura|control)\b/, 'control'], [/\b(prueba|examen|evaluacion)\b/, 'prueba'], [/\btest\b/, 'test'], [/\b(disertacion|exposicion|presentacion)\b/, 'disertacion'], [/\b(trabajo|tarea|proyecto|informe|maqueta|guia)\b/, 'trabajo'], [/\b(llevar|traer|materiales?)\b/, 'material']];
+  for (const x of tiposExtra()) { const n = sinTilde(x.n); if (st.includes(n)) { tipo = x.id; kw = x.n.split(/\s+/); break; } }
+  if (!tipo) for (const [re, k] of reglas) { const m = st.match(re); if (m) { tipo = k; kw = (k === 'trabajo' && !/^(trabajo|tarea)$/.test(m[0])) ? [] : m[0].split(/\s+/); break; } }
+  const asg = buscarAsig(txt), quitar = [...kw, ...(asg ? asg.w : []), ...STOP_FECHA, ...usados];
+  const resto = limpiarTitulo(txt, quitar);
+  tipo = tipo || 'trabajo';
+  const ev = { tipo, asig: asg ? asg.a.id : null, fecha: fecha || sumaDias(hoyYmd(), 7), hora: hora || '', titulo: tipo === 'material' ? '' : resto, contenidos: '', detalles: '', materiales: tipo === 'material' ? resto.split(/,| y /).map(s => s.trim()).filter(Boolean).join('\n') : '', pasos: [] };
+  return { tipoObj: 'evento', ev, faltaFecha: !fecha };
+}
+
+/* ----- interpretación para Mi vida ----- */
+function interpretarYo(txt) {
+  const st = sinTilde(txt), { fecha, hora, usados } = leerFechaHora(txt);
+  let m = st.match(/^\s*(comprar|compra|falta|faltan|agregar a (?:la )?(?:lista de )?compras?)\s+/);
+  if (m) { const items = txt.slice(m[0].length).split(/,| y /).map(s => cap(s.trim())).filter(Boolean); return { tipoObj: 'compras', items }; }
+  const horaQ = usados;
+  for (const x of cfgE('yo', 'tiposA').lista || []) if (st.includes(sinTilde(x.n))) return agendaDe(txt, x.id, fecha, hora, [...x.n.split(/\s+/), ...horaQ]);
+  const ag = [[/\b(medico|medica|doctora?|dentista|kine|kinesiologo|psicologa?|examen medico|hora medica|control medico|vacuna)\b/, 'medico'], [/\b(cumpleanos|cumple)\b/, 'cumple'], [/\b(tramite|banco|notaria|registro civil)\b/, 'tramite'], [/\b(reunion|junta|consejo de profesores|entrevista)\b/, 'reunion'], [/\b(cine|salida|almuerzo|cena|gimnasio|peluqueria|paseo)\b/, 'personal']];
+  for (const [re, k] of ag) if (re.test(st) && (k !== 'reunion' || !/\b(planificar|preparar)\b/.test(st))) return agendaDe(txt, k, fecha, hora, horaQ);
+  const cats = [[/\b(corregir|correccion|revisar pruebas)\b/, 'correccion'], [/\b(planificar|planificacion|preparar clase|preparar guia)\b/, 'planif'], [/\b(informe|notas|libro de clases|subir notas)\b/, 'informe'], [/\b(citacion|citar|apoderado)\b/, 'citacion']];
+  let cat = 'otro'; for (const [re, k] of cats) if (re.test(st)) { cat = k; break; }
+  const rep = /\b(cada semana|todas las semanas|todos los (lunes|martes|miercoles|jueves|viernes|sabados|domingos))\b/.test(st);
+  const titulo = limpiarTitulo(txt.replace(/\b(cada semana|todas las semanas|todos los \w+)\b/gi, ' '), [...STOP_FECHA, ...horaQ]);
+  return { tipoObj: 'tarea', t: { t: titulo || cap(txt.trim()), cat, fecha: fecha || '', hora: hora || '', notas: '', pasos: [], rep } };
+}
+function agendaDe(txt, tipo, fecha, hora, quitar) {
+  const st = sinTilde(txt), hogar = /\b(hogar|compartid[oa]|familia|todos)\b/.test(st);
+  const t = limpiarTitulo(txt.replace(/\b(hogar|compartido|compartida)\b/gi, ' '), [...STOP_FECHA, ...quitar]);
+  return { tipoObj: 'agenda', esp: hogar ? 'hogar' : 'yo', e: { t: t || tipoA(tipo).n, tipo, fecha: fecha || hoyYmd(), hora: hora || '', notas: '' }, faltaFecha: !fecha };
+}
+
+/* ----- tarjeta del asistente y vista previa ----- */
+function asistenteCard() {
+  const ej = enMiVida() ? ['Corregir pruebas el viernes 10:00', 'Dentista el 3 de diciembre 18:30', 'Comprar pan y leche'] : ['Prueba de mate el jueves', 'Llevar témperas el martes', 'Disertación de inglés el 5 de diciembre'];
+  return `<div class="card asistente"><p class="eti">🐾 Pídele algo a Ron</p><div class="fila mt"><input type="text" id="as-txt" placeholder="${esc(ej[0])}" enterkeyhint="send" autocomplete="off" style="flex:1"><button class="btn pr sm" data-a="as-ir" aria-label="Enviar">${ic('plus')}</button></div>
+    <div class="chips mt">${ej.map(x => `<button class="chip ej" data-a="as-ej" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`;
+}
+function asistenteIr() {
+  const inp = $('#as-txt'), txt = ((inp && inp.value) || '').trim(); if (!txt) return toast('Escríbele a Ron qué quieres agendar.');
+  const r = enMiVida() ? interpretarYo(txt) : interpretarEst(txt); S.asist = r; mostrarAsist(r);
+}
+function mostrarAsist(r) {
+  let det = '', puede = true;
+  if (r.tipoObj === 'evento') {
+    const e = r.ev, a = e.asig ? asigPor(e.asig) : null; puede = !!a;
+    det = `<p><b>${esc(tipoN(e.tipo))}</b>${a ? ' de <b>' + esc(a.nombre) + '</b>' : ''}</p>${e.titulo ? `<p>📝 ${esc(e.titulo)}</p>` : ''}${e.materiales ? `<p>🎒 ${esc(e.materiales.split('\n').join(', '))}</p>` : ''}
+      <p>📅 ${cap(fechaLarga(e.fecha))}${e.hora ? ' · ' + e.hora : ''}${r.faltaFecha ? ' <span class="sub">(no dijiste el día: puse en una semana)</span>' : ''}</p>
+      ${!a ? `<p class="aviso mt">¿De qué asignatura? Elige una:</p><div class="chips mt">${asigOrden().map(x => `<button class="chip" data-a="as-asig" data-id="${x.id}"><i class="pt" style="background:${x.color}"></i>${esc(x.nombre)}</button>`).join('')}</div>` : ''}
+      ${['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) && a ? `<p class="sub mt">📚 Ron te armará un plan de estudio de ${planSesiones(e).length} ${planSesiones(e).length === 1 ? 'sesión' : 'sesiones'}.</p>` : ''}`;
+  } else if (r.tipoObj === 'compras') det = `<p><b>🛒 Lista de compras</b></p><p>${r.items.map(esc).join(' · ')}</p>`;
+  else if (r.tipoObj === 'agenda') { const t = tipoA(r.e.tipo); det = `<p><b>${t.ic} ${esc(t.n)}</b>${r.esp === 'hogar' ? ' · 🏠 compartido' : ''}</p><p>📝 ${esc(r.e.t)}</p><p>📅 ${cap(fechaLarga(r.e.fecha))}${r.e.hora ? ' · ' + r.e.hora : ''}${r.faltaFecha ? ' <span class="sub">(sin día: puse hoy)</span>' : ''}</p>`; }
+  else { const c = CAT_T[r.t.cat]; det = `<p><b>${c[0]} Tarea de trabajo · ${c[1]}</b>${r.t.rep ? ' · 🔁 semanal' : ''}</p><p>📝 ${esc(r.t.t)}</p><p>📅 ${r.t.fecha ? cap(fechaLarga(r.t.fecha)) + (r.t.hora ? ' · ' + r.t.hora : '') : 'Sin fecha'}</p>`; }
+  abrirHoja(`${cabHoja('Ron entendió esto')}<div class="card rosa interp">${det}</div>
+    <div class="grid2 mt"><button class="btn" data-a="as-ajustar">Ajustar</button><button class="btn pr" data-a="as-guardar" ${puede ? '' : 'disabled'}>Guardar</button></div>
+    <p class="sub mt">Si algo no quedó bien, toca "Ajustar" y lo corriges.</p>`);
+}
+async function asistenteGuardar() {
+  const r = S.asist; if (!r) return;
+  if (r.tipoObj === 'evento') { const g = await put('eventos', r.ev); cerrarHoja(true); toast('¡Agendado! 🐾'); if (['trabajo', 'disertacion'].includes(r.ev.tipo) || String(r.ev.tipo).startsWith('c_')) setTimeout(() => verEvento(g.id), 50); }
+  else if (r.tipoObj === 'compras') { for (const n of r.items) await putE('hogar', 'compras', { n, ok: false }); cerrarHoja(true); toast('Agregado a la lista de compras 🛒'); }
+  else if (r.tipoObj === 'agenda') { await putE(r.esp, 'agenda', r.e); cerrarHoja(true); toast('¡Agendado! 🐾'); }
+  else { await putE('yo', 'tareas', r.t); cerrarHoja(true); toast('Tarea guardada 🐾'); }
+  const i = $('#as-txt'); if (i) i.value = ''; S.asist = null; sonido('mrrp'); render(true);
+}
+function asistenteAjustar() {
+  const r = S.asist; if (!r) return; cerrarHoja(true);
+  if (r.tipoObj === 'evento') { S.formTipoNuevo = false; formEvento(Object.assign({}, r.ev, { asig: r.ev.asig || (asigOrden()[0] || {}).id })); }
+  else if (r.tipoObj === 'agenda') formAgenda(Object.assign({}, r.e), r.esp);
+  else if (r.tipoObj === 'tarea') formTarea(Object.assign({}, r.t));
+  else location.hash = '#mas-hogar';
+}
+
+/* ----- Ron sugiere (automatizaciones) ----- */
+function sugerenciasEst() {
+  const hoy = hoyYmd(), s = [];
+  D.eventos.filter(e => !e.hecho && ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) && e.fecha > hoy && difDias(hoy, e.fecha) <= 14).forEach(e => {
+    const p = planSesiones(e).find(x => x.fecha === hoy), hecha = D.sesiones.some(x => x.evento === e.id && x.fecha === hoy);
+    if (p && !hecha) s.push(`<div class="sug"><span>📚 Hoy toca estudiar <b>${esc(asigPor(e.asig).nombre)}</b> ${p.min} min para ${esc(e.titulo || tipoN(e.tipo).toLowerCase())} (${cuando(e.fecha).toLowerCase()}).</span><button class="btn sm pr" data-a="sug-estudiar" data-id="${e.id}" data-v="${p.min}" data-tec="${p.tec}">Estudiar</button></div>`);
+  });
+  const atras = []; D.eventos.filter(e => !e.hecho && e.fecha >= hoy).forEach(e => (e.pasos || []).forEach(p => { if (!p.hecho && p.fecha && p.fecha < hoy) atras.push(e); }));
+  if (atras.length) s.push(`<div class="sug"><span>⏰ Tienes <b>${atras.length}</b> ${atras.length === 1 ? 'paso atrasado' : 'pasos atrasados'} en tus trabajos. ¿Los reparto en los próximos días?</span><button class="btn sm" data-a="sug-pasos">Reprogramar</button></div>`);
+  const sem = D.eventos.filter(e => !e.hecho && ['prueba', 'test', 'control', 'disertacion', 'trabajo'].includes(e.tipo) && e.fecha >= hoy && difDias(hoy, e.fecha) <= 7).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  if (sem.length >= 3) s.push(`<div class="sug"><span>🔥 Semana intensa: <b>${sem.length}</b> evaluaciones o entregas. Empieza por ${esc(tipoN(sem[0].tipo).toLowerCase())} de ${esc(asigPor(sem[0].asig).nombre)} (${cuando(sem[0].fecha).toLowerCase()}).</span></div>`);
+  return s;
+}
+function sugerenciasYo() {
+  const hoy = hoyYmd(), s = [], at = tareasPend().filter(t => t.fecha && t.fecha < hoy);
+  if (at.length) s.push(`<div class="sug"><span>⏰ Tienes <b>${at.length}</b> ${at.length === 1 ? 'tarea atrasada' : 'tareas atrasadas'}. ¿Las paso a hoy y mañana para ordenarte?</span><button class="btn sm" data-a="sug-mover">Reordenar</button></div>`);
+  const dias = [...Array(7)].map((_, k) => { const d = sumaDias(hoy, k); return { d, n: tareasPend().filter(t => t.fecha === d).length + ED('yo', 'agenda').concat(ED('hogar', 'agenda')).filter(e => e.fecha === d).length }; }).filter(x => x.n >= 4);
+  if (dias.length) s.push(`<div class="sug"><span>📈 El ${DIAS[deYmd(dias[0].d).getDay()]} viene cargado (<b>${dias[0].n}</b> cosas). ¿Adelantas algo hoy?</span><a class="btn sm" href="#trabajo">Ver</a></div>`);
+  const sinF = tareasPend().filter(t => !t.fecha).length;
+  if (sinF >= 3) s.push(`<div class="sug"><span>🗂️ Tienes <b>${sinF}</b> tareas sin fecha. Ponerles día ayuda a no olvidarlas.</span><a class="btn sm" href="#trabajo">Ordenar</a></div>`);
+  return s;
+}
+function sugiereCard() { const s = enMiVida() ? sugerenciasYo() : AJ.rol === 'estudiante' ? sugerenciasEst() : []; return s.length ? `<div class="card sugiere"><p class="eti mb">💡 Ron sugiere</p>${s.slice(0, 3).join('')}</div>` : ''; }
+async function reprogramarPasos() {
+  const hoy = hoyYmd(); let n = 0;
+  for (const e of D.eventos.filter(x => !x.hecho && x.fecha >= hoy && (x.pasos || []).some(p => !p.hecho && p.fecha && p.fecha < hoy))) {
+    const pend = e.pasos.filter(p => !p.hecho), libres = Math.max(1, difDias(hoy, e.fecha));
+    pend.forEach((p, i) => { const nf = sumaDias(hoy, Math.min(libres - 1 < 0 ? 0 : libres - 1, Math.floor(i * libres / Math.max(1, pend.length)))); if (p.fecha < hoy || p.fecha > e.fecha || !p.fecha) { p.fecha = nf; n++; } });
+    await put('eventos', Object.assign({}, e));
+  }
+  toast(n ? `Reorganicé ${n} ${n === 1 ? 'paso' : 'pasos'} 🐾` : 'Todo está al día'); render(true);
+}
+async function moverAtrasadas() {
+  const hoy = hoyYmd(), at = tareasPend().filter(t => t.fecha && t.fecha < hoy);
+  for (let i = 0; i < at.length; i++) await putE('yo', 'tareas', Object.assign({}, at[i], { fecha: i < 3 ? hoy : sumaDias(hoy, 1) }));
+  toast(`Moví ${at.length} ${at.length === 1 ? 'tarea' : 'tareas'}: las primeras para hoy y el resto para mañana 🐾`); render(true);
+}
+
+/* ===== Avisos de Ron: notificaciones push con la app cerrada =====
+   El teléfono calcula sus avisos de los próximos 7 días y se los entrega
+   al servidor de avisos (Cloudflare Worker), que los envía a su hora. */
+const AV0 = { animo: true, misiones: true, gato: true, evaluaciones: true, estudio: true, mochila: true, dormir: true, trabajo: true, agenda: true, habitos: true, cuentas: true, corte: true, emy: false };
+const avCfg = () => Object.assign({}, AV0, { gato: AJ.rol === 'estudiante' }, AJ.av || {});
+const pushLS = () => { try { return JSON.parse(localStorage.getItem('ronrutina.push') || 'null'); } catch (e) { return null; } };
+const guardarPushLS = o => { try { o ? localStorage.setItem('ronrutina.push', JSON.stringify(o)) : localStorage.removeItem('ronrutina.push'); } catch (e) { } };
+const urlAvisos = () => (cfg('avisos').url || '').replace(/\/+$/, '');
+const soportaPush = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const esStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+const enMin = (f, hm) => { if (!f || !hm) return 0; const [h, m] = hm.split(':').map(Number); const d = deYmd(f); d.setHours(h, m || 0, 0, 0); return d.getTime(); };
+const restaMin = (hm, min) => { const [h, m] = hm.split(':').map(Number), t = h * 60 + m - min; return t < 0 ? null : pad(Math.floor(t / 60)) + ':' + pad(t % 60); };
+const ub64App = s => { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; const b = atob(s), o = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) o[i] = b.charCodeAt(i); return o; };
+const hashTxt = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = (h * 33 ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
+
+/* ----- qué avisos tocan esta semana ----- */
+function generarAvisos() {
+  const av = avCfg(), hoy = hoyYmd(), ahora = Date.now() + 60000, l = [], n = AJ.nombre || '', R = '🐾 Ron';
+  const add = (f, hm, cuerpo, tag, url, titulo) => { const t = enMin(f, hm); if (t > ahora) l.push({ t, titulo: titulo || R, cuerpo, tag: tag || '', url: url || '#hoy' }); };
+  const animo = AJ.avAnimo || '07:30';
+  for (let k = 0; k < 7; k++) {
+    const f = sumaDias(hoy, k), dw = deYmd(f).getDay(), man = sumaDias(f, 1);
+    if (av.animo) add(f, animo, `☀️ ¡Buenos días${n ? ', ' + n : ''}! ¿Cómo te sientes hoy? Cuéntamelo en Ronrutina`, 'animo', '#hoy');
+    if (av.gato && cfg('gato').activo !== false) gatoTareas(f).filter(t => !(f === hoy && hechoGato(hoy, t.id))).forEach(t => add(f, t.h, t.f[0], 'gato-' + t.id, '#hoy'));
+    if (AJ.rol === 'estudiante') {
+      if (av.misiones) { const c = misCfg(); if (c.activo !== false) { const ms = misionesDe(f, c).filter(m => !(f === hoy && misHecha(hoy, m.id, c))); ms.filter(m => m.hora).forEach(m => add(f, m.hora, `⭐ Misión: ${m.ic} ${m.n}`, 'mision-' + m.id)); const sh = ms.filter(m => !m.hora); if (sh.length) add(f, AJ.avMisiones || '18:00', `⭐ Tus misiones de hoy: ${sh.map(m => m.n.toLowerCase()).join(', ')}`, 'misiones'); } }
+      if (av.evaluaciones) D.eventos.filter(e => !e.hecho && e.fecha === man).forEach(e => { if (['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) || String(e.tipo).startsWith('c_')) add(f, '19:00', `📚 Mañana tienes ${tipoN(e.tipo).toLowerCase()} de ${asigPor(e.asig).nombre}. ¡Repasemos un ratito!`, 'ev-' + e.id, '#calendario'); else if (e.tipo === 'trabajo') add(f, '18:00', `📝 Mañana entregas: ${e.titulo || 'trabajo'} (${asigPor(e.asig).nombre}).`, 'ev-' + e.id, '#calendario'); });
+      if (av.estudio) {
+        D.eventos.filter(e => !e.hecho && ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) && e.fecha > f && difDias(hoy, e.fecha) <= 14).forEach(e => { const p = planSesiones(e).find(x => x.fecha === f); if (p && !(f === hoy && D.sesiones.some(s => s.evento === e.id && s.fecha === hoy))) add(f, AJ.horaEstudio || '17:00', `📚 Hoy toca estudiar ${asigPor(e.asig).nombre} ${p.min} minutos. ¡Yo te acompaño!`, 'plan-' + e.id, '#estudiar'); });
+        D.eventos.filter(e => !e.hecho).forEach(e => (e.pasos || []).filter(p => !p.hecho && p.fecha === f).forEach(p => add(f, AJ.horaEstudio || '17:00', `✅ Paso de hoy: ${p.t} (${e.titulo || asigPor(e.asig).nombre})`, 'paso-' + e.id)));
+      }
+      if (av.mochila && dw >= 0 && dw <= 4) { const asg = asigDelDia(man), mats = materialesDe(man); if (asg.length || mats.length) add(f, AJ.mochilaHora || '20:00', `🎒 Prepara la mochila para mañana${asg.length ? ': ' + asg.map(a => a.nombre).join(', ') : ''}${mats.length ? '. Lleva: ' + mats.map(e => e.materiales.split('\n').filter(Boolean).join(', ')).join(', ') : ''}`, 'mochila', '#hoy'); }
+      if (av.mochila) { const mats = materialesDe(f); if (mats.length) add(f, AJ.materialesHora || '07:00', `🎒 Hoy llevar: ${mats.map(e => e.materiales.split('\n').filter(Boolean).join(', ')).join(', ')}`, 'materiales'); }
+      if (av.dormir && AJ.dormir) add(f, AJ.dormir, `🌙 Ya es hora de dormir${n ? ', ' + n : ''}. Mañana seguimos 🐾`, 'dormir');
+    } else if (AJ.rol === 'apoderado') {
+      if (av.trabajo) { const ts = tareasYo().filter(t => !t.hecho && t.fecha === f); ts.filter(t => t.hora).forEach(t => { const h = restaMin(t.hora, 30); if (h) add(f, h, `💼 En 30 minutos: ${t.t}`, 'tarea-' + t.id, '#trabajo'); }); const sh = ts.filter(t => !t.hora); if (sh.length) add(f, '08:00', `💼 Hoy en el trabajo: ${sh.map(t => t.t).join(', ')}`, 'trabajo', '#trabajo'); }
+      if (av.agenda) ['yo', 'hogar'].forEach(es => ED(es, 'agenda').filter(e => e.fecha === f).forEach(e => { const t = tipoA(e.tipo); if (e.hora) { const h = restaMin(e.hora, 30); if (h) add(f, h, `${t.ic} En 30 minutos: ${e.t}`, 'ag-' + e.id, '#calendario'); } else add(f, '08:00', `${t.ic} Hoy: ${e.t}`, 'ag-' + e.id, '#calendario'); if (e.tipo === 'cumple') add(sumaDias(f, -1), '19:00', `🎂 Mañana: ${e.t}. ¿Ya tienes el regalo?`, 'cumple-' + e.id, '#calendario'); }));
+      if (av.habitos) { const c = habCfg(); habDe(f, c).filter(m => m.hora && !(f === hoy && habHecho(hoy, m.id, c))).forEach(m => add(f, m.hora, `⭐ ${m.ic} ${m.n}`, 'hab-' + m.id)); }
+      if (av.cuentas) { const dm = deYmd(f).getDate(), mk = f.slice(0, 7); ED('hogar', 'cuentas').filter(c => c.dia === dm && !(c.pagado || {})[mk]).forEach(c => { add(sumaDias(f, -1), '10:00', `💳 Mañana vence: ${c.n}${c.monto ? ' ($' + Number(c.monto).toLocaleString('es-CL') + ')' : ''}`, 'cuenta-' + c.id, '#mas-hogar'); add(f, '10:00', `💳 Hoy vence: ${c.n}`, 'cuenta-' + c.id, '#mas-hogar'); }); }
+      if (av.corte && AJ.corte && dw >= 1 && dw <= 5) add(f, AJ.corte, '🌙 Hora de cortar con el trabajo. Lo que quedó, mañana tendrá su momento 🧡', 'corte');
+      if (av.emy) D.eventos.filter(e => !e.hecho && e.fecha === man && ['prueba', 'test', 'control', 'disertacion', 'trabajo'].includes(e.tipo)).forEach(e => add(f, '20:00', `🎒 Mañana ${estudiante()} tiene ${tipoN(e.tipo).toLowerCase()} de ${asigPor(e.asig).nombre}.`, 'emy-' + e.id));
+    }
+  }
+  return l.sort((a, b) => a.t - b.t).slice(0, 250);
+}
+
+/* ----- activar, sincronizar, probar ----- */
+async function activarAvisos() {
+  if (!soportaPush()) return toast(esIOS && !esStandalone() ? 'En iPhone, primero instala la app en la pantalla de inicio y ábrela desde el ícono.' : 'Este navegador no permite notificaciones.');
+  const permiso = Notification.requestPermission();
+  const inp = $('#av-url'), url = ((inp && inp.value) || urlAvisos()).trim().replace(/\/+$/, '');
+  if (!/^https:\/\//.test(url)) return toast('Pega la dirección del servidor de avisos (empieza con https://).');
+  if (url !== urlAvisos()) await put('config', Object.assign({}, cfg('avisos'), { id: 'avisos', url }));
+  if ((await permiso) !== 'granted') return toast('Necesito tu permiso para mandarte avisos. Puedes darlo en los ajustes del teléfono.');
+  try {
+    const reg = await navigator.serviceWorker.ready, clave = (await (await fetch(url + '/clave')).json()).clave;
+    let sub = await reg.pushManager.getSubscription();
+    if (sub && sub.options && sub.options.applicationServerKey) { const k = new Uint8Array(sub.options.applicationServerKey); if (k.length && btoa(String.fromCharCode(...k)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') !== clave) { await sub.unsubscribe(); sub = null; } }
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: ub64App(clave) });
+    const ant = pushLS(); guardarPushLS({ id: (ant && ant.id) || uid() + uid(), url, hash: '', ult: 0 });
+    const ok = await sincronizarAvisos(true);
+    if (ok) { toast('¡Avisos activados! 🔔 Ron te avisará aunque la app esté cerrada.'); sonido('feliz'); }
+    render(true);
+  } catch (e) { console.warn(e); toast('No pude conectar con el servidor de avisos. Revisa la dirección.'); }
+}
+async function sincronizarAvisos(forzar) {
+  const st = pushLS(); if (!st || !soportaPush() || !DB.listo) return false;
+  const avisos = generarAvisos(), h = hashTxt(JSON.stringify(avisos.map(a => [a.t, a.cuerpo])));
+  if (!forzar && h === st.hash && Date.now() - st.ult < 12 * 3600e3) return true;
+  try {
+    const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (!sub) { guardarPushLS(null); return false; }
+    const r = await fetch(st.url + '/registrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: st.id, sub: sub.toJSON(), avisos }) });
+    if (!r.ok) throw new Error('estado ' + r.status);
+    guardarPushLS(Object.assign(st, { hash: h, ult: Date.now(), n: avisos.length })); return true;
+  } catch (e) { console.warn(e); if (forzar) toast('No pude guardar los avisos en el servidor.'); return false; }
+}
+async function probarAviso() {
+  const st = pushLS(); if (!st) return toast('Primero activa los avisos.');
+  try { const r = await (await fetch(st.url + '/probar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: st.id }) })).json(); toast(r.ok ? 'Listo: debería llegarte un aviso de Ron en unos segundos 🔔' : 'El servidor no pudo enviar el aviso (' + (r.estado || r.error) + ').'); }
+  catch (e) { toast('No pude conectar con el servidor de avisos.'); }
+}
+async function desactivarAvisos() {
+  const st = pushLS();
+  try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) { }
+  if (st) fetch(st.url + '/borrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: st.id }) }).catch(() => { });
+  guardarPushLS(null); toast('Avisos desactivados en este teléfono.'); render(true);
+}
+
+/* ----- pantalla de ajustes ----- */
+function vAvisos() {
+  const st = pushLS(), av = avCfg(), sop = soportaPush(), perm = sop ? Notification.permission : 'no', est = AJ.rol === 'estudiante';
+  const prox = generarAvisos(), sw = (k, t) => `<label class="sw"><span>${t}</span><input type="checkbox" data-av="${k}" ${av[k] ? 'checked' : ''}></label>`;
+  let h = cabSub('Avisos de Ron 🔔');
+  h += `<div class="card ${st ? 'rosa' : ''}"><p class="eti">Estado en este teléfono</p><p class="mt"><b>${st ? '🔔 Avisos activados' : !sop ? (esIOS && !esStandalone() ? '📱 Falta instalar la app' : '🚫 Este navegador no permite notificaciones') : perm === 'denied' ? '🔕 Notificaciones bloqueadas' : '🔕 Avisos apagados'}</b></p>
+    <p class="sub mt">${st ? `Ron tiene <b>${prox.length}</b> avisos programados para los próximos 7 días. Se actualizan solos cada vez que abres la app.` : !sop && esIOS ? 'En iPhone: abre Ronrutina en Safari, toca Compartir → "Agregar a inicio" y luego entra desde el ícono. Ahí podrás activar los avisos.' : perm === 'denied' ? 'Desbloquéalas en los ajustes del teléfono (Notificaciones → Ronrutina) y vuelve aquí.' : 'Activa los avisos para que Ron te recuerde tus responsabilidades aunque la app esté cerrada.'}</p>
+    ${st ? `<div class="grid2 mt"><button class="btn sm pr" data-a="av-probar">Enviar aviso de prueba</button><button class="btn sm" data-a="av-off">Desactivar</button></div>` : sop ? `<label class="lbl" for="av-url">Dirección del servidor de avisos</label><input type="url" id="av-url" value="${esc(urlAvisos())}" placeholder="https://ronrutina-avisos.tu-cuenta.workers.dev" autocapitalize="off" spellcheck="false"><p class="sub mt">Se configura una sola vez y queda guardada para toda la familia.</p><button class="btn pr big mt" data-a="av-on">🔔 Activar avisos en este teléfono</button>` : ''}</div>`;
+  h += `<div class="card"><p class="eti mb">¿De qué quieres que te avise Ron?</p>
+    ${sw('animo', '☀️ Saludo de la mañana: ¿cómo te sientes?')}<label class="lbl" for="av-animo">Hora del saludo</label><input type="time" id="av-animo" data-aj="avAnimo" value="${AJ.avAnimo || '07:30'}" style="max-width:160px">
+    ${est ? sw('misiones', '⭐ Misiones del día') + sw('evaluaciones', '📚 Pruebas y entregas (el día antes)') + sw('estudio', '📖 Plan de estudio y pasos de trabajos') + sw('mochila', '🎒 Mochila y materiales') + sw('dormir', '🌙 Hora de dormir')
+      : sw('trabajo', '💼 Tareas del trabajo') + sw('agenda', '📅 Eventos del calendario (30 min antes)') + sw('habitos', '⭐ Hábitos con hora') + sw('cuentas', '💳 Cuentas por vencer') + sw('corte', '🌙 Hora de cortar con el trabajo') + sw('emy', '🎒 Evaluaciones de ' + esc(estudiante()))}
+    ${sw('gato', '🐾 Cuidar a Ron de verdad')}</div>`;
+  if (st && prox.length) h += `<div class="card"><p class="eti mb">Próximos avisos</p>${prox.slice(0, 6).map(a => { const d = new Date(a.t); return `<p class="prox-av"><b>${cap(fechaCorta(ymd(d)))} ${pad(d.getHours())}:${pad(d.getMinutes())}</b> · ${esc(a.cuerpo)}</p>`; }).join('')}</div>`;
+  h += `<p class="sub" style="text-align:center">Ron programa los avisos de la próxima semana. Abre la app al menos una vez por semana para que sigan llegando.</p>`;
+  return h;
 }
 
 /* ===== Estado de la interfaz ===== */
@@ -1962,13 +2383,16 @@ function vHoy() {
   const pruebaMan = D.eventos.find(e => e.fecha === sumaDias(hoy, 1) && ['prueba', 'test', 'control', 'disertacion'].includes(e.tipo) && !e.hecho);
   const finde = [0, 6].includes(new Date().getDay()), hobbies = (AJ.hobbies || '').split(',').map(x => x.trim()).filter(Boolean);
   const fija = S.fraseFija && S.fraseFija.hasta > Date.now() ? S.fraseFija.txt : '';
+  const animoH = est ? animoEst(hoy) : null, animoF = animoH && new Date().getHours() < 13 ? (EMOS_EST[animoH.emo] || [])[animoH.i] : '';
   const gatoF = est && !fija ? fraseGato() : '';
-  let frase = fija ? fija : gatoF ? gatoF : noche ? elige(RON.noche, AJ.nombre) : est && pruebaMan ? `Mañana tienes ${tipoN(pruebaMan.tipo).toLowerCase()} de ${asigPor(pruebaMan.asig).nombre}. ¿Repasamos ${AJ.duracion || 20} minutos? 🐾`
+  let frase = fija ? fija : animoF ? animoF : gatoF ? gatoF : noche ? elige(RON.noche, AJ.nombre) : est && pruebaMan ? `Mañana tienes ${tipoN(pruebaMan.tipo).toLowerCase()} de ${asigPor(pruebaMan.asig).nombre}. ¿Repasamos ${AJ.duracion || 20} minutos? 🐾`
     : est && finde && hobbies.length && Math.random() < .5 ? `Hoy te ganaste un rato para ${elige(hobbies)} 🎨`
     : est && finde && AJ.aire && new Date().getHours() >= 11 && new Date().getHours() < 19 && Math.random() < .4 ? '¿Y si sales un ratito al aire libre? Yo miro por la ventana 🌤️' : !est ? (semana.length ? `Hola ${AJ.nombre}. ${estudiante()} tiene ${semana.length} ${semana.length === 1 ? 'evaluación o trabajo' : 'evaluaciones o trabajos'} esta semana.` : `Hola ${AJ.nombre}. ${estudiante()} no tiene evaluaciones ni trabajos esta semana.`) : elige(RON.saludos, AJ.nombre);
   let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
   h += ronHTML('', frase, 'ron-hoy');
   if (est && regalosInfo().pend) h += `<a class="card regalo-aviso" href="#ron"><span style="font-size:30px">🎁</span><span><b>¡Ron tiene ${regalosInfo().pend === 1 ? 'un regalo misterioso' : regalosInfo().pend + ' regalos misteriosos'}!</b><br><small class="sub">Toca para abrir</small></span></a>`;
+  if (est) h += animoCardEst() + asistenteCard() + sugiereCard();
+  if (est && [0, 5, 6].includes(new Date().getDay())) h += `<a class="card hogar-card" href="#semana"><p>💗 <b>Mira lo que aprendiste de tus emociones esta semana</b></p><p class="sub mt">Y guarda tus aprendizajes en Mi semana.</p></a>`;
   h += misionesCard();
   if (DB.modo === 'local') h += `<div class="aviso">Sin conexión con la nube: los cambios quedan en este teléfono y se compartirán cuando vuelva internet.</div>`;
   const asigM = asigDelDia(man), mats = materialesDe(man), chk = mochilaChecks(man);
@@ -2207,7 +2631,10 @@ function vMas() {
   return `<div class="top"><h1>Más</h1><span class="badge">🍓 ${frutillas()}</span></div>
   ${it('guia', 'libro', 'Cómo estudiar', 'Técnicas, prioridades y desafío')}
   ${it('semana', 'cal', AJ.rol === 'estudiante' ? 'Mi semana' : 'La semana de ' + esc(estudiante()), 'Resumen, reflexión y técnicas')}
+  ${AJ.rol === 'estudiante' ? it('diario', 'lapiz', 'Mi diario 🔒', 'Escribe cómo te sientes. Solo tú lo ves') : ''}
   ${it('mas-correo', 'mail', 'Correo a profes', 'Escribe consultas o envía trabajos')}
+  ${it('mas-plantillas', 'mail', 'Mis plantillas de correo', 'Crea tus correos frecuentes')}
+  ${it('mas-avisos', 'reloj', 'Avisos de Ron 🔔', 'Notificaciones aunque la app esté cerrada')}
   ${it('mas-horario', 'tabla', 'Horario de clases', 'Qué asignaturas hay cada día')}
   ${it('mas-asig', 'libro', 'Asignaturas y profes', 'Colores, profesores y correos')}
   ${it('mas-misiones', 'check', 'Misiones diarias ⭐', 'Mochila, dormitorio, loza, piano y más')}
@@ -2215,7 +2642,7 @@ function vMas() {
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 6</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 9</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
@@ -2224,18 +2651,18 @@ function vCorreo() {
   ${asigOrden().map(a => `<button class="ev" data-a="correo" data-id="${a.id}"><span class="barra" style="background:${a.color}"></span><span class="txt"><b>${esc(a.nombre)}</b><small>${a.profe ? esc(a.profe) : 'Sin profe anotado'}${a.correo ? ' · ' + esc(a.correo) : ''}</small></span>${ic('mail')}</button>`).join('')}`;
 }
 function abrirCorreo(asigId, evId, tipo) {
-  const a = asigPor(asigId), ev = evId ? D.eventos.find(e => e.id === evId) : null;
-  tipo = tipo || (ev && ['trabajo', 'disertacion'].includes(ev.tipo) ? 'trabajo' : 'consulta');
-  const rel = s => s.replace(/\{asig\}/g, a.nombre).replace(/\{profe\}/g, a.profe || '').replace(/\{tema\}/g, ev ? (ev.titulo || tipoN(ev.tipo)) : (tipo === 'trabajo' ? '[nombre del trabajo]' : '[tema]')).replace(/\{nombre\}/g, AJ.rol === 'estudiante' ? AJ.nombre : estudiante()).replace(/\{fecha\}/g, fechaLarga(hoyYmd()));
-  const [as, cu] = PLANTILLAS[tipo];
+  const a = asigPor(asigId), ev = evId ? D.eventos.find(e => e.id === evId) : null, l = plantillas();
+  tipo = tipo || (l[0] ? l[0].id : 'blanco');
+  const p = l.find(x => x.id === tipo) || { as: '', cu: '' };
+  const rel = s => (s || '').replace(/\{asig\}/g, a.nombre).replace(/\{profe\}/g, a.profe || '').replace(/\{tema\}/g, ev ? (ev.titulo || tipoN(ev.tipo)) : '[tema]').replace(/\{nombre\}/g, AJ.rol === 'estudiante' ? AJ.nombre : estudiante()).replace(/\{fecha\}/g, fechaLarga(hoyYmd()));
   abrirHoja(`${cabHoja('Escribir a ' + esc(a.profe || 'profe'))}<p class="sub">${esc(a.nombre)}</p>
-    <div class="chips mt">${[['consulta', 'Consulta'], ['trabajo', 'Envío de trabajo'], ['justificacion', 'Justificación'], ['libre', 'Libre']].map(([k, t]) => `<button class="chip" data-a="correo-tipo" data-v="${k}" data-id="${asigId}" ${evId ? `data-ev="${evId}"` : ''} aria-pressed="${tipo === k}">${t}</button>`).join('')}</div>
+    <div class="chips mt">${l.map(x => `<button class="chip" data-a="correo-tipo" data-v="${x.id}" data-id="${asigId}" ${evId ? `data-ev="${evId}"` : ''} aria-pressed="${tipo === x.id}">${esc(x.n)}</button>`).join('')}<button class="chip" data-a="correo-tipo" data-v="blanco" data-id="${asigId}" ${evId ? `data-ev="${evId}"` : ''} aria-pressed="${tipo === 'blanco'}">En blanco</button></div>
+    ${l.length ? '' : `<p class="sub mt">¿Escribes seguido el mismo tipo de correo? <a href="#mas-plantillas" data-a="cerrar">Crea tus plantillas</a>.</p>`}
     <label class="lbl" for="c-para">Para</label><input type="email" id="c-para" value="${esc(a.correo || '')}" placeholder="correo@colegio.cl" autocapitalize="off">
-    <label class="lbl" for="c-asunto">Asunto</label><input type="text" id="c-asunto" value="${esc(rel(as) || a.nombre)}">
-    <label class="lbl" for="c-cuerpo">Mensaje</label><textarea id="c-cuerpo" style="min-height:200px">${esc(rel(cu))}</textarea>
-    ${tipo === 'trabajo' ? '<div class="aviso mt">📎 Recuerda adjuntar el archivo en Gmail antes de enviar.</div>' : ''}
+    <label class="lbl" for="c-asunto">Asunto</label><input type="text" id="c-asunto" value="${esc(rel(p.as) || a.nombre)}">
+    <label class="lbl" for="c-cuerpo">Mensaje</label><textarea id="c-cuerpo" style="min-height:200px">${esc(rel(p.cu))}</textarea>
     <div class="col mt"><button class="btn pr big" data-a="correo-abrir" data-v="app" data-id="${asigId}">${ic('mail')} Abrir en Gmail</button><button class="btn w" data-a="correo-abrir" data-v="web" data-id="${asigId}">Gmail en el navegador</button></div>
-    <p class="sub mt">Usa la cuenta de correo del colegio para enviar.</p>`);
+    <p class="sub mt">Si envías un trabajo, adjunta el archivo en Gmail antes de enviar.</p>`);
 }
 function correoAbrir(modo, asigId) {
   const para = $('#c-para').value.trim(), as = $('#c-asunto').value, cu = $('#c-cuerpo').value, a = D.asig.find(x => x.id === asigId);
@@ -2287,7 +2714,6 @@ function vMochila() {
 }
 
 function vFamilia() {
-  const enlace = location.origin + location.pathname + '#unir=' + AJ.codigo;
   return cabSub('Familia') + `<div class="card"><p class="eti">Estudiante</p><label class="lbl" for="fa-est">Nombre</label><input type="text" id="fa-est" value="${esc(estudiante())}"></div>
   <div class="card"><p class="eti">Compartir con mamá</p><p class="sub mt">Quien abra este enlace verá y podrá editar el mismo calendario, en vivo. Compártelo solo con tu familia.</p>
     <button class="btn pr w mt" data-a="fa-compartir">Compartir enlace</button>
@@ -2317,8 +2743,8 @@ function vAjustes() {
 }
 
 /* ===== Navegación ===== */
-const VISTAS = { hoy: vHoy, calendario: vCalendario, estudiar: vEstudiar, ron: vRon, semana: vSemana, guia: vGuia, mas: vMas, 'mas-correo': vCorreo, 'mas-horario': vHorario, 'mas-asig': vAsignaturas, 'mas-mochila': vMochila, 'mas-familia': vFamilia, 'mas-ajustes': vAjustes, 'mas-gato': vGato, 'mas-misiones': vMisiones };
-const TAB = v => v.startsWith('mas') ? 'mas' : v === 'semana' ? 'ron' : v === 'guia' ? 'estudiar' : v;
+const VISTAS = { hoy: vHoy, calendario: vCalendario, estudiar: vEstudiar, ron: vRon, semana: vSemana, guia: vGuia, mas: vMas, 'mas-correo': vCorreo, 'mas-horario': vHorario, 'mas-asig': vAsignaturas, 'mas-mochila': vMochila, 'mas-familia': vFamilia, 'mas-ajustes': vAjustes, 'mas-gato': vGato, 'mas-avisos': vAvisos, diario: vDiario, 'mas-plantillas': vPlantillas, 'mas-misiones': vMisiones };
+const TAB = v => v === 'diario' ? 'hoy' : v.startsWith('mas') ? 'mas' : v === 'semana' ? 'ron' : v === 'guia' ? 'estudiar' : v;
 const vistas = () => enMiVida() ? Object.assign({}, VISTAS, VISTAS_YO) : VISTAS;
 function render(force) {
   const cont = $('#vista'); if (!cont) return;
@@ -2337,6 +2763,7 @@ function render(force) {
   if (!force) scrollTo(0, y);
   $$('.ron.saluda').forEach(ronFin);
   clearTimeout(render._l); render._l = setTimeout(revisarLogros, 600);
+  clearTimeout(render._av); render._av = setTimeout(() => sincronizarAvisos(false), 4000);
 }
 function irVista() {
   const h = location.hash.slice(1);
@@ -2410,7 +2837,7 @@ document.addEventListener('click', async ev => {
       cerrarHoja(true);
       if (v !== 'duda') { const tt = tecPor(v); S.est.tec = [tt.n, tt.pasos.join(' ')]; S.est.tecId = tt.id; render(true); setTimeout(() => ronEstado('ron-est', 'saluda', tt.n + ': ' + tt.pasos[0]), 0); return; }
       {
-        const el = abrirHoja(`${cabHoja('Anota tu duda')}<textarea id="duda" placeholder="¿Qué no entendiste?"></textarea><button class="btn pr big mt" data-a="est-duda">Guardar duda</button>`);
+        abrirHoja(`${cabHoja('Anota tu duda')}<textarea id="duda" placeholder="¿Qué no entendiste?"></textarea><button class="btn pr big mt" data-a="est-duda">Guardar duda</button>`);
         return;
       }
     }
@@ -2418,6 +2845,31 @@ document.addEventListener('click', async ev => {
     case 'est-terminar': S.est.fase = 'fin'; S.est.frase = elige(RON.fin, AJ.nombre); pantallaOff(); campana([880, 1175, 1568]); render(true); setTimeout(() => ronEstado('ron-est', 'celebra'), 0); return;
     case 'est-como': S.est.como = v; $$('[data-a=est-como]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return;
     case 'est-guardar': return estGuardar();
+    /* avisos */
+    case 'av-on': return activarAvisos();
+    case 'av-off': return desactivarAvisos();
+    case 'av-probar': return probarAviso();
+    /* asistente */
+    case 'as-ir': return asistenteIr();
+    case 'as-ej': { const i = $('#as-txt'); if (i) i.value = v; return asistenteIr(); }
+    case 'as-asig': if (S.asist && S.asist.ev) { S.asist.ev.asig = id; mostrarAsist(S.asist); } return;
+    case 'as-guardar': return asistenteGuardar();
+    case 'as-ajustar': return asistenteAjustar();
+    case 'sug-estudiar': S.estSel = { ev: id, min: +v, tecId: t.dataset.tec || null }; S.est = null; location.hash = '#estudiar'; return;
+    case 'sug-pasos': return reprogramarPasos();
+    case 'sug-mover': return moverAtrasadas();
+    /* emociones y plantillas */
+    case 'animo-est': return elegirAnimoEst(v);
+    case 'animo-est-cambiar': { const a = animoEst(hoyYmd()); if (a) await borrarE('yo', 'animo', a.id); S.verConsejos = false; return render(true); }
+    case 'd-emo': S.dEmo = v; $$('[data-a=d-emo]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return;
+    case 'd-guardar': return guardarDiario();
+    case 'd-borrar': if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro? Toca otra vez'; return; } await borrarE('yo', 'diario', id); return render(true);
+    case 'd-restaurar': { const c = ($('#d-rest').value || '').trim().toLowerCase().replace(/[^a-z0-9]/g, ''); if (c.length < 24) return toast('El código no parece completo.'); if (!confirm('¿Cambiar a este diario? El que tienes ahora seguirá guardado con su código.')) return; AJ.codigoYo = c; guardarAjustes(); await conectarEsp('yo', c); toast('Diario recuperado 🧡'); return render(true); }
+    case 'ap-guardar': await putE('yo', 'config', { id: 'aprendizaje-' + v, q1: $('#ap1').value, q2: $('#ap2').value, q3: $('#ap3').value }); toast('Aprendizajes guardados 💗'); sonido('prrr'); return;
+    case 'pl-editar': return editarPlantilla(id);
+    case 'pl-campo': return insertarCampo(v);
+    case 'pl-guardar': return guardarPlantilla(id);
+    case 'pl-borrar': if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro? Toca otra vez'; return; } await guardarPlantillas(plantillas().filter(x => x.id !== id)); cerrarHoja(true); return render(true);
     /* Mi vida */
     case 'animo': return elegirAnimo(v);
     case 'animo-cambiar': { const a = animoDe(hoyYmd()); if (a) await borrarE('yo', 'animo', a.id); return render(true); }
@@ -2438,12 +2890,12 @@ document.addEventListener('click', async ev => {
     case 'tf-paso': leerTarea(); S.tForm.pasos.push({ t: '', hecho: false }); return S.tPinta();
     case 'tf-quita': leerTarea(); S.tForm.pasos.splice(+t.dataset.i, 1); return S.tPinta();
     case 'tf-guardar': return guardarTarea();
-    case 't-correo': return correoTrabajo(+v);
+    case 't-correo': return correoTrabajo(v);
     case 'tc-abrir': { const e = correoEnlaces($('#tc-para').value.trim(), $('#tc-as').value, $('#tc-cu').value); location.href = v === 'web' ? e.web : e.app; return; }
-    case 'a-nuevo': return formAgenda(null, 'yo', { fecha: t.dataset.fecha });
-    case 'a-ver': return verAgenda(id, t.dataset.esp);
-    case 'a-editar': return formAgenda(ED(t.dataset.esp, 'agenda').find(x => x.id === id), t.dataset.esp);
-    case 'a-borrar': if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro?'; return; } await borrarE(t.dataset.esp, 'agenda', id); cerrarHoja(); return render(true);
+    case 'ag-nuevo': return formAgenda(null, 'yo', { fecha: t.dataset.fecha });
+    case 'ag-ver': return verAgenda(id, t.dataset.esp);
+    case 'ag-editar': return formAgenda(ED(t.dataset.esp, 'agenda').find(x => x.id === id), t.dataset.esp);
+    case 'ag-borrar': if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro?'; return; } await borrarE(t.dataset.esp, 'agenda', id); cerrarHoja(); return render(true);
     case 'af-tipo': leerAgenda(); S.aForm.e.tipo = v; return S.aPinta();
     case 'af-otro': leerAgenda(); S.aForm.nuevoTipo = !S.aForm.nuevoTipo; return S.aPinta();
     case 'af-crear': { const n = ($('#af-tn').value || '').trim(); if (!n) return toast('Escribe el nombre del tipo.'); leerAgenda(); const l = cfgE('yo', 'tiposA').lista || [], nt = { id: 'c_' + uid().slice(0, 8), n: cap(n), color: TIPO_PALETA[l.length % TIPO_PALETA.length] }; await putE('yo', 'config', { id: 'tiposA', lista: [...l, nt] }); S.aForm.e.tipo = nt.id; S.aForm.nuevoTipo = false; return S.aPinta(); }
@@ -2528,7 +2980,7 @@ document.addEventListener('click', async ev => {
       try { await navigator.clipboard.writeText(url); toast('Enlace copiado. Pégalo en WhatsApp.'); } catch (e) { prompt('Copia este enlace:', url); } return;
     }
     case 'fa-copiar': try { await navigator.clipboard.writeText(AJ.codigo); toast('Código copiado'); } catch (e) { prompt('Copia el código:', AJ.codigo); } return;
-    case 'fa-salir': if (!confirm('¿Salir de esta familia en este teléfono? Podrás volver con el código.')) return; DB.unsubs.forEach(u => { try { u(); } catch (e) { } }); AJ = Object.assign({}, AJ0); guardarAjustes(); S.ob = null; location.hash = ''; return render(true);
+    case 'fa-salir': if (!confirm('¿Salir de esta familia en este teléfono? Podrás volver con el código.')) return; DB.unsubs.forEach(u => { try { u(); } catch (e) { } }); DB.unsubs = []; Object.values(ESP).forEach(e => { e.unsubs.forEach(u => { try { u(); } catch (x) { } }); e.unsubs = []; e.codigo = ''; e.cols.forEach(c => e.D[c] = []); }); COLS.forEach(c => D[c] = []); S.fraseFija = null; AJ = Object.assign({}, AJ0); guardarAjustes(); S.ob = null; location.hash = ''; return render(true);
     /* ajustes */
     case 'aj': AJ[t.dataset.k] = isNaN(+v) || v === '' ? v : +v; guardarAjustes(); return render(true);
     case 'respaldo': {
@@ -2537,12 +2989,15 @@ document.addEventListener('click', async ev => {
     }
   }
 });
+document.addEventListener('focusin', e => { if (e.target.id === 'pl-as' || e.target.id === 'pl-cu') S.plUlt = e.target.id; });
 document.addEventListener('input', e => { if (e.target.id === 'deco-op') { AJ.decoOp = +e.target.value; const x = $('#deco-txt'), op = AJ.decoOp; if (x) x.textContent = op < 14 ? 'muy suave' : op < 28 ? 'suave' : op < 44 ? 'media' : 'bien visible'; try { document.body.style.backgroundImage = fondoSVG(); } catch (z) { } } });
-document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-ron]')) { e.preventDefault(); e.target.click(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'as-txt') { e.preventDefault(); return asistenteIr(); } if (e.key === 'Enter' && e.target.id === 'hc-n') { e.preventDefault(); const b = $('[data-a=hc-add]'); if (b) b.click(); return; } if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-ron]')) { e.preventDefault(); e.target.click(); } });
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.aj) { AJ[t.dataset.aj] = t.value.trim(); guardarAjustes(); if (t.dataset.aj === 'mochilaHora' || t.dataset.aj === 'materialesHora') render(true); }
   if (t.dataset.ajc) { AJ[t.dataset.ajc] = t.checked; guardarAjustes(); }
+  if (t.dataset.av) { AJ.av = Object.assign({}, avCfg(), { [t.dataset.av]: t.checked }); guardarAjustes(); sincronizarAvisos(true); return; }
+  if (t.dataset.aj === 'avAnimo') setTimeout(() => sincronizarAvisos(true), 50);
   if (t.id === 'deco-op') { AJ.decoOp = +t.value; guardarAjustes(); return; }
   if (t.id === 'f-archivo' && t.files && t.files[0]) { const f = t.files[0]; t.value = ''; subirArchivo(f, t.dataset.ev); return; }
   if (t.dataset.mis === 'activo') { put('config', Object.assign({}, misCfg(), { id: 'misiones', activo: t.checked })).then(() => render(true)); return; }
