@@ -304,6 +304,7 @@ label.adjuntar{cursor:pointer;border-style:dashed}
 .av-h.col{flex-direction:column;align-items:stretch;gap:4px;min-width:0}.av-h.col select,.av-h.col input{max-width:none;width:100%}
 .av-ck{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px}.av-ck input{width:20px;height:20px;margin:0;accent-color:var(--ac)}
 details summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ac)}
+.av-err{margin-top:10px;padding:10px 12px;border-radius:12px;background:#FFF0F0;border:1.5px solid #F2B8B8;color:#8E2A2A;font-size:13px;word-break:break-word}
 
 </style>
 <script defer src="fb.js"></script>
@@ -1880,7 +1881,7 @@ function vYoMas() {
   ${it('mas-gato', '🐾', 'Ron de verdad', 'Comida, agua, arenero, paseo y cariño')}
   ${it('mas-familia', '👨‍👩‍👧', 'Familia', 'Código y enlace de la familia')}
   ${it('mas-ajustes', '⚙️', 'Ajustes', 'Fondo, colores, hora de corte y sonido')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 10</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 10.1</p>`;
 }
 /* Navegación según el modo */
 const NAV_IC = { hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>', gato: '<path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/>', mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>', maletin: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>' };
@@ -2334,21 +2335,31 @@ function generarAvisos() {
 async function activarAvisos() {
   if (!soportaPush()) return toast(esIOS && !esStandalone() ? 'En iPhone, primero instala la app en la pantalla de inicio y ábrela desde el ícono.' : 'Este navegador no permite notificaciones.');
   const permiso = Notification.requestPermission();
-  const inp = $('#av-url'), url = ((inp && inp.value) || urlAvisos()).trim().replace(/\/+$/, '');
-  if (!/^https:\/\//.test(url)) return toast('Pega la dirección del servidor de avisos (empieza con https://).');
-  if (url !== urlAvisos()) await put('config', Object.assign({}, cfg('avisos'), { id: 'avisos', url }));
+  const inp = $('#av-url'), url = ((inp && inp.value) || urlAvisos()).replace(/[\s\u200B-\u200D\uFEFF]/g, '').replace(/\/+$/, '');
+  if (!/^https:\/\/[^/]+\.[^/]+/.test(url)) return toast('Pega la dirección del servidor de avisos (empieza con https://).');
+  if (url !== urlAvisos()) { try { await put('config', Object.assign({}, cfg('avisos'), { id: 'avisos', url })); } catch (e) { } }
   if ((await permiso) !== 'granted') return toast('Necesito tu permiso para mandarte avisos. Puedes darlo en los ajustes del teléfono.');
+  const fallo = (msg, e) => { console.warn(e); avisoError(msg + (e ? ` (${(e.name || '') + (e.message ? ': ' + e.message : '')})` : '')); };
+  /* 1. leer la clave del servidor */
+  let clave;
+  try { const r = await fetch(url + '/clave', { cache: 'no-store' }); if (!r.ok) throw new Error('estado ' + r.status); clave = (await r.json()).clave; if (!clave) throw new Error('sin clave'); }
+  catch (e) { return fallo('Paso 1: no pude leer el servidor. Revisa que la dirección sea exacta y que tengas internet', e); }
+  /* 2. suscribir el teléfono */
+  let sub;
   try {
-    const reg = await navigator.serviceWorker.ready, clave = (await (await fetch(url + '/clave')).json()).clave;
-    let sub = await reg.pushManager.getSubscription();
+    const reg = await Promise.race([navigator.serviceWorker.ready, new Promise((_, no) => setTimeout(() => no(new Error('el servicio de la app no está listo')), 8000))]);
+    sub = await reg.pushManager.getSubscription();
     if (sub && sub.options && sub.options.applicationServerKey) { const k = new Uint8Array(sub.options.applicationServerKey); if (k.length && btoa(String.fromCharCode(...k)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') !== clave) { await sub.unsubscribe(); sub = null; } }
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: ub64App(clave) });
-    const ant = pushLS(); guardarPushLS({ id: (ant && ant.id) || uid() + uid(), url, hash: '', ult: 0 });
-    const ok = await sincronizarAvisos(true);
-    if (ok) { toast('¡Avisos activados! 🔔 Ron te avisará aunque la app esté cerrada.'); sonido('feliz'); }
-    render(true);
-  } catch (e) { console.warn(e); toast('No pude conectar con el servidor de avisos. Revisa la dirección.'); }
+  } catch (e) { return fallo('Paso 2: el teléfono no aceptó la suscripción a avisos. Abre la app desde Chrome (en Brave: Configuración → Privacidad → activa «Usar los servicios de Google para mensajes push»)', e); }
+  /* 3. guardar los avisos en el servidor */
+  const ant = pushLS(); guardarPushLS({ id: (ant && ant.id) || uid() + uid(), url, hash: '', ult: 0 });
+  const ok = await sincronizarAvisos(true);
+  if (ok) { toast('¡Avisos activados! 🔔 Ron te avisará aunque la app esté cerrada.'); sonido('feliz'); render(true); }
+  else { const b = $('#av-error'); if (!b || b.hidden) avisoError('Paso 3: no pude guardar los avisos en el servidor. Revisa tu internet e inténtalo de nuevo.'); }
 }
+/* deja el error a la vista (los toast duran poco) */
+function avisoError(msg) { toast('No se pudo activar. Mira el detalle en pantalla.'); const b = $('#av-error'); if (b) { b.textContent = msg; b.hidden = false; } }
 async function sincronizarAvisos(forzar) {
   const st = pushLS(); if (!st || !soportaPush() || !DB.listo) return false;
   guardarAjSW();
@@ -2359,7 +2370,7 @@ async function sincronizarAvisos(forzar) {
     const r = await fetch(st.url + '/registrar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: st.id, sub: sub.toJSON(), avisos }) });
     if (!r.ok) throw new Error('estado ' + r.status);
     guardarPushLS(Object.assign(st, { hash: h, ult: Date.now(), n: avisos.length })); return true;
-  } catch (e) { console.warn(e); if (forzar) toast('No pude guardar los avisos en el servidor.'); return false; }
+  } catch (e) { console.warn(e); if (forzar) avisoError('Paso 3: el servidor no guardó los avisos (' + (e.message || e) + ').'); return false; }
 }
 async function probarAviso() {
   const st = pushLS(); if (!st) return toast('Primero activa los avisos.');
@@ -2416,7 +2427,7 @@ function vAvisos() {
     <p class="sub mt">${st ? (avPausado() ? `Ron vuelve a avisarte el ${(d => DIAS[d.getDay()] + ' ' + d.getDate() + ' a las ' + hmDe(d))(new Date(+AJ.avPausa))}.` : `Ron tiene <b>${prox.length}</b> avisos programados para los próximos días. Se actualizan solos cada vez que abres la app.`) : !sop && esIOS ? 'En iPhone: abre Ronrutina en Safari, toca Compartir → "Agregar a inicio" y luego entra desde el ícono. Ahí podrás activar los avisos.' : perm === 'denied' ? 'Desbloquéalas en los ajustes del teléfono (Notificaciones → Ronrutina) y vuelve aquí.' : 'Activa los avisos para que Ron te recuerde tus responsabilidades aunque la app esté cerrada.'}</p>
     ${st ? `<div class="grid2 mt"><button class="btn sm pr" data-a="av-probar">Enviar aviso de prueba</button><button class="btn sm" data-a="av-off">Desactivar</button></div>
       <p class="av-t mt">${avPausado() ? '' : 'Pausar avisos'}</p><div class="chips">${avPausado() ? `<button class="chip" data-a="av-pausa" data-v="0">▶️ Reanudar avisos</button>` : `<button class="chip" data-a="av-pausa" data-v="manana">⏸️ Hasta mañana</button><button class="chip" data-a="av-pausa" data-v="3">3 días</button><button class="chip" data-a="av-pausa" data-v="7">1 semana</button>`}</div>`
-      : sop ? `<label class="lbl" for="av-url">Dirección del servidor de avisos</label><input type="url" id="av-url" value="${esc(urlAvisos())}" placeholder="https://ronrutina-avisos.tu-cuenta.workers.dev" autocapitalize="off" spellcheck="false"><p class="sub mt">Se configura una sola vez y queda guardada para toda la familia.</p><button class="btn pr big mt" data-a="av-on">🔔 Activar avisos en este teléfono</button>` : ''}</div>`;
+      : sop ? `<label class="lbl" for="av-url">Dirección del servidor de avisos</label><input type="url" id="av-url" value="${esc(urlAvisos())}" placeholder="https://ronrutina-avisos.tu-cuenta.workers.dev" autocapitalize="off" spellcheck="false"><p class="sub mt">Se configura una sola vez y queda guardada para toda la familia.</p><button class="btn pr big mt" data-a="av-on">🔔 Activar avisos en este teléfono</button><p class="av-err" id="av-error" hidden></p>` : ''}</div>`;
   h += `<div class="card"><p class="eti">¿De qué y cuándo te avisa Ron?</p><p class="sub mt mb">Toca varias opciones si quieres más de un aviso. Esta configuración es solo de este teléfono.</p>
     ${g('animo', '☀️ Saludo de la mañana', hora('Hora del saludo', 'avAnimo', true, '07:30') + `<label class="av-ck"><input type="checkbox" data-avt="animoSem" ${T.animoSem ? 'checked' : ''}> Solo de lunes a viernes</label>`)}
     ${est ? g('misiones', '⭐ Misiones del día', p('Misiones con hora: avisar') + chips('misAnt', ANT_MIS) + hora('Misiones sin hora: recordatorio a las', 'avMisiones', true, '18:00'))
@@ -2769,7 +2780,7 @@ function vMas() {
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 10</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 10.1</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
