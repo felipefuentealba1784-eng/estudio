@@ -109,7 +109,7 @@ svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke
 .dia[aria-pressed=true]{background:var(--ac);color:#fff}
 .puntos{display:flex;gap:2px;margin-top:3px;height:6px}.puntos i{width:6px;height:6px;border-radius:3px;display:block}
 label.lbl{display:block;font-weight:800;font-size:14px;margin:14px 0 6px}
-input[type=text],input[type=email],input[type=date],input[type=time],select,textarea{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--borde);background:var(--sup);color:var(--tx)}
+input[type=text],input[type=email],input[type=date],input[type=time],input[type=number],select,textarea{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--borde);background:var(--sup);color:var(--tx)}
 textarea{min-height:90px;resize:vertical}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;padding:6px 0;border-bottom:1px solid var(--borde)}
 .sw:last-child{border-bottom:0}
@@ -262,11 +262,29 @@ label.adjuntar{cursor:pointer;border-style:dashed}
 .prenda.leg[aria-pressed=true]{background:linear-gradient(var(--sup2),var(--sup2)) padding-box,linear-gradient(135deg,#FF8A80,#FFD180,#B9F6CA,#80D8FF,#EA80FC) border-box}
 .badge-leg{background:linear-gradient(90deg,#F9A825,#FF4081,#7C4DFF)!important;font-size:14px;padding:6px 14px;animation:latido 1.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.anim-luz,.anim-rayo,.anim-scan,.anim-brillo,.ron[data-pelo=fantasma]{animation:none!important}}
+.emo{border:1.5px solid var(--borde);background:var(--sup);border-radius:16px;padding:10px 4px;font-weight:800;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--tx)}.emo span{font-size:28px}
+.animo{border:2px solid var(--ac2)}
+.animo-ok{margin:-4px 0 12px}
+.cuidado{background:#FFF8E1;border-color:#FFE082}
+.carga{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}.carga div{display:flex;flex-direction:column;align-items:center;gap:2px}
+.carga .col{width:22px;height:60px;border-radius:11px;background:var(--sup2);display:flex;align-items:flex-end;overflow:hidden}.carga .col i{display:block;width:100%;border-radius:11px}
+.carga b{font-size:13px;min-height:16px}.carga small{font-size:11px;font-weight:800;color:var(--mu)}.carga .hoy small{color:var(--ac)}
+.tarea-t{align-items:center;padding:8px 10px}.tarea-t .txt{background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit;flex:1;min-width:0}
+.tarea-t .ck{background:none;border:0;padding:4px;flex:none}.tarea-t .ck .box{width:26px;height:26px;border-radius:13px;border:2px solid var(--ac);display:grid;place-items:center;background:#fff}
+.tarea-t .ck[aria-pressed=true] .box{background:var(--ac)}.tarea-t .ck[aria-pressed=true] .box::after{content:'✓';color:#fff;font-weight:900}
+.tarea-t.hecho b{text-decoration:line-through}
+.recomp{padding:8px 0;border-bottom:1px dashed var(--borde);font-weight:700}.recomp:last-of-type{border-bottom:0}
+.btn[disabled]{opacity:.45}
+.banner-emy{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--ac);color:#fff;border-radius:16px;padding:8px 8px 8px 14px;margin-bottom:12px;font-weight:800;font-size:14px}.banner-emy .btn{background:#fff;color:var(--ac);border:0}
+.card.apagada{opacity:.6}
+.hogar-card{display:block;text-decoration:none;color:inherit}
+
+.grid3>input,.grid2>input,.fila>input{min-width:0}
 
 </style>
 <script defer src="fb.js"></script>
 </head>
-<body class="deco">
+<body>
 <main class="app"><div id="vista"></div></main>
 <nav class="nav oculta" aria-label="Secciones"><a href="#hoy" data-tab="hoy"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Hoy</a><a href="#calendario" data-tab="calendario"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario</a><a href="#estudiar" data-tab="estudiar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/></svg>Estudiar</a><a href="#ron" data-tab="ron"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/></svg>Ron</a><a href="#mas" data-tab="mas"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Más</a></nav>
 <script>
@@ -338,12 +356,12 @@ const PLANTILLAS = {
 };
 
 /* ===== Ajustes de este teléfono ===== */
-const AJ0 = { rol: '', nombre: '', codigo: '', tema: 'chicle', deco: true, ronFreq: 15, sonido: true, agua: 45, dormir: '22:00', mochilaHora: '20:00', materialesHora: '07:00', duracion: 25, estirar: true, hobbies: '', aire: true, horaEstudio: '17:00' };
+const AJ0 = { rol: '', nombre: '', codigo: '', tema: 'chicle', deco: true, ronFreq: 15, sonido: true, agua: 45, dormir: '22:00', mochilaHora: '20:00', materialesHora: '07:00', duracion: 25, estirar: true, hobbies: '', aire: true, horaEstudio: '17:00', corte: '19:00', decoEl: { fr: true, fl: true, gi: false }, decoOp: 16, modoApo: 'yo', verEmy: true };
 let AJ = Object.assign({}, AJ0);
 const LS = 'ronrutina.ajustes';
 function cargarAjustes() { try { AJ = Object.assign({}, AJ0, JSON.parse(localStorage.getItem(LS) || '{}')); } catch (e) { } }
 function guardarAjustes() { try { localStorage.setItem(LS, JSON.stringify(AJ)); } catch (e) { } aplicarTema(); }
-function aplicarTema() { document.documentElement.dataset.tema = AJ.tema; document.body.classList.toggle('deco', !!AJ.deco); }
+function aplicarTema() { document.documentElement.dataset.tema = AJ.tema; document.body.classList.remove('deco'); try { document.body.style.backgroundImage = fondoSVG(); } catch (e) { } }
 
 /* ===== Datos compartidos (Firebase o local) ===== */
 const FB_CONFIG = { apiKey: 'AIzaSyB_Z7YOYFsR-Br2FJLCFBf2SVyUg7TtCPE', authDomain: 'app-estudio-2027.firebaseapp.com', projectId: 'app-estudio-2027', storageBucket: 'app-estudio-2027.firebasestorage.app', messagingSenderId: '532112907706', appId: '1:532112907706:web:4a27001a73fe4ca8325183' };
@@ -695,8 +713,8 @@ function ronZona(r, x, y) {
 }
 
 /* ===== Estado compartido de Ron ===== */
-const ronCfg = () => cfg('ron');
-const guardarRon = cambios => put('config', Object.assign({ id: 'ron' }, ronCfg(), cambios));
+const ronCfg = () => enMiVida() ? cfgE('yo', 'ron') : cfg('ron');
+const guardarRon = cambios => enMiVida() ? putE('yo', 'config', Object.assign({ id: 'ron' }, ronCfg(), cambios)) : put('config', Object.assign({ id: 'ron' }, ronCfg(), cambios));
 const frutillasDisp = () => Math.max(0, frutillas() + (ronCfg().bonus || 0) - (ronCfg().gastadas || 0));
 function rachaMax() {
   const dias = [...new Set(D.sesiones.map(s => s.fecha))].sort(); let mx = 0, r = 0, prev = null;
@@ -842,7 +860,7 @@ function iniciarPausaRon(min) { S.cuidado = { hasta: Date.now() + (min || 5) * 6
 function vRon() {
   const est = AJ.rol === 'estudiante', pausa = enPausa(), cat = S.bandeja || 'comida', rc = ronCfg(), tiene = new Set(rc.logros || []);
   const frase = pausa ? '¡Pausa! Juguemos un ratito 🧶' : est ? elige(['Acaríciame la cabecita o el mentón… prrr', '¿Me traes algo rico? Arrástralo hasta mí 🍓', '¡Hola, ' + AJ.nombre + '! ¿Me haces cariño en la pancita?']) : `¡Hola, ${AJ.nombre}! Hazme cariño 🧡`;
-  let h = `<div class="top"><div><p class="sub">${est ? 'Tu gato' : 'El gato de ' + esc(estudiante())}</p><h1>Ron</h1></div>${est ? `<span class="badge big">🍓 <b id="fr-n">${frutillasDisp()}</b></span>` : ''}</div>`;
+  let h = `<div class="top"><div><p class="sub">${est || enMiVida() ? 'Tu gato' : 'El gato de ' + esc(estudiante())}</p><h1>Ron</h1></div>${est ? `<span class="badge big">🍓 <b id="fr-n">${frutillasDisp()}</b></span>` : enMiVida() ? `<span class="badge big">⭐ ${estDisp()}</span>` : ''}</div>`;
   if (pausa) h += `<div class="card rosa fila entre"><div><p class="eti">Pausa con Ron</p><p><b id="pausa-t">${mmss((S.cuidado.hasta - Date.now()) / 1000)}</b> <span class="sub">para jugar</span></p></div>
     ${S.est && S.est.pausaDesde ? `<a class="btn pr sm" href="#estudiar" data-a="fin-pausa">Seguir estudiando</a>` : `<button class="btn sm" data-a="fin-pausa">Terminar</button>`}</div>`;
   h += `<div class="escena" id="escena">${areneroEscena()}${ronHTML('grande', frase, 'ron-casa')}</div>
@@ -856,9 +874,10 @@ function vRon() {
     if (cat === 'comida') h += `<p class="sub" style="text-align:center">${est ? 'Cada comida cuesta 1 🍓 (las ganas estudiando). El agua es gratis.' : 'Ron come máximo ' + MAX_PANZA + ' cositas al día.'}</p>`;
   }
   if (typeof gatoCard === 'function') h += gatoCard();
+  if (enMiVida()) h += recompensasCard();
   h += regaloCard() + vArmario() + `
-  <div class="card"><p class="eti mb">Logros</p><div class="grid3">${LOGROS.map(l => `<div class="logro ${tiene.has(l.id) ? 'si' : ''}"><span>${tiene.has(l.id) ? l.ic : '🔒'}</span><b>${l.n}</b><small>${esc(l.d)}</small></div>`).join('')}</div></div>
-  <a class="mas-item" href="#semana"><span class="ic">💭</span><span>Mi semana<small>¿Qué funcionó? ¿Qué cambio?</small></span></a>`;
+  ${enMiVida() ? '' : `<div class="card"><p class="eti mb">Logros</p><div class="grid3">${LOGROS.map(l => `<div class="logro ${tiene.has(l.id) ? 'si' : ''}"><span>${tiene.has(l.id) ? l.ic : '🔒'}</span><b>${l.n}</b><small>${esc(l.d)}</small></div>`).join('')}</div></div>
+  <a class="mas-item" href="#semana"><span class="ic">💭</span><span>Mi semana<small>¿Qué funcionó? ¿Qué cambio?</small></span></a>`}`;
   setTimeout(() => ronEstado('ron-casa', pausa ? 'celebra' : 'saluda'), 0);
   return h;
 }
@@ -1409,7 +1428,7 @@ function inventario() {
 }
 const sesionesPorRegalo = 5;
 function regalosInfo() {
-  const rc = ronCfg(), est = estrellas(), ses = D.sesiones.length, lg = (rc.logros || []).length;
+  const rc = ronCfg(), yo = enMiVida(), est = estrellas(), ses = yo ? 0 : D.sesiones.length, lg = yo ? 0 : (rc.logros || []).length;
   const ganados = Math.floor(est / ESTRELLAS_REGALO) + Math.floor(ses / sesionesPorRegalo) + lg;
   return { ganados, abiertos: rc.regalos || 0, pend: Math.max(0, ganados - (rc.regalos || 0)), est: est % ESTRELLAS_REGALO, ses: ses % sesionesPorRegalo };
 }
@@ -1447,8 +1466,8 @@ function regaloCard() {
   return `<div class="card regalo-card ${g.pend ? 'hay' : ''}"><div class="fila entre"><div><p class="eti">🎁 Regalos misteriosos</p>
     <p class="mt">${g.pend ? `<b>¡Tienes ${g.pend} ${g.pend === 1 ? 'regalo' : 'regalos'} por abrir!</b>` : 'Gana regalos siendo responsable:'}</p></div>${g.pend ? `<button class="btn pr" data-a="abrir-regalo">Abrir</button>` : '<span style="font-size:34px">🎁</span>'}</div>
     <div class="regalo-prog mt"><span>⭐ ${g.est}/${ESTRELLAS_REGALO}</span><div class="barra-prog"><i style="width:${g.est / ESTRELLAS_REGALO * 100}%"></i></div></div>
-    <div class="regalo-prog"><span>📚 ${g.ses}/${sesionesPorRegalo}</span><div class="barra-prog"><i style="width:${g.ses / sesionesPorRegalo * 100}%"></i></div></div>
-    <p class="sub mt">Cada ${ESTRELLAS_REGALO} ⭐ (misiones y cuidar a Ron de verdad), cada ${sesionesPorRegalo} sesiones de estudio y cada logro nuevo traen un regalo.</p></div>`;
+    ${enMiVida() ? `<p class="sub mt">Cada ${ESTRELLAS_REGALO} ⭐ que ganas (tareas, hábitos y cuidar a Ron de verdad) traen un regalo misterioso.</p></div>` : `<div class="regalo-prog"><span>📚 ${g.ses}/${sesionesPorRegalo}</span><div class="barra-prog"><i style="width:${g.ses / sesionesPorRegalo * 100}%"></i></div></div>
+    <p class="sub mt">Cada ${ESTRELLAS_REGALO} ⭐ (misiones y cuidar a Ron de verdad), cada ${sesionesPorRegalo} sesiones de estudio y cada logro nuevo traen un regalo.</p></div>`}`;
 }
 const CAJA = `<svg viewBox="0 0 160 160" class="caja-regalo" aria-hidden="true" stroke="${OSC}" stroke-width="3" stroke-linejoin="round"><rect x="28" y="70" width="104" height="78" rx="8" fill="#F48FB1"/><rect x="72" y="70" width="16" height="78" fill="#FFD54F"/><g class="tapa"><rect x="20" y="52" width="120" height="24" rx="6" fill="#F06292"/><rect x="72" y="52" width="16" height="24" fill="#FFD54F"/><path d="M80 52 C60 22 36 36 52 50 Z M80 52 C100 22 124 36 108 50 Z" fill="#FFD54F"/></g><text x="80" y="122" text-anchor="middle" font-size="30" font-weight="900" fill="#FFF" stroke="none" font-family="Nunito,sans-serif">?</text></svg>`;
 function abrirRegalo() {
@@ -1480,6 +1499,400 @@ function confeti() {
   for (let i = 0; i < 40; i++) { const c = document.createElement('i'); c.className = 'confeti'; c.style.left = Math.random() * 100 + 'vw'; c.style.background = cols[i % cols.length]; c.style.animationDelay = (Math.random() * .4) + 's'; c.style.transform = `rotate(${Math.random() * 360}deg)`; document.body.appendChild(c); setTimeout(() => c.remove(), 2400); }
 }
 function areneroEscena() { const id = ronEq().arenero || 'ar_clasico', x = itemCat(id); return x ? `<div class="arenero-esc" aria-hidden="true">${miniItem(x)}</div>` : ''; }
+
+/* ===== Espacios extra para "Mi vida": privado (yo) y compartido con la pareja (hogar) =====
+   Cada espacio es otro código de 28 letras con su propia ruta familias/{codigo}/…,
+   así las reglas de Firebase no cambian y Emy no ve lo privado. */
+const ESP = {
+  yo: { cols: ['tareas', 'agenda', 'config', 'animo'], D: {}, unsubs: [], listo: false, codigo: '' },
+  hogar: { cols: ['compras', 'cuentas', 'agenda', 'config'], D: {}, unsubs: [], listo: false, codigo: '' }
+};
+Object.values(ESP).forEach(e => e.cols.forEach(c => e.D[c] = []));
+const enMiVida = () => AJ.rol === 'apoderado' && (AJ.modoApo || 'yo') === 'yo';
+const ED = (n, col) => ESP[n].D[col] || [];
+const cfgE = (n, id) => ED(n, 'config').find(x => x.id === id) || {};
+function guardarLocalE(n) { const e = ESP[n]; if (e.modo !== 'local') return; try { localStorage.setItem('ronrutina.esp.' + e.codigo, JSON.stringify(e.D)); } catch (x) { } }
+async function conectarEsp(n, codigo) {
+  const e = ESP[n]; e.unsubs.forEach(u => { try { u(); } catch (x) { } }); e.unsubs = []; e.listo = false; e.codigo = codigo;
+  e.cols.forEach(c => e.D[c] = []);
+  if (!codigo) return;
+  if (DB.modo !== 'nube' || !window.FB || !DB.fs) {
+    e.modo = 'local';
+    try { const j = JSON.parse(localStorage.getItem('ronrutina.esp.' + codigo) || '{}'); e.cols.forEach(c => e.D[c] = j[c] || []); } catch (x) { }
+    e.listo = true; render(); return;
+  }
+  e.modo = 'nube'; let llegaron = 0;
+  e.cols.forEach(c => {
+    const u = FB.onSnapshot(FB.collection(DB.fs, 'familias', codigo, c), s => {
+      e.D[c] = s.docs.map(d => Object.assign({}, d.data(), { id: d.id }));
+      if (!e.listo && ++llegaron >= e.cols.length) e.listo = true;
+      render();
+    }, x => console.warn(x));
+    e.unsubs.push(u);
+  });
+}
+async function putE(n, col, obj) {
+  const e = ESP[n]; if (!obj.id) obj.id = uid(); obj.act = Date.now(); obj.por = AJ.nombre || '';
+  const l = e.D[col], i = l.findIndex(x => x.id === obj.id); if (i >= 0) l[i] = obj; else l.push(obj);
+  if (e.modo === 'nube') { const { id, ...data } = obj; window.FB.setDoc(window.FB.doc(DB.fs, 'familias', e.codigo, col, id), limpio(data)).catch(x => { console.warn(x); toast('No se pudo guardar en la nube.'); }); }
+  else { guardarLocalE(n); render(); }
+  return obj;
+}
+async function borrarE(n, col, id) {
+  const e = ESP[n]; e.D[col] = e.D[col].filter(x => x.id !== id);
+  if (e.modo === 'nube') window.FB.deleteDoc(window.FB.doc(DB.fs, 'familias', e.codigo, col, id)).catch(x => console.warn(x));
+  else { guardarLocalE(n); render(); }
+}
+async function prepararMiVida() {
+  if (AJ.rol !== 'apoderado') return;
+  let cambio = false;
+  if (!AJ.codigoYo) { AJ.codigoYo = nuevoCodigo(); cambio = true; }
+  if (!AJ.codigoHogar) { AJ.codigoHogar = nuevoCodigo(); cambio = true; }
+  if (cambio) guardarAjustes();
+  await conectarEsp('yo', AJ.codigoYo); await conectarEsp('hogar', AJ.codigoHogar);
+}
+
+/* ===== MI VIDA: la versión adulta de Ronrutina para el apoderado/a ===== */
+const CAT_T = { planif: ['📝', 'Planificación', '#1E88E5'], correccion: ['✏️', 'Corrección', '#E53935'], informe: ['📊', 'Informe', '#8E24AA'], reunion: ['👥', 'Reunión', '#00897B'], citacion: ['📣', 'Citación', '#F57C00'], otro: ['📌', 'Otro', '#78909C'] };
+const TIPO_A = { reunion: ['👥', 'Reunión', '#00897B'], entrega: ['📦', 'Entrega', '#1E88E5'], medico: ['🩺', 'Médico', '#E53935'], tramite: ['🗂️', 'Trámite', '#6D4C41'], cumple: ['🎂', 'Cumpleaños', '#D81B60'], personal: ['🌷', 'Personal', '#8E24AA'] };
+const HABITOS0 = [
+  { id: 'h_agua', n: 'Tomar agua', ic: '💧', dias: [0, 1, 2, 3, 4, 5, 6] }, { id: 'h_pausa', n: 'Pausa activa', ic: '🧘', dias: [1, 2, 3, 4, 5] },
+  { id: 'h_caminata', n: 'Caminata', ic: '🚶', dias: [0, 1, 2, 3, 4, 5, 6] }, { id: 'h_regaloneo', n: 'Autoregaloneo', ic: '💆', dias: [0, 1, 2, 3, 4, 5, 6] },
+  { id: 'h_cantar', n: 'Cantar', ic: '🎤', dias: [0, 1, 2, 3, 4, 5, 6] }, { id: 'h_plantas', n: 'Regar las plantas', ic: '🌱', dias: [1, 4] }
+];
+const RECOMP0 = [{ id: 'r1', n: 'Un café rico', ic: '☕', costo: 5 }, { id: 'r2', n: 'Un capítulo de mi serie', ic: '📺', costo: 8 }, { id: 'r3', n: 'Un chocolate', ic: '🍫', costo: 4 }, { id: 'r4', n: 'Un baño largo y relajado', ic: '🛁', costo: 10 }, { id: 'r5', n: 'Un gustito para mí', ic: '🎁', costo: 25 }];
+const EMOS = {
+  energia: ['😄', 'Con energía', ["¡Qué lindo verte así! Aprovechemos esa energía en lo que más te importa hoy 🐾", "Hoy brillas, y se nota. ¡Vamos por ese día! ☀️", "Con esa energía podrías mover montañas… o al menos la ropa de la silla 😹", "Me encanta tu ánimo. Contagias hasta a este gato dormilón.", "Hoy es un gran día para empezar eso que vienes postergando. ¡Tú puedes!", "Guarda un poquito de esa energía para ti al final del día 🧡", "Tu buen ánimo también es un regalo para quienes te rodean.", "¡Prrr! Hoy vamos con todo, pero sin olvidar el agua 💧", "Cuando te sientes así, recuerda lo capaz que eres. Siempre lo has sido.", "Elige tu tarea más importante y conquístala primero. ¡Vamos!", "Qué alegría empezar el día contigo así. Hoy va a salir bien.", "Tu energía de hoy es fruto de todo lo que te has cuidado. ¡Bien hecho!", "Aprovecha para hacer algo que te haga feliz, no solo lo urgente.", "¡Modo imparable activado! Yo te acompaño desde mi cojín 🐾", "Hoy es buen día para decirle algo lindo a alguien. Empieza por ti.", "Mira todo lo que puedes lograr cuando te sientes así. ¡Increíble!", "Celebra este ánimo: no todos los días son así, y este es tuyo.", "Con esa sonrisa, hasta los lunes se ven bonitos.", "Haz una lista corta y táchala con estilo. ¡A darle!", "Me haces ronronear de orgullo. ¡Que tengas un día precioso!"]],
+  calma: ['😌', 'En calma', ["La calma también es una fuerza. Hoy vamos a paso tranquilo y seguro 🐾", "Qué rico empezar así. Respira hondo y disfruta este momento.", "No todo tiene que ser rápido. Hoy, lo importante es avanzar.", "Prrr… la calma te queda muy bien.", "Con esta tranquilidad, todo se ve más claro. Confía en ti.", "Un paso a la vez. Así también se llega lejos.", "Aprovecha esta paz para ordenar tus prioridades con cariño.", "Hoy puedes hacer las cosas con calma y hacerlas bien.", "Tu serenidad es un ancla para tu familia. Gracias por eso.", "Tómate un cafecito tranquilo antes de empezar. Te lo mereces ☕", "Cuando estás en calma, tomas las mejores decisiones.", "Hoy no hay apuro. Hay un día entero para ti.", "Mira por la ventana un ratito. El día también está empezando con calma.", "Me encanta acompañarte en días así. Yo también estoy muy tranquilo.", "La tranquilidad es una forma de cuidarte. Bien por ti.", "Elige tres cosas para hoy y deja que el resto espere.", "Respirar, sonreír, comenzar. Así de simple 🌿", "Estás exactamente donde necesitas estar.", "Que este día fluya suave como mi siesta de la tarde.", "Hoy cuida esa paz: es tuya y nadie te la puede quitar."]],
+  cansancio: ['😴', 'Cansancio', ["Está bien sentir cansancio. Hoy haremos solo lo importante 🧡", "Descansar también es avanzar. No lo olvides.", "Hoy vamos despacito. Lo justo y necesario.", "Tu cuerpo te está hablando. Escúchalo con cariño.", "No tienes que poder con todo hoy. Con lo esencial basta.", "Una tarea a la vez, y una pausa entre cada una. ¿Trato hecho? 🐾", "Mereces descanso, no culpa.", "Hoy acuéstate temprano. Yo te cuido el sueño 😴", "Has dado mucho últimamente. Es normal sentirse así.", "Un vaso de agua y cinco minutos de aire fresco pueden hacer magia.", "Haz lo que puedas, y lo que puedas será suficiente.", "Incluso con cansancio, aquí estás. Eso ya es valiente.", "Elige lo más importante y deja lo demás para otro día.", "Pide ayuda si la necesitas. No tienes que hacerlo todo sin apoyo.", "Un gato sabio dice: las siestas no son flojera, son estrategia 😸", "Hoy sé amable contigo como lo eres con los demás.", "Lo que no alcances hoy, mañana tendrá su momento.", "Respira profundo tres veces. Ya está, un poquito mejor.", "Tu valor no depende de cuánto hagas hoy.", "Prrr… hoy te acompaño en modo suave. Vamos de a poco."]],
+  estres: ['😣', 'Estrés', ["Respira conmigo: inhala… exhala. Vamos a ordenar esto 🐾", "No tienes que resolverlo todo ahora. Solo el siguiente paso.", "Escribe lo que te preocupa y elige una sola cosa para empezar.", "Has salido de días difíciles antes. Este también pasará.", "Lo que sientes es válido. Y eres más capaz de lo que crees.", "Hoy, tres tareas clave. El resto puede esperar.", "Una pausa de 5 minutos no te atrasa: te ordena.", "Suelta lo que no depende de ti. Enfócate en lo que sí.", "Estás haciendo lo mejor que puedes. Y eso es muchísimo.", "Pide ayuda: compartir la carga también es inteligencia.", "Cuando todo parece urgente, nada lo es. Prioricemos con calma.", "Un vaso de agua, hombros abajo, mandíbula suelta. Así, mucho mejor.", "No eres tus pendientes. Eres mucho más que eso 🧡", "Paso a paso, tarea a tarea. Yo te aviso cuando sea hora de descansar.", "Está bien decir que no a algo hoy. Protege tu energía.", "Mira todo lo que ya resolviste esta semana. ¡Puedes con esto!", "Sal un minuto al aire libre. El mundo sigue ahí, y tú también.", "Lo perfecto puede esperar. Lo hecho con calma también vale.", "Hoy celebra cada pequeña tarea terminada. Cuentan todas.", "Prrr… aquí estoy contigo. Vamos de a poquito."]],
+  tristeza: ['😢', 'Tristeza', ["Siento que hoy estés así. Puedes ir más lento, aquí estoy 🧡", "Está bien no estar bien. Tus emociones son válidas.", "Hoy solo lo mínimo. Lo demás puede esperar.", "Mereces el mismo cariño que tú das a los demás.", "Los días grises también pasan. Este no es para siempre.", "Si quieres, escríbele a alguien que te quiera. Un mensaje puede abrigar.", "Llorar también limpia. No tienes que esconder lo que sientes.", "Eres importante, incluso en los días en que no lo sientes.", "Hazte un té calentito y date un momento para ti ☕", "Me acurruco a tu lado un ratito. Prrr…", "No tienes que explicarle a nadie por qué hoy cuesta más.", "Tienes mucha más fuerza de la que este momento te hace sentir.", "Pequeños pasos hoy: comer algo rico, tomar agua, respirar.", "Tu familia te quiere tal cual eres, en días buenos y en días difíciles.", "Mirar el cielo un ratito ayuda. Prueba asomarte a la ventana.", "Hoy no se trata de rendir, sino de cuidarte.", "Lo que sientes ahora no define todo lo que eres.", "Mañana puede ser un poquito más liviano. Yo voy a estar aquí.", "Gracias por seguir adelante, incluso cuando cuesta.", "Hablar con alguien de confianza puede ayudar mucho. No tienes que cargarlo en soledad."]],
+  singanas: ['😕', 'Sin ganas', ["No hace falta tener ganas para empezar: bastan 5 minutos 🐾", "Hoy hagamos una sola cosa pequeña. Después vemos.", "La motivación muchas veces llega después de empezar, no antes.", "Está bien tener días así. No significa que no puedas.", "Elige la tarea más fácil y regálate esa primera victoria.", "Ponle música que te guste y avancemos un poquito.", "Recuerda por qué empezaste. Esa razón sigue ahí.", "No tienes que hacerlo perfecto. Solo hacerlo.", "Un pasito hoy vale más que un gran plan para mañana.", "Prrr… yo tampoco quiero dejar mi cojín. ¡Pero vamos juntos!", "Cada tarea que termines hoy es una ⭐ más para ti.", "Cambia de lugar, abre la ventana, toma agua. A veces ayuda mucho.", "Tus metas no se van a ir. Te esperan con paciencia.", "Hoy basta con moverte un poquito hacia adelante.", "Divide lo difícil en partes chiquititas. Así se ve menos grande.", "Tener pocas ganas no te hace menos capaz.", "Haz la primera tarea y date un premio: un café, una canción, un abrazo.", "Un día con poquitas ganas también puede terminar con orgullo.", "Confío en ti, incluso cuando las ganas no aparecen.", "Empieza por algo que te dé alegría. Las ganas vienen detrás."]]
+};
+const SALUDO_YO = { man: ['¡Buenos días, {n}! Hoy también estoy de tu lado 🐾', 'Arriba ese ánimo, {n}. Vamos paso a paso ☀️'], tarde: ['¡Buenas tardes, {n}! ¿Una pausita y un vaso de agua? 💧', 'Vas muy bien, {n}. Lo que hiciste hoy cuenta 🧡'], noche: ['Buenas noches, {n}. Hoy hiciste suficiente 🌙', 'Ya es hora de bajar el ritmo. Te lo mereces 🧡'] };
+const mesKey = (d = hoyYmd()) => d.slice(0, 7);
+const ahoraHM = () => { const d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+const despuesCorte = () => !!AJ.corte && ahoraHM() >= AJ.corte;
+const estDisp = () => Math.max(0, estrellas() - (ronCfg().canje || 0));
+
+/* ----- ánimo diario ----- */
+const animoDe = f => ED('yo', 'animo').find(a => a.id === f);
+function rachaTriste() { let n = 0, d = hoyYmd(); while (n < 30) { const a = animoDe(d); if (!a || a.emo !== 'tristeza') break; n++; d = sumaDias(d, -1); } return n; }
+async function elegirAnimo(emo) {
+  const l = EMOS[emo][2], k = 'ronrutina.ultAnimo.' + emo; let i, prev = +(localStorage.getItem(k) || -1);
+  do { i = Math.floor(Math.random() * l.length); } while (i === prev && l.length > 1);
+  try { localStorage.setItem(k, i); } catch (e) { }
+  await putE('yo', 'animo', { id: hoyYmd(), emo, i });
+  render(true); setTimeout(() => ronEstado('ron-hoy', ['tristeza', 'cansancio', 'estres'].includes(emo) ? 'mimo' : 'celebra', l[i], 6000), 30);
+  sonido(['tristeza', 'cansancio'].includes(emo) ? 'prrr' : 'miau');
+}
+function animoCard() {
+  const a = animoDe(hoyYmd());
+  if (!a) return `<div class="card animo"><p class="eti">¿Cómo te sientes hoy?</p><div class="grid3 mt">${Object.entries(EMOS).map(([k, e]) => `<button class="emo" data-a="animo" data-v="${k}"><span>${e[0]}</span>${e[1]}</button>`).join('')}</div></div>`;
+  const e = EMOS[a.emo];
+  return `<div class="fila entre animo-ok"><span class="sub">Hoy te sientes: <b>${e[0]} ${e[1]}</b></span><button class="btn sm suave" data-a="animo-cambiar">Cambiar</button></div>
+    ${rachaTriste() >= 3 ? `<div class="card cuidado"><p>🧡 <b>Llevas algunos días con tristeza.</b> Conversar con alguien de confianza (tu pareja, una amiga, un profesional) puede ayudar mucho. No tienes que cargarlo en soledad.</p></div>` : ''}`;
+}
+
+/* ----- hábitos y misiones de la casa ----- */
+const habCfg = () => { const c = cfgE('yo', 'habitos'); return Object.assign({ lista: HABITOS0, hechos: {} }, c, { lista: c.lista || HABITOS0 }); };
+const habDe = (f, c) => { c = c || habCfg(); const dw = deYmd(f).getDay(); return c.lista.filter(m => m.on !== false && (m.dias || []).includes(dw)); };
+const habHecho = (f, id, c) => ((((c || habCfg()).hechos) || {})[f] || {})[id];
+function habitosCard() {
+  const c = habCfg(), hoy = hoyYmd(), l = habDe(hoy, c); if (!l.length) return '';
+  const n = l.filter(m => habHecho(hoy, m.id, c)).length;
+  return `<div class="card misiones"><div class="fila entre mb"><p class="eti">⭐ Hábitos y misiones de hoy</p><span class="badge">${n}/${l.length}</span></div>
+    <div class="barra-prog mb"><i style="width:${n / l.length * 100}%"></i></div>
+    ${l.map(m => `<button class="tarea" data-a="habito" data-v="${m.id}" aria-pressed="${!!habHecho(hoy, m.id, c)}"><span class="box"></span><span style="font-size:22px">${m.ic}</span><span class="txt" style="flex:1"><b>${esc(m.n)}</b>${m.hora ? `<br><small>${m.hora}</small>` : ''}</span><span class="estrella">+1 ⭐</span></button>`).join('')}
+    <div class="fila entre mt"><span class="sub">⭐ ${estDisp()} estrellas para canjear</span><a class="sub" href="#mas-habitos">Editar</a></div></div>`;
+}
+async function marcarHabito(id) {
+  const c = habCfg(), hoy = hoyYmd(), hechos = {}, desde = sumaDias(hoy, -40);
+  Object.keys(c.hechos || {}).filter(f => f >= desde).forEach(f => hechos[f] = Object.assign({}, c.hechos[f]));
+  hechos[hoy] = hechos[hoy] || {};
+  const l = habDe(hoy, c), antes = l.every(m => hechos[hoy][m.id]), ya = hechos[hoy][id];
+  if (ya) delete hechos[hoy][id]; else hechos[hoy][id] = { t: ahoraHM() };
+  const todas = l.every(m => hechos[hoy][m.id]); let d = ya ? -1 : 1; if (todas && !antes) d += 2; if (antes && !todas) d -= 2;
+  await putE('yo', 'config', Object.assign({}, c, { id: 'habitos', hechos })); await sumaEstrellas(d); render(true);
+  if (!ya) { setTimeout(() => ronDice('ron-hoy', todas ? '¡Todos tus hábitos de hoy! Eres increíble ⭐⭐' : elige(['¡Bien! +1 ⭐', '¡Eso! Cuidarte también es importante 🧡', 'Prrr… me encanta verte así'])), 20); sonido(todas ? 'feliz' : 'mrrp'); }
+}
+
+/* ----- trabajo ----- */
+const tareasYo = () => ED('yo', 'tareas');
+const tareasPend = () => tareasYo().filter(t => !t.hecho).sort((a, b) => (a.fecha || '9999').localeCompare(b.fecha || '9999'));
+function vTareaItem(t) {
+  const c = CAT_T[t.cat] || CAT_T.otro, at = t.fecha && t.fecha < hoyYmd() && !t.hecho, np = (t.pasos || []).length;
+  return `<div class="ev tarea-t ${t.hecho ? 'hecho' : ''}"><button class="ck" data-a="t-hecha" data-id="${t.id}" aria-pressed="${!!t.hecho}" aria-label="Marcar ${esc(t.t)}"><span class="box"></span></button>
+    <button class="txt" data-a="t-ver" data-id="${t.id}"><span class="tipo"><span class="tp" style="background:${c[2]}">${c[0]} ${c[1]}</span>${t.rep ? ' 🔁' : ''}</span><b>${esc(t.t)}</b><small>${t.fecha ? cap(fechaCorta(t.fecha)) : 'Sin fecha'}${t.hora ? ' · ' + t.hora : ''}${np ? ` · ${t.pasos.filter(p => p.hecho).length}/${np} pasos` : ''}</small></button>
+    ${t.fecha ? `<span class="der"><b style="color:${at ? '#E53935' : c[2]}">${cuando(t.fecha)}</b></span>` : ''}</div>`;
+}
+function vTrabajo() {
+  const hoy = hoyYmd(), lun = sumaDias(hoy, -((deYmd(hoy).getDay() + 6) % 7)), p = tareasPend();
+  const at = p.filter(t => t.fecha && t.fecha < hoy), sem = p.filter(t => t.fecha && t.fecha >= hoy && t.fecha <= sumaDias(lun, 6)), luego = p.filter(t => t.fecha && t.fecha > sumaDias(lun, 6)), sf = p.filter(t => !t.fecha);
+  const carga = [0, 1, 2, 3, 4, 5, 6].map(k => { const d = sumaDias(lun, k); return { d, n: p.filter(t => t.fecha === d).length + ED('yo', 'agenda').concat(ED('hogar', 'agenda')).filter(e => e.fecha === d).length }; });
+  const max = Math.max(3, ...carga.map(x => x.n));
+  let h = `<div class="top"><h1>Trabajo</h1><button class="btn pr sm" data-a="t-nueva">${ic('plus')} Agregar</button></div>
+  <div class="card"><p class="eti mb">Carga de la semana</p><div class="carga">${carga.map(x => `<div class="${x.d === hoy ? 'hoy' : ''}"><span class="col"><i style="height:${x.n / max * 100}%;background:${x.n >= 4 ? '#E53935' : x.n >= 3 ? '#F57C00' : 'var(--ac)'}"></i></span><b>${x.n || ''}</b><small>${DIAS_C[deYmd(x.d).getDay()]}</small></div>`).join('')}</div>
+  ${carga.some(x => x.n >= 4) ? `<p class="sub mt">🐾 Hay un día muy cargado. ¿Mueves algo a otro día?</p>` : `<p class="sub mt">Tareas y eventos por día. Así evitas amontonar entregas.</p>`}</div>`;
+  const grupo = (t, l) => l.length ? `<h3 class="mb mt2">${t}</h3>${l.map(vTareaItem).join('')}` : '';
+  h += grupo('Atrasadas', at) + grupo('Esta semana', sem) + grupo('Más adelante', luego) + grupo('Sin fecha', sf);
+  if (!p.length) h += `<p class="vacio">${elige(['Nada pendiente. ¡A disfrutar! 🐾', 'Todo al día. Eres admirable 🧡'])}</p>`;
+  const hechas = tareasYo().filter(t => t.hecho).sort((a, b) => (b.hechoEn || 0) - (a.hechoEn || 0));
+  if (hechas.length) h += `<details class="mt"><summary class="sub" style="padding:10px 0">Terminadas (${hechas.length})</summary>${hechas.slice(0, 30).map(vTareaItem).join('')}</details>`;
+  h += `<div class="card mt2"><p class="eti mb">✉️ Plantillas de correo</p>${PLANT_T.map((x, i) => `<button class="mas-item" data-a="t-correo" data-v="${i}"><span class="ic">${x.ic}</span><span>${x.n}<small>${x.s}</small></span></button>`).join('')}</div>`;
+  return h;
+}
+const PLANT_T = [
+  { n: 'Citación a apoderado', ic: '📣', s: 'Para pedir una reunión', a: 'Citación a reunión', c: 'Estimado/a apoderado/a:\n\nJunto con saludar, le cito a una reunión el día [fecha] a las [hora] para conversar sobre [tema].\n\nQuedo atenta a su confirmación.\n\nSaludos cordiales,\n{n}' },
+  { n: 'Aviso de reunión', ic: '👥', s: 'Para colegas o equipo', a: 'Reunión [tema] – [fecha]', c: 'Hola a todos:\n\nLes recuerdo que tenemos reunión el [fecha] a las [hora] en [lugar]. Temas: [temas].\n\nSaludos,\n{n}' },
+  { n: 'Justificación', ic: '📄', s: 'Ausencia o atraso', a: 'Justificación', c: 'Estimado/a:\n\nJunto con saludar, informo que [motivo] el día [fecha].\n\nAgradezco su comprensión.\n\nSaludos,\n{n}' },
+  { n: 'Correo libre', ic: '✉️', s: 'Empieza en blanco', a: '', c: '\n\nSaludos,\n{n}' }
+];
+function correoTrabajo(i) {
+  const p = PLANT_T[i];
+  abrirHoja(`${cabHoja(p.n)}<label class="lbl" for="tc-para">Para</label><input type="email" id="tc-para" placeholder="correo@colegio.cl" autocapitalize="off">
+    <label class="lbl" for="tc-as">Asunto</label><input type="text" id="tc-as" value="${esc(p.a)}">
+    <label class="lbl" for="tc-cu">Mensaje</label><textarea id="tc-cu" style="min-height:180px">${esc(p.c.replace('{n}', AJ.nombre))}</textarea>
+    <p class="sub mt">Reemplaza lo que está entre [corchetes].</p><div class="grid2 mt"><button class="btn pr" data-a="tc-abrir" data-v="app">Abrir en correo</button><button class="btn" data-a="tc-abrir" data-v="web">Gmail web</button></div>`);
+}
+function formTarea(t, pre = {}) {
+  t = t ? JSON.parse(JSON.stringify(t)) : { t: '', cat: pre.cat || 'planif', fecha: pre.fecha || sumaDias(hoyYmd(), 1), hora: '', notas: '', pasos: [], rep: false };
+  S.tForm = t;
+  const pinta = () => abrirHoja(`${cabHoja(t.id ? 'Editar tarea' : 'Nueva tarea')}
+    <p class="eti">Tipo</p><div class="chips mt">${Object.entries(CAT_T).map(([k, c]) => `<button class="chip tipo-chip" style="--tc:${c[2]}" data-a="tf-cat" data-v="${k}" aria-pressed="${t.cat === k}">${c[0]} ${c[1]}</button>`).join('')}</div>
+    <label class="lbl" for="tf-t">¿Qué hay que hacer?</label><input type="text" id="tf-t" value="${esc(t.t)}" placeholder="Por ejemplo, corregir pruebas de 1° medio">
+    <div class="grid2"><div><label class="lbl" for="tf-f">Fecha</label><input type="date" id="tf-f" value="${t.fecha || ''}"></div><div><label class="lbl" for="tf-h">Hora (opcional)</label><input type="time" id="tf-h" value="${t.hora || ''}"></div></div>
+    <label class="sw mt"><span>🔁 Se repite cada semana<br><small class="sub">Al terminarla, se crea la de la semana siguiente.</small></span><input type="checkbox" id="tf-rep" ${t.rep ? 'checked' : ''}></label>
+    <label class="lbl" for="tf-n">Notas</label><textarea id="tf-n" placeholder="Cursos, enlaces, detalles">${esc(t.notas || '')}</textarea>
+    <p class="eti mt2">Pasos (opcional)</p><div class="mt">${t.pasos.map((p, i) => `<div class="paso-tr"><input type="text" data-tpaso="${i}" value="${esc(p.t)}" aria-label="Paso ${i + 1}"><button class="icono" data-a="tf-quita" data-i="${i}" aria-label="Quitar paso">${ic('x')}</button></div>`).join('')}</div>
+    <button class="btn sm mt" data-a="tf-paso">${ic('plus')} Agregar paso</button>
+    <button class="btn pr big mt2" data-a="tf-guardar">Guardar</button>`);
+  S.tPinta = () => { leerTarea(); pinta(); }; pinta();
+}
+function leerTarea() {
+  const t = S.tForm, v = id => ($('#' + id) || {}).value; if (!t || v('tf-t') === undefined) return;
+  t.t = v('tf-t').trim(); t.fecha = v('tf-f'); t.hora = v('tf-h'); t.notas = v('tf-n'); t.rep = $('#tf-rep').checked;
+  $$('[data-tpaso]').forEach(x => { const i = +x.dataset.tpaso; if (t.pasos[i]) t.pasos[i].t = x.value; });
+}
+async function guardarTarea() {
+  leerTarea(); const t = S.tForm; if (!t.t) return toast('Escribe qué hay que hacer.');
+  t.pasos = t.pasos.filter(p => (p.t || '').trim()); await putE('yo', 'tareas', t); S.tForm = null; cerrarHoja(); toast('Guardada 🐾'); render(true);
+}
+function verTarea(id) {
+  const t = tareasYo().find(x => x.id === id); if (!t) return; const c = CAT_T[t.cat] || CAT_T.otro;
+  abrirHoja(`<div class="fila entre mb"><div><span class="tipo"><span class="tp" style="background:${c[2]}">${c[0]} ${c[1]}</span>${t.rep ? ' 🔁 semanal' : ''}</span><h2>${esc(t.t)}</h2></div><button class="icono" data-a="cerrar" aria-label="Cerrar">${ic('x')}</button></div>
+    <p>${t.fecha ? `<b>${cap(fechaLarga(t.fecha))}</b>${t.hora ? ' · ' + t.hora : ''} <span class="badge">${cuando(t.fecha)}</span>` : 'Sin fecha'}</p>
+    ${t.notas ? `<p class="pre mt">${esc(t.notas)}</p>` : ''}
+    ${(t.pasos || []).length ? `<h3 class="mt2">Pasos</h3><div class="mt">${t.pasos.map((p, i) => `<button class="check" data-a="t-paso" data-id="${t.id}" data-i="${i}" aria-pressed="${!!p.hecho}"><span class="box"></span><span>${esc(p.t)}</span></button>`).join('')}</div>` : ''}
+    <div class="col mt2">${t.fecha ? `<a class="btn sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: c[0] + ' ' + t.t, fecha: t.fecha, hora: t.hora, min: 30, detalles: t.notas || '' })}">${ic('cal')} Agregar a Google Calendar</a>` : ''}
+    <div class="grid2"><button class="btn sm" data-a="t-hecha" data-id="${t.id}">${t.hecho ? 'Reabrir' : ic('check') + ' Terminada'}</button><button class="btn sm" data-a="t-editar" data-id="${t.id}">${ic('lapiz')} Editar</button></div>
+    <button class="btn sm w" data-a="t-borrar" data-id="${t.id}">Eliminar</button></div>`);
+}
+async function tareaHecha(id) {
+  const t = tareasYo().find(x => x.id === id); if (!t) return;
+  const ya = t.hecho; await putE('yo', 'tareas', Object.assign({}, t, { hecho: !ya, hechoEn: ya ? null : Date.now() }));
+  if (!ya && t.rep && t.fecha && !tareasYo().some(x => x.repDe === t.id)) await putE('yo', 'tareas', { t: t.t, cat: t.cat, fecha: sumaDias(t.fecha, 7), hora: t.hora, notas: t.notas, rep: true, repDe: t.id, pasos: (t.pasos || []).map(p => ({ t: p.t, hecho: false })) });
+  await sumaEstrellas(ya ? -1 : 1);
+  if ($('.hoja')) cerrarHoja(true); render(true);
+  if (!ya) { toast(elige(['¡Lista! +1 ⭐', '¡Una menos! +1 ⭐', '¡Bien hecho! +1 ⭐'])); sonido('mrrp'); }
+}
+
+/* ----- agenda (calendario propio y del hogar) ----- */
+const tiposA = () => Object.entries(TIPO_A).map(([k, v]) => ({ id: k, ic: v[0], n: v[1], c: v[2] })).concat((cfgE('yo', 'tiposA').lista || []).map(x => ({ id: x.id, ic: '📍', n: x.n, c: x.color })));
+const tipoA = id => tiposA().find(t => t.id === id) || { id, ic: '📍', n: 'Evento', c: '#78909C' };
+function itemsCal(desde, hasta) {
+  const r = [], en = f => f && f >= desde && f <= hasta;
+  ['yo', 'hogar'].forEach(n => ED(n, 'agenda').filter(e => en(e.fecha)).forEach(e => { const t = tipoA(e.tipo); r.push({ f: e.fecha, h: e.hora, t: e.t, c: t.c, ic: t.ic, tn: t.n + (n === 'hogar' ? ' · 🏠' : ''), a: 'a-ver', id: e.id, esp: n }); }));
+  tareasYo().filter(t => !t.hecho && en(t.fecha)).forEach(t => { const c = CAT_T[t.cat] || CAT_T.otro; r.push({ f: t.fecha, h: t.hora, t: t.t, c: c[2], ic: c[0], tn: 'Trabajo · ' + c[1], a: 't-ver', id: t.id }); });
+  if (AJ.verEmy !== false) D.eventos.filter(e => en(e.fecha) && !e.hecho && e.tipo !== 'material').forEach(e => r.push({ f: e.fecha, h: e.hora, t: (e.titulo || tipoN(e.tipo)) + ' · ' + asigPor(e.asig).nombre, c: tipoC(e.tipo), ic: '🎒', tn: estudiante() + ' · ' + tipoN(e.tipo), a: 'ver', id: e.id }));
+  return r.sort((a, b) => (a.f + (a.h || '')).localeCompare(b.f + (b.h || '')));
+}
+const itemCalHTML = x => `<button class="ev" data-a="${x.a}" data-id="${x.id}" ${x.esp ? `data-esp="${x.esp}"` : ''}><span class="barra" style="background:${x.c}"></span><span class="txt"><span class="tipo"><span class="tp" style="background:${x.c}">${x.ic} ${esc(x.tn)}</span></span><b>${esc(x.t)}</b><small>${cap(fechaCorta(x.f))}${x.h ? ' · ' + x.h : ''}</small></span><span class="der"><b style="color:${x.c}">${cuando(x.f)}</b></span></button>`;
+function vYoCal() {
+  const vista = AJ.calVistaYo || 'mes', hoy = hoyYmd();
+  let h = `<div class="top"><h1>Calendario</h1><button class="btn pr sm" data-a="a-nuevo">${ic('plus')} Agregar</button></div>
+  <div class="seg mb"><button data-a="ycal" data-v="mes" aria-selected="${vista === 'mes'}">Mes</button><button data-a="ycal" data-v="semana" aria-selected="${vista === 'semana'}">Semana</button></div>
+  <div class="chips mb"><button class="chip" data-a="ver-emy-cal" aria-pressed="${AJ.verEmy !== false}">🎒 Ver lo de ${esc(estudiante())}</button></div>`;
+  if (vista === 'mes') {
+    const b = new Date(); b.setDate(1); b.setMonth(b.getMonth() + (S.yMes || 0));
+    const y = b.getFullYear(), m = b.getMonth(), off = (new Date(y, m, 1).getDay() + 6) % 7, ini = ymd(new Date(y, m, 1 - off)), fin = sumaDias(ini, 41), its = itemsCal(ini, fin);
+    let celdas = '';
+    for (let k = 0; k < 42; k++) { const d = new Date(y, m, 1 - off + k), s = ymd(d); if (k >= 35 && d.getMonth() !== m) break; const ev = its.filter(x => x.f === s).slice(0, 4);
+      celdas += `<button class="dia ${d.getMonth() !== m ? 'otro' : ''} ${s === hoy ? 'hoy' : ''}" data-a="ydia" data-v="${s}" aria-pressed="${S.yDia === s}">${d.getDate()}<span class="puntos">${ev.map(x => `<i style="background:${x.c}"></i>`).join('')}</span></button>`; }
+    h += `<div class="card"><div class="fila entre mb"><button class="icono" data-a="ymes" data-v="-1" aria-label="Mes anterior">${ic('back')}</button><h3>${cap(MESES[m])} ${y}</h3><button class="icono" data-a="ymes" data-v="1" aria-label="Mes siguiente" style="transform:scaleX(-1)">${ic('back')}</button></div>
+      <div class="mes">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(x => `<span class="cab">${x}</span>`).join('')}${celdas}</div></div>`;
+    if (S.yDia) { const l = itemsCal(S.yDia, S.yDia); h += `<div class="fila entre mb"><h3>${cap(fechaLarga(S.yDia))}</h3><button class="btn sm suave" data-a="ydia" data-v="">Ver próximos</button></div>${l.length ? l.map(itemCalHTML).join('') : '<p class="vacio">Nada este día.</p>'}<button class="btn w mt" data-a="a-nuevo" data-fecha="${S.yDia}">${ic('plus')} Agregar para este día</button>`; }
+    else { const l = itemsCal(hoy, sumaDias(hoy, 45)); h += `<h3 class="mb">Próximos</h3>${l.length ? l.slice(0, 25).map(itemCalHTML).join('') : '<p class="vacio">Nada agendado todavía.</p>'}`; }
+  } else {
+    const lun = sumaDias(hoy, -((deYmd(hoy).getDay() + 6) % 7) + 7 * (S.ySem || 0)), dom = sumaDias(lun, 6), its = itemsCal(lun, dom);
+    h += `<div class="card"><div class="fila entre"><button class="icono" data-a="ysem" data-v="-1" aria-label="Semana anterior">${ic('back')}</button><h3>${deYmd(lun).getDate()} ${MESES[deYmd(lun).getMonth()].slice(0, 3)} – ${deYmd(dom).getDate()} ${MESES[deYmd(dom).getMonth()].slice(0, 3)}</h3><button class="icono" data-a="ysem" data-v="1" aria-label="Semana siguiente" style="transform:scaleX(-1)">${ic('back')}</button></div>
+      ${S.ySem ? `<button class="btn sm suave w mt" data-a="ysem" data-v="0">Volver a esta semana</button>` : ''}</div>`;
+    for (let k = 0; k < 7; k++) { const d = sumaDias(lun, k), l = its.filter(x => x.f === d);
+      h += `<div class="sem-dia ${d === hoy ? 'hoy' : ''} ${d < hoy ? 'pasado' : ''}"><div class="fila entre"><p class="sem-cab"><b>${cap(DIAS[deYmd(d).getDay()])}</b> ${deYmd(d).getDate()}${d === hoy ? ' <span class="badge">Hoy</span>' : ''}</p><button class="icono chico" data-a="a-nuevo" data-fecha="${d}" aria-label="Agregar">${ic('plus')}</button></div>${l.length ? l.map(itemCalHTML).join('') : '<p class="sub">Libre 🐾</p>'}</div>`; }
+  }
+  return h;
+}
+function formAgenda(e, esp, pre = {}) {
+  e = e ? JSON.parse(JSON.stringify(e)) : { t: '', tipo: pre.tipo || 'reunion', fecha: pre.fecha || hoyYmd(), hora: '', notas: '' };
+  S.aForm = { e, esp: esp || 'yo', espOrig: esp || null, nuevoTipo: false };
+  const pinta = () => { const f = S.aForm; abrirHoja(`${cabHoja(e.id ? 'Editar evento' : 'Nuevo evento')}
+    <p class="eti">Tipo</p><div class="chips mt">${tiposA().map(t => `<button class="chip tipo-chip" style="--tc:${t.c}" data-a="af-tipo" data-v="${t.id}" aria-pressed="${e.tipo === t.id}">${t.ic} ${esc(t.n)}</button>`).join('')}<button class="chip" data-a="af-otro">${ic('plus')} Otro tipo…</button></div>
+    ${f.nuevoTipo ? `<div class="card rosa mt"><label class="lbl" for="af-tn" style="margin-top:0">Nombre del tipo</label><input type="text" id="af-tn" placeholder="Por ejemplo: Peluquería, Gimnasio" maxlength="30"><button class="btn pr sm mt" data-a="af-crear">Crear</button></div>` : ''}
+    <label class="lbl" for="af-t">Título</label><input type="text" id="af-t" value="${esc(e.t)}" placeholder="¿Qué es?">
+    <div class="grid2"><div><label class="lbl" for="af-f">Fecha</label><input type="date" id="af-f" value="${e.fecha}"></div><div><label class="lbl" for="af-h">Hora</label><input type="time" id="af-h" value="${e.hora || ''}"></div></div>
+    <label class="lbl" for="af-n">Notas</label><textarea id="af-n" placeholder="Lugar, qué llevar…">${esc(e.notas || '')}</textarea>
+    <label class="sw mt"><span>🏠 Compartir con el hogar<br><small class="sub">Lo verá también tu pareja si se unió al hogar.</small></span><input type="checkbox" id="af-hogar" ${f.esp === 'hogar' ? 'checked' : ''}></label>
+    <button class="btn pr big mt2" data-a="af-guardar">Guardar</button>`); };
+  S.aPinta = () => { leerAgenda(); pinta(); }; pinta();
+}
+function leerAgenda() { const f = S.aForm, v = id => ($('#' + id) || {}).value; if (!f || v('af-t') === undefined) return; f.e.t = v('af-t').trim(); f.e.fecha = v('af-f'); f.e.hora = v('af-h'); f.e.notas = v('af-n'); f.esp = $('#af-hogar').checked ? 'hogar' : 'yo'; }
+async function guardarAgenda() {
+  leerAgenda(); const f = S.aForm; if (!f.e.t) return toast('Escribe un título.'); if (!f.e.fecha) return toast('Elige la fecha.');
+  if (f.espOrig && f.espOrig !== f.esp) await borrarE(f.espOrig, 'agenda', f.e.id);
+  await putE(f.esp, 'agenda', f.e); S.aForm = null; cerrarHoja(); toast('Guardado 🐾'); render(true);
+}
+function verAgenda(id, esp) {
+  const e = ED(esp, 'agenda').find(x => x.id === id); if (!e) return; const t = tipoA(e.tipo);
+  abrirHoja(`<div class="fila entre mb"><div><span class="tipo"><span class="tp" style="background:${t.c}">${t.ic} ${esc(t.n)}</span>${esp === 'hogar' ? ' 🏠 Compartido' : ''}</span><h2>${esc(e.t)}</h2></div><button class="icono" data-a="cerrar" aria-label="Cerrar">${ic('x')}</button></div>
+    <p><b>${cap(fechaLarga(e.fecha))}</b>${e.hora ? ' · ' + e.hora : ''} <span class="badge">${cuando(e.fecha)}</span></p>${e.notas ? `<p class="pre mt">${esc(e.notas)}</p>` : ''}
+    <div class="col mt2"><a class="btn pr sm w" target="_blank" rel="noopener" href="${gcalEnlace({ titulo: t.ic + ' ' + e.t, fecha: e.fecha, hora: e.hora, min: 60, detalles: e.notas || '' })}">${ic('cal')} Recordatorio en Google Calendar</a>
+    <div class="grid2"><button class="btn sm" data-a="a-editar" data-id="${e.id}" data-esp="${esp}">${ic('lapiz')} Editar</button><button class="btn sm" data-a="a-borrar" data-id="${e.id}" data-esp="${esp}">Eliminar</button></div></div>`);
+}
+
+/* ----- hogar: compras y cuentas ----- */
+function cuentasPendientes() {
+  const hoy = hoyYmd(), m = mesKey(), dHoy = deYmd(hoy).getDate();
+  return ED('hogar', 'cuentas').filter(c => !(c.pagado || {})[m]).map(c => ({ c, dias: (c.dia || 1) - dHoy })).filter(x => x.dias <= 7).sort((a, b) => a.dias - b.dias);
+}
+function vHogar() {
+  const comp = ED('hogar', 'compras').sort((a, b) => (a.ok ? 1 : 0) - (b.ok ? 1 : 0) || (a.act || 0) - (b.act || 0)), m = mesKey();
+  const url = location.origin + location.pathname + '#hogar=' + AJ.codigoHogar;
+  return cabSub('Hogar compartido') + `<div class="card rosa"><p>🏠 Compras, cuentas y la agenda marcada como "hogar" se comparten con tu pareja.</p><button class="btn pr w mt" data-a="hogar-compartir">Invitar a mi pareja</button><p class="sub mt">Tu pareja abre el enlace en su Ronrutina (como apoderado/a) y listo.</p></div>
+  <div class="card"><p class="eti mb">🛒 Lista de compras</p><div class="fila"><input type="text" id="hc-n" placeholder="Agregar algo… (pan, leche)" style="flex:1"><button class="btn pr sm" data-a="hc-add">${ic('plus')}</button></div>
+    <div class="mt">${comp.length ? comp.map(c => `<div class="fila"><button class="check" data-a="hc-ok" data-id="${c.id}" aria-pressed="${!!c.ok}" style="flex:1;margin-bottom:6px"><span class="box"></span><span>${esc(c.n)}</span></button><button class="icono chico" data-a="hc-del" data-id="${c.id}" aria-label="Quitar">${ic('x')}</button></div>`).join('') : '<p class="sub">La lista está vacía.</p>'}</div>
+    ${comp.some(c => c.ok) ? `<button class="btn sm suave w mt" data-a="hc-limpiar">Quitar lo ya comprado</button>` : ''}</div>
+  <div class="card"><p class="eti mb">💳 Cuentas del mes</p>${ED('hogar', 'cuentas').sort((a, b) => (a.dia || 0) - (b.dia || 0)).map(c => { const p = (c.pagado || {})[m]; return `<div class="fila" style="margin-bottom:6px"><button class="check" data-a="hcu-pago" data-id="${c.id}" aria-pressed="${!!p}" style="flex:1;margin:0"><span class="box"></span><span>${esc(c.n)} <small class="sub">· día ${c.dia}${c.monto ? ' · $' + Number(c.monto).toLocaleString('es-CL') : ''}${p ? ' · pagó ' + esc(p) : ''}</small></span></button><button class="icono chico" data-a="hcu-del" data-id="${c.id}" aria-label="Quitar">${ic('x')}</button></div>`; }).join('') || '<p class="sub">Agrega las cuentas que se pagan cada mes.</p>'}
+    <div class="grid3 mt" style="grid-template-columns:2fr 1fr 1.3fr"><input type="text" id="hcu-n" placeholder="Luz, agua…"><input type="number" id="hcu-d" placeholder="Día" min="1" max="31"><input type="number" id="hcu-m" placeholder="Monto"></div>
+    <button class="btn sm w mt" data-a="hcu-add">${ic('plus')} Agregar cuenta</button></div>`;
+}
+
+/* ----- recompensas reales ----- */
+const recCfg = () => cfgE('yo', 'recompensas').lista || RECOMP0;
+function recompensasCard() {
+  const d = estDisp();
+  return `<div class="card"><div class="fila entre mb"><p class="eti">🎀 Mis recompensas</p><span class="badge">⭐ ${d} disponibles</span></div>
+    ${recCfg().map(r => `<div class="fila entre recomp"><span>${r.ic} ${esc(r.n)}</span><button class="btn sm ${d >= r.costo ? 'pr' : ''}" data-a="canjear" data-id="${r.id}" ${d >= r.costo ? '' : 'disabled'}>${r.costo} ⭐</button></div>`).join('')}
+    <a class="sub" href="#mas-recompensas">Editar mis recompensas</a></div>`;
+}
+async function canjear(id) {
+  const r = recCfg().find(x => x.id === id); if (!r || estDisp() < r.costo) return;
+  await guardarRon({ canje: (ronCfg().canje || 0) + r.costo }); confeti(); sonido('feliz');
+  render(true); setTimeout(() => ronDice('ron-casa', `¡Te ganaste ${r.n.toLowerCase()}! Disfrútalo mucho ${r.ic}`), 30);
+}
+function vRecompensas() {
+  return cabSub('Mis recompensas') + `<p class="sub mb">Premios de la vida real que te das con tus estrellas.</p><div class="card">${recCfg().map(r => `<div class="fila entre recomp"><span>${r.ic} ${esc(r.n)} · <b>${r.costo} ⭐</b></span><button class="icono chico" data-a="rec-del" data-id="${r.id}" aria-label="Quitar">${ic('x')}</button></div>`).join('')}</div>
+  <div class="card"><p class="eti">Nueva recompensa</p><div class="grid3 mt" style="grid-template-columns:56px 1fr 80px"><input type="text" id="rc-ic" value="🎁" maxlength="4" aria-label="Ícono"><input type="text" id="rc-n" placeholder="Por ejemplo, ir al cine"><input type="number" id="rc-c" value="10" min="1" aria-label="Estrellas"></div><button class="btn pr w mt" data-a="rec-add">Agregar</button></div>`;
+}
+
+/* ----- ajustes de hábitos ----- */
+function vHabitos() {
+  const c = habCfg();
+  return cabSub('Hábitos y misiones') + `<p class="sub mb">Cada uno da 1 ⭐. Completar todos los del día da 2 ⭐ extra.</p><div class="card">${c.lista.map(m => `<button class="ev" data-a="hab-editar" data-id="${m.id}" style="${m.on === false ? 'opacity:.5' : ''}"><span style="font-size:26px;align-self:center">${m.ic}</span><span class="txt"><b>${esc(m.n)}</b><small>${diasTxt(m.dias)}${m.hora ? ' · ' + m.hora : ''}</small></span>${ic('lapiz')}</button>`).join('')}
+    <button class="btn w mt" data-a="hab-editar" data-id="">${ic('plus')} Nuevo hábito o misión</button></div>`;
+}
+function editarHabito(id) {
+  const c = habCfg(), m = id ? Object.assign({}, c.lista.find(x => x.id === id)) : { id: '', n: '', ic: '⭐', dias: [0, 1, 2, 3, 4, 5, 6], hora: '' };
+  S.misEd = m; S.misEsp = 'yo';
+  abrirHoja(`${cabHoja(id ? 'Editar' : 'Nuevo hábito o misión')}
+    <label class="lbl" for="mi-n">Nombre</label><input type="text" id="mi-n" value="${esc(m.n)}" placeholder="Por ejemplo, pagar cuentas" maxlength="40">
+    <p class="eti mt2">Ícono</p><div class="emojis mt">${EMOJIS_M.concat(['🚶', '💆', '🎤', '🧘', '💳', '🛒']).filter((x, i, a) => a.indexOf(x) === i).map(e => `<button class="chip" data-a="mi-ic" data-v="${e}" aria-pressed="${m.ic === e}">${e}</button>`).join('')}</div>
+    <p class="eti mt2">¿Qué días?</p><div class="chips mt">${[1, 2, 3, 4, 5, 6, 0].map(i => `<button class="chip dsem" data-a="mi-dia" data-v="${i}" aria-pressed="${m.dias.includes(i)}" aria-label="${DIAS[i]}">${DIAS_C[i]}</button>`).join('')}</div>
+    <div class="chips mt"><button class="chip" data-a="mi-dias" data-v="todos">Todos</button><button class="chip" data-a="mi-dias" data-v="semana">Lunes a viernes</button><button class="chip" data-a="mi-dias" data-v="finde">Fin de semana</button></div>
+    <label class="lbl" for="mi-h">Hora (opcional)</label><input type="time" id="mi-h" value="${m.hora || ''}" style="max-width:160px">
+    ${id ? `<label class="sw mt"><span>Activo</span><input type="checkbox" id="mi-on" ${m.on !== false ? 'checked' : ''}></label>` : ''}
+    <button class="btn pr big mt2" data-a="hab-guardar">Guardar</button>${id ? `<button class="btn w mt" data-a="hab-borrar" data-id="${id}">Eliminar</button>` : ''}`);
+}
+async function guardarHabito() {
+  const m = S.misEd, c = habCfg(); m.n = $('#mi-n').value.trim(); m.hora = $('#mi-h').value; if ($('#mi-on')) m.on = $('#mi-on').checked;
+  if (!m.n) return toast('Escribe el nombre.'); if (!m.dias.length) return toast('Elige al menos un día.'); if (!m.hora) delete m.hora;
+  const lista = c.lista.slice(); if (m.id) lista[lista.findIndex(x => x.id === m.id)] = m; else { m.id = 'h_' + uid().slice(0, 8); lista.push(m); }
+  await putE('yo', 'config', Object.assign({}, c, { id: 'habitos', lista })); cerrarHoja(); toast('Guardado ⭐'); render(true);
+}
+
+/* ----- HOY de Mi vida ----- */
+function vYoHoy() {
+  const hoy = hoyYmd(), hr = new Date().getHours(), a = animoDe(hoy), corte = despuesCorte(), estr = a && ['cansancio', 'estres'].includes(a.emo);
+  const frase = S.fraseFija && S.fraseFija.hasta > Date.now() ? S.fraseFija.txt
+    : corte ? elige(['Ya es hora de cortar con el trabajo. Lo que quedó, mañana tendrá su momento 🧡', 'Hora de soltar el trabajo. Ahora toca descansar y regalonear 🐾'])
+    : !a ? '¡Buenos días, ' + AJ.nombre + '! ¿Cómo te sientes hoy? 🐾'
+    : hr < 13 ? EMOS[a.emo][2][a.i] || '' : elige(SALUDO_YO[hr < 19 ? 'tarde' : 'noche'], AJ.nombre);
+  let h = `<div class="top"><div><p class="sub">${cap(fechaLarga(hoy))}</p><h1>Hola, ${esc(AJ.nombre)}</h1></div><a class="icono" href="#mas-ajustes" aria-label="Ajustes">${ic('ajustes')}</a></div>`;
+  h += ronHTML('', frase, 'ron-hoy');
+  if (!cfgE('yo', 'bienvenida').visto) h += `<div class="card rosa"><p><b>¡Bienvenida a Mi vida! 🐾</b> Este es tu espacio: tus tareas, tu trabajo, tus hábitos y tus recompensas. Es privado: ${esc(estudiante())} no lo ve.</p><button class="btn sm mt" data-a="yo-bienvenida">¡Entendido!</button></div>`;
+  h += animoCard();
+  if (regalosInfo().pend) h += `<a class="card regalo-aviso" href="#ron"><span style="font-size:30px">🎁</span><span><b>¡Ron tiene ${regalosInfo().pend === 1 ? 'un regalo misterioso' : regalosInfo().pend + ' regalos'} para ti!</b><br><small class="sub">Toca para abrir</small></span></a>`;
+  const ag = itemsCal(hoy, hoy).filter(x => x.a !== 't-ver');
+  h += `<div class="card"><div class="fila entre mb"><p class="eti">📅 Hoy</p><button class="btn sm suave" data-a="a-nuevo" data-fecha="${hoy}">${ic('plus')} Evento</button></div>${ag.length ? ag.map(itemCalHTML).join('') : '<p class="sub">Sin eventos para hoy.</p>'}</div>`;
+  const urg = tareasPend().filter(t => t.fecha && t.fecha <= sumaDias(hoy, 1)), lista = estr ? urg.slice(0, 3) : urg;
+  h += `<div class="card ${corte ? 'apagada' : ''}"><div class="fila entre mb"><p class="eti">💼 Trabajo ${corte ? '· ya cortaste por hoy 🌙' : 'urgente'}</p><button class="btn sm suave" data-a="t-nueva">${ic('plus')} Tarea</button></div>
+    ${estr && urg.length > 3 ? `<p class="sub mb">🧡 Hoy solo las 3 más importantes. Las demás pueden esperar.</p>` : ''}
+    ${lista.length ? lista.map(vTareaItem).join('') : `<p class="sub">${urg.length ? '' : 'Nada urgente para hoy ni mañana. 🐾'}</p>`}
+    <a class="sub" href="#trabajo">Ver todo el trabajo (${tareasPend().length})</a></div>`;
+  h += habitosCard();
+  const cu = cuentasPendientes(), nc = ED('hogar', 'compras').filter(c => !c.ok).length;
+  if (cu.length || nc) h += `<a class="card hogar-card" href="#mas-hogar"><p class="eti">🏠 Hogar</p>${cu.map(x => `<p class="mt">💳 <b>${esc(x.c.n)}</b> · ${x.dias < 0 ? `<span style="color:#E53935">venció hace ${-x.dias} ${-x.dias === 1 ? 'día' : 'días'}</span>` : x.dias === 0 ? 'vence hoy' : `vence en ${x.dias} ${x.dias === 1 ? 'día' : 'días'}`}</p>`).join('')}${nc ? `<p class="mt">🛒 ${nc} ${nc === 1 ? 'cosa' : 'cosas'} en la lista de compras</p>` : ''}</a>`;
+  h += emyResumen();
+  h += gatoCard();
+  setTimeout(() => ronEstado('ron-hoy', corte ? 'mimo' : 'saluda'), 0);
+  return h;
+}
+function emyResumen() {
+  if (!D.asig.length && !D.eventos.length) return '';
+  const hoy = hoyYmd(), n = estudiante(), ev = proximos(7).filter(e => e.tipo !== 'material').slice(0, 3);
+  const mc = misCfg(), ml = misionesDe(hoy, mc), mh = ml.filter(m => misHecha(hoy, m.id, mc)).length;
+  return `<div class="card"><div class="fila entre mb"><p class="eti">🎒 ${esc(n)} hoy</p><button class="btn sm" data-a="ver-emy">Ver todo</button></div>
+    ${ml.length ? `<p>⭐ Misiones: <b>${mh}/${ml.length}</b></p>` : ''}
+    ${ev.length ? ev.map(e => `<p class="mt">${e.fecha === sumaDias(hoy, 1) ? '⚠️' : '•'} ${esc(tipoN(e.tipo))} de ${esc(asigPor(e.asig).nombre)} · <b>${cuando(e.fecha)}</b></p>`).join('') : `<p class="sub mt">Sin evaluaciones esta semana.</p>`}</div>`;
+}
+function vYoMas() {
+  const it = (h, i, t, s) => `<a class="mas-item" href="#${h}" style="text-decoration:none;color:inherit"><span class="ic">${i}</span><span>${t}<small>${s}</small></span></a>`;
+  return `<div class="top"><h1>Más</h1><span class="badge">⭐ ${estDisp()}</span></div>
+  <button class="mas-item" data-a="ver-emy"><span class="ic">🎒</span><span>Ver lo de ${esc(estudiante())}<small>Su calendario, misiones, estudio y su Ron</small></span></button>
+  ${it('mas-hogar', '🏠', 'Hogar compartido', 'Compras, cuentas y agenda con tu pareja')}
+  ${it('mas-habitos', '⭐', 'Hábitos y misiones', 'Agua, pausas, caminata, cantar y más')}
+  ${it('mas-recompensas', '🎀', 'Mis recompensas', 'Premios reales que canjeas con estrellas')}
+  ${it('mas-gato', '🐾', 'Ron de verdad', 'Comida, agua, arenero, paseo y cariño')}
+  ${it('mas-familia', '👨‍👩‍👧', 'Familia', 'Código y enlace de la familia')}
+  ${it('mas-ajustes', '⚙️', 'Ajustes', 'Fondo, colores, hora de corte y sonido')}
+  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 6</p>`;
+}
+/* Navegación según el modo */
+const NAV_IC = { hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>', gato: '<path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/>', mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>', maletin: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>' };
+function pintarNav() {
+  const yo = enMiVida(), k = yo ? 'yo' : 'emy'; const n = $('.nav'); if (!n || n.dataset.modo === k) return;
+  const L = yo ? [['hoy', 'Hoy', 'hoy'], ['trabajo', 'Trabajo', 'maletin'], ['calendario', 'Calendario', 'cal'], ['ron', 'Ron', 'gato'], ['mas', 'Más', 'mas']] : [['hoy', 'Hoy', 'hoy'], ['calendario', 'Calendario', 'cal'], ['estudiar', 'Estudiar', 'libro'], ['ron', 'Ron', 'gato'], ['mas', 'Más', 'mas']];
+  n.innerHTML = L.map(([h, t, i]) => `<a href="#${h}" data-tab="${h}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true">${NAV_IC[i]}</svg>${t}</a>`).join(''); n.dataset.modo = k;
+}
+const VISTAS_YO = { hoy: vYoHoy, trabajo: vTrabajo, calendario: vYoCal, mas: vYoMas, 'mas-hogar': vHogar, 'mas-habitos': vHabitos, 'mas-recompensas': vRecompensas };
+const bannerEmy = () => AJ.rol === 'apoderado' && !enMiVida() ? `<div class="banner-emy"><span>👀 Viendo lo de ${esc(estudiante())}</span><button class="btn sm" data-a="volver-yo">Volver a Mi vida</button></div>` : '';
+
+/* ----- Fondo decorativo configurable ----- */
+function fondoSVG() {
+  const el = Object.assign({ fr: true, fl: true, gi: false }, AJ.decoEl || {}), op = (AJ.decoOp || 16) / 100, sel = [];
+  const fresa = (x, y) => `<g transform='translate(${x - 30} ${y - 32})'><path d='M30 22c-8 0-10 9-6 16l6 10 6-10c4-7 2-16-6-16z' fill='%23E8475F'/><path d='M24 23l6-6 6 6-6 3z' fill='%236BBF59'/></g>`;
+  const flor = (x, y) => [[0, -10], [9.5, -3], [6, 8], [-6, 8], [-9.5, -3]].map(p => `<circle cx='${x + p[0]}' cy='${y + p[1]}' r='6' fill='%23F48FB1'/>`).join('') + `<circle cx='${x}' cy='${y}' r='4' fill='%23FFD54F'/>`;
+  const gira = (x, y) => `<path d='M${x} ${y + 12} q2 12 -2 22' stroke='%236BBF59' stroke-width='3' fill='none'/>` + [...Array(12)].map((_, k) => `<ellipse cx='${x}' cy='${y - 10}' rx='3.6' ry='7.5' fill='%23F9C80E' transform='rotate(${k * 30} ${x} ${y})'/>`).join('') + `<circle cx='${x}' cy='${y}' r='6.5' fill='%237A4E2D'/>`;
+  if (el.fr) sel.push(fresa); if (el.fl) sel.push(flor); if (el.gi) sel.push(gira);
+  if (!sel.length || !AJ.deco) return 'none';
+  const g = [[32, 34], [112, 106], [112, 32], [34, 112]].map((p, i) => sel[i % sel.length](p[0], p[1])).join('');
+  return `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg opacity='${op}'%3E${g.replace(/</g, '%3C').replace(/>/g, '%3E')}%3C/g%3E%3C/svg%3E")`;
+}
+function fondoAjustes() {
+  const el = Object.assign({ fr: true, fl: true, gi: false }, AJ.decoEl || {}), op = AJ.decoOp || 16;
+  return `<div class="card"><p class="eti">Fondo decorativo</p><div class="chips mt">${[['fr', '🍓 Frutillas'], ['fl', '🌸 Flores'], ['gi', '🌻 Girasoles']].map(([k, n]) => `<button class="chip" data-a="deco-el" data-v="${k}" aria-pressed="${!!el[k] && AJ.deco}">${n}</button>`).join('')}</div>
+    <label class="lbl" for="deco-op">Visibilidad: <span id="deco-txt">${op < 14 ? 'muy suave' : op < 28 ? 'suave' : op < 44 ? 'media' : 'bien visible'}</span></label><input type="range" id="deco-op" min="5" max="60" value="${op}" style="width:100%;accent-color:var(--ac)">
+    <p class="sub mt">Desmarca todos para un fondo liso.</p></div>`;
+}
 
 /* ===== Estado de la interfaz ===== */
 const S = { vista: 'hoy', filtro: '', mesOff: 0, diaSel: '', ob: null, est: null, hDia: 1 };
@@ -1526,7 +1939,7 @@ async function obListo() {
   Object.assign(AJ, { rol: o.rol, nombre: o.nombre, codigo }); guardarAjustes();
   S.nuevo = o.paso === 'crear' ? { est: o.rol === 'estudiante' ? o.nombre : (o.est || 'Emy') } : null;
   S.ob = null; history.replaceState(null, '', location.pathname + '#hoy');
-  await conectar(codigo); render(true);
+  await conectar(codigo); await prepararMiVida(); render(true);
 }
 async function alListo() {
   if (S.nuevo) {
@@ -1802,7 +2215,7 @@ function vMas() {
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 5</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 6</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
@@ -1888,8 +2301,10 @@ function vAjustes() {
   return cabSub('Ajustes') + `<div class="card"><label class="lbl" for="aj-nombre" style="margin-top:0">Tu nombre</label><input type="text" id="aj-nombre" data-aj="nombre" value="${esc(AJ.nombre)}">
     <p class="sub mt">Usas Ronrutina como: <b>${AJ.rol === 'estudiante' ? 'estudiante' : 'mamá o apoderado'}</b></p></div>
   <div class="card"><p class="eti">Color de la app</p><div class="fila wrap mt">${Object.entries(TEMAS).map(([k, c]) => `<span style="text-align:center"><button class="swatch" style="background:${c}" data-a="aj" data-k="tema" data-v="${k}" aria-pressed="${AJ.tema === k}" aria-label="${TEMAS_N[k]}"></button><br><small class="sub">${TEMAS_N[k]}</small></span>`).join('')}</div>
-    <label class="sw mt"><span>Decoración de frutillas y flores</span><input type="checkbox" data-ajc="deco" ${AJ.deco ? 'checked' : ''}></label></div>
-  <div class="card"><p class="eti">Ron</p><p class="mt">Comenta mientras estudias cada:</p><div class="chips mt">${f('ronFreq', 0, 'Nunca')}${f('ronFreq', 10, '10 min')}${f('ronFreq', 15, '15 min')}${f('ronFreq', 20, '20 min')}${f('ronFreq', 30, '30 min')}</div>
+</div>
+  ${fondoAjustes()}
+  ${AJ.rol === 'apoderado' ? `<div class="card"><p class="eti">Mi vida</p><label class="lbl" for="aj-corte">Hora de cortar con el trabajo</label><input type="time" id="aj-corte" data-aj="corte" value="${AJ.corte || ''}" style="max-width:160px"><p class="sub mt">A esa hora Ron te recuerda soltar el trabajo y descansar.</p></div>` : ''}
+  <div class="card"><p class="eti">Ron</p>${AJ.rol === 'apoderado' ? '' : `<p class="mt">Comenta mientras estudias cada:</p>`}<div class="chips mt" ${AJ.rol === 'apoderado' ? 'hidden' : ''}>${f('ronFreq', 0, 'Nunca')}${f('ronFreq', 10, '10 min')}${f('ronFreq', 15, '15 min')}${f('ronFreq', 20, '20 min')}${f('ronFreq', 30, '30 min')}</div>
     ${AJ.rol === 'estudiante' ? `<p class="mt">Recordarte tomar agua cada:</p><div class="chips mt">${f('agua', 0, 'Nunca')}${f('agua', 30, '30 min')}${f('agua', 45, '45 min')}${f('agua', 60, '60 min')}</div>
     <label class="lbl" for="aj-dormir">Hora de dormir</label><input type="time" id="aj-dormir" data-aj="dormir" value="${AJ.dormir}">
     <p class="eti mt2">Ron cuida de ti</p>
@@ -1904,10 +2319,11 @@ function vAjustes() {
 /* ===== Navegación ===== */
 const VISTAS = { hoy: vHoy, calendario: vCalendario, estudiar: vEstudiar, ron: vRon, semana: vSemana, guia: vGuia, mas: vMas, 'mas-correo': vCorreo, 'mas-horario': vHorario, 'mas-asig': vAsignaturas, 'mas-mochila': vMochila, 'mas-familia': vFamilia, 'mas-ajustes': vAjustes, 'mas-gato': vGato, 'mas-misiones': vMisiones };
 const TAB = v => v.startsWith('mas') ? 'mas' : v === 'semana' ? 'ron' : v === 'guia' ? 'estudiar' : v;
+const vistas = () => enMiVida() ? Object.assign({}, VISTAS, VISTAS_YO) : VISTAS;
 function render(force) {
   const cont = $('#vista'); if (!cont) return;
   const sinFamilia = !AJ.codigo || !AJ.rol;
-  $('.nav').classList.toggle('oculta', sinFamilia);
+  $('.nav').classList.toggle('oculta', sinFamilia); if (!sinFamilia) pintarNav();
   if (sinFamilia) { cont.innerHTML = vBienvenida(); return; }
   if (!force) {
     const a = document.activeElement;
@@ -1916,7 +2332,7 @@ function render(force) {
   }
   if (!DB.listo) { cont.innerHTML = ronHTML('grande', 'Un momento… estoy buscando tus cosas 🐾') ; return; }
   if (!force && S.vista === 'ron' && $('#escena')) { ronContadores(); return; }
-  const y = scrollY; cont.innerHTML = (VISTAS[S.vista] || vHoy)();
+  const y = scrollY, V = vistas(); cont.innerHTML = bannerEmy() + (V[S.vista] || V.hoy)();
   $$('.nav a').forEach(a => a.dataset.tab === TAB(S.vista) ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
   if (!force) scrollTo(0, y);
   $$('.ron.saluda').forEach(ronFin);
@@ -1924,13 +2340,18 @@ function render(force) {
 }
 function irVista() {
   const h = location.hash.slice(1);
+  if (h.startsWith('hogar=')) {
+    const cod = h.slice(6).replace(/[^a-z0-9]/g, '');
+    if (AJ.rol === 'apoderado' && cod.length >= 24) { if (cod !== AJ.codigoHogar && confirm('¿Unirte al hogar compartido? Verás las compras, cuentas y agenda compartida.')) { AJ.codigoHogar = cod; guardarAjustes(); conectarEsp('hogar', cod); toast('¡Listo! Ya compartes el hogar 🏠'); } location.hash = '#mas-hogar'; return; }
+    toast('Abre este enlace en Ronrutina como apoderado/a.'); location.hash = '#hoy'; return;
+  }
   if (h.startsWith('unir=')) {
     const cod = h.slice(5).replace(/[^a-z0-9]/g, '');
     if (AJ.codigo && AJ.codigo !== cod) { if (!confirm('Este enlace es de otra familia. ¿Cambiarte a ella en este teléfono?')) { location.hash = '#hoy'; return; } AJ.codigo = ''; AJ.rol = ''; guardarAjustes(); }
     if (!AJ.codigo) { S.ob = { paso: 'unir', rol: '', nombre: '', codigo: cod }; render(true); return; }
     location.hash = '#hoy'; return;
   }
-  const v = h || 'hoy'; S.vista = VISTAS[v] ? v : 'hoy'; cerrarHoja(true); render(true); scrollTo(0, 0);
+  const v = h || 'hoy'; S.vista = vistas()[v] ? v : 'hoy'; cerrarHoja(true); render(true); scrollTo(0, 0);
   const t = $('#vista h1'); if (t) { t.tabIndex = -1; t.focus({ preventScroll: true }); }
 }
 window.addEventListener('hashchange', irVista);
@@ -1997,6 +2418,53 @@ document.addEventListener('click', async ev => {
     case 'est-terminar': S.est.fase = 'fin'; S.est.frase = elige(RON.fin, AJ.nombre); pantallaOff(); campana([880, 1175, 1568]); render(true); setTimeout(() => ronEstado('ron-est', 'celebra'), 0); return;
     case 'est-como': S.est.como = v; $$('[data-a=est-como]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return;
     case 'est-guardar': return estGuardar();
+    /* Mi vida */
+    case 'animo': return elegirAnimo(v);
+    case 'animo-cambiar': { const a = animoDe(hoyYmd()); if (a) await borrarE('yo', 'animo', a.id); return render(true); }
+    case 'yo-bienvenida': await putE('yo', 'config', { id: 'bienvenida', visto: true }); return render(true);
+    case 'habito': return marcarHabito(v);
+    case 'hab-editar': return editarHabito(id);
+    case 'hab-guardar': return guardarHabito();
+    case 'hab-borrar': { if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro? Toca otra vez'; return; } const c = habCfg(); await putE('yo', 'config', Object.assign({}, c, { id: 'habitos', lista: c.lista.filter(x => x.id !== id) })); cerrarHoja(); return render(true); }
+    case 'ver-emy': AJ.modoApo = 'emy'; guardarAjustes(); cerrarHoja(true); location.hash = '#hoy'; return render(true);
+    case 'volver-yo': AJ.modoApo = 'yo'; guardarAjustes(); location.hash = '#hoy'; return render(true);
+    case 't-nueva': return formTarea(null, { fecha: t.dataset.fecha });
+    case 't-ver': return verTarea(id);
+    case 't-editar': return formTarea(tareasYo().find(x => x.id === id));
+    case 't-hecha': return tareaHecha(id);
+    case 't-borrar': if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro? Toca otra vez'; return; } await borrarE('yo', 'tareas', id); cerrarHoja(); return render(true);
+    case 't-paso': { const x = tareasYo().find(z => z.id === id); const p = x.pasos[+t.dataset.i]; p.hecho = !p.hecho; t.setAttribute('aria-pressed', p.hecho); await putE('yo', 'tareas', Object.assign({}, x)); return; }
+    case 'tf-cat': leerTarea(); S.tForm.cat = v; return S.tPinta();
+    case 'tf-paso': leerTarea(); S.tForm.pasos.push({ t: '', hecho: false }); return S.tPinta();
+    case 'tf-quita': leerTarea(); S.tForm.pasos.splice(+t.dataset.i, 1); return S.tPinta();
+    case 'tf-guardar': return guardarTarea();
+    case 't-correo': return correoTrabajo(+v);
+    case 'tc-abrir': { const e = correoEnlaces($('#tc-para').value.trim(), $('#tc-as').value, $('#tc-cu').value); location.href = v === 'web' ? e.web : e.app; return; }
+    case 'a-nuevo': return formAgenda(null, 'yo', { fecha: t.dataset.fecha });
+    case 'a-ver': return verAgenda(id, t.dataset.esp);
+    case 'a-editar': return formAgenda(ED(t.dataset.esp, 'agenda').find(x => x.id === id), t.dataset.esp);
+    case 'a-borrar': if (!t.dataset.ok) { t.dataset.ok = '1'; t.textContent = '¿Seguro?'; return; } await borrarE(t.dataset.esp, 'agenda', id); cerrarHoja(); return render(true);
+    case 'af-tipo': leerAgenda(); S.aForm.e.tipo = v; return S.aPinta();
+    case 'af-otro': leerAgenda(); S.aForm.nuevoTipo = !S.aForm.nuevoTipo; return S.aPinta();
+    case 'af-crear': { const n = ($('#af-tn').value || '').trim(); if (!n) return toast('Escribe el nombre del tipo.'); leerAgenda(); const l = cfgE('yo', 'tiposA').lista || [], nt = { id: 'c_' + uid().slice(0, 8), n: cap(n), color: TIPO_PALETA[l.length % TIPO_PALETA.length] }; await putE('yo', 'config', { id: 'tiposA', lista: [...l, nt] }); S.aForm.e.tipo = nt.id; S.aForm.nuevoTipo = false; return S.aPinta(); }
+    case 'af-guardar': return guardarAgenda();
+    case 'ycal': AJ.calVistaYo = v; guardarAjustes(); S.yDia = ''; return render(true);
+    case 'ymes': S.yMes = (S.yMes || 0) + +v; return render(true);
+    case 'ysem': S.ySem = v === '0' ? 0 : (S.ySem || 0) + +v; return render(true);
+    case 'ydia': S.yDia = v === S.yDia ? '' : v; return render(true);
+    case 'ver-emy-cal': AJ.verEmy = AJ.verEmy === false; guardarAjustes(); return render(true);
+    case 'hogar-compartir': { const url = location.origin + location.pathname + '#hogar=' + AJ.codigoHogar; try { if (navigator.share) { await navigator.share({ title: 'Ronrutina · Hogar', text: 'Compartamos compras, cuentas y agenda en Ronrutina 🏠', url }); return; } } catch (e) { if (e && e.name === 'AbortError') return; } try { await navigator.clipboard.writeText(url); toast('Enlace copiado. Envíalo por WhatsApp.'); } catch (e) { prompt('Copia este enlace:', url); } return; }
+    case 'hc-add': { const n = ($('#hc-n').value || '').trim(); if (!n) return; await putE('hogar', 'compras', { n, ok: false }); render(true); setTimeout(() => { const x = $('#hc-n'); if (x) x.focus(); }, 30); return; }
+    case 'hc-ok': { const x = ED('hogar', 'compras').find(z => z.id === id); await putE('hogar', 'compras', Object.assign({}, x, { ok: !x.ok })); return render(true); }
+    case 'hc-del': await borrarE('hogar', 'compras', id); return render(true);
+    case 'hc-limpiar': for (const x of ED('hogar', 'compras').filter(z => z.ok)) await borrarE('hogar', 'compras', x.id); return render(true);
+    case 'hcu-add': { const n = ($('#hcu-n').value || '').trim(), d = Math.min(31, Math.max(1, +$('#hcu-d').value || 1)), m = $('#hcu-m').value; if (!n) return toast('Escribe el nombre de la cuenta.'); await putE('hogar', 'cuentas', { n, dia: d, monto: m ? +m : null, pagado: {} }); return render(true); }
+    case 'hcu-pago': { const x = ED('hogar', 'cuentas').find(z => z.id === id), p = Object.assign({}, x.pagado), k = mesKey(); if (p[k]) delete p[k]; else p[k] = AJ.nombre; await putE('hogar', 'cuentas', Object.assign({}, x, { pagado: p })); if (p[k]) { toast('¡Pagada! 💳'); sonido('mrrp'); } return render(true); }
+    case 'hcu-del': if (!t.dataset.ok) { t.dataset.ok = '1'; t.innerHTML = '¿?'; return; } await borrarE('hogar', 'cuentas', id); return render(true);
+    case 'canjear': return canjear(id);
+    case 'rec-add': { const n = ($('#rc-n').value || '').trim(), c = Math.max(1, +$('#rc-c').value || 1); if (!n) return toast('Escribe la recompensa.'); await putE('yo', 'config', { id: 'recompensas', lista: [...recCfg(), { id: 'r_' + uid().slice(0, 6), n, ic: ($('#rc-ic').value || '🎁').trim(), costo: c }] }); return render(true); }
+    case 'rec-del': await putE('yo', 'config', { id: 'recompensas', lista: recCfg().filter(x => x.id !== id) }); return render(true);
+    case 'deco-el': { const el = Object.assign({ fr: true, fl: true, gi: false }, AJ.decoEl); if (!AJ.deco) { AJ.deco = true; Object.keys(el).forEach(k => el[k] = false); } el[v] = !el[v]; AJ.decoEl = el; guardarAjustes(); return render(true); }
     /* Ron y v2 */
     case 'pausa-ron': if (S.est && S.est.fase === 'corre' && !S.est.pausaDesde) estPausa(); return iniciarPausaRon();
     case 'fin-pausa': S.cuidado = null; return render(true);
@@ -2069,11 +2537,13 @@ document.addEventListener('click', async ev => {
     }
   }
 });
+document.addEventListener('input', e => { if (e.target.id === 'deco-op') { AJ.decoOp = +e.target.value; const x = $('#deco-txt'), op = AJ.decoOp; if (x) x.textContent = op < 14 ? 'muy suave' : op < 28 ? 'suave' : op < 44 ? 'media' : 'bien visible'; try { document.body.style.backgroundImage = fondoSVG(); } catch (z) { } } });
 document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-ron]')) { e.preventDefault(); e.target.click(); } });
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.aj) { AJ[t.dataset.aj] = t.value.trim(); guardarAjustes(); if (t.dataset.aj === 'mochilaHora' || t.dataset.aj === 'materialesHora') render(true); }
   if (t.dataset.ajc) { AJ[t.dataset.ajc] = t.checked; guardarAjustes(); }
+  if (t.id === 'deco-op') { AJ.decoOp = +t.value; guardarAjustes(); return; }
   if (t.id === 'f-archivo' && t.files && t.files[0]) { const f = t.files[0]; t.value = ''; subirArchivo(f, t.dataset.ev); return; }
   if (t.dataset.mis === 'activo') { put('config', Object.assign({}, misCfg(), { id: 'misiones', activo: t.checked })).then(() => render(true)); return; }
   if (t.dataset.gato) {
@@ -2090,8 +2560,8 @@ async function arrancar() {
   cargarAjustes(); aplicarTema();
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => { });
   irVista();
-  if (AJ.codigo && AJ.rol) await conectar(AJ.codigo);
-  render(true);
+  if (AJ.codigo && AJ.rol) { await conectar(AJ.codigo); await prepararMiVida(); }
+  irVista();
 }
 window.addEventListener('load', arrancar);
 
