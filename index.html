@@ -311,6 +311,24 @@ details summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ac)}
 .alerta-riesgo{background:#FFF6EC;border:2px solid #F2B279}.alerta-riesgo h3{color:#9A4A12}.alerta-riesgo ul,.alerta-suave ul{padding-left:20px;margin-bottom:0}.alerta-riesgo li,.alerta-suave li{margin-top:6px}
 .alerta-suave{background:#FFF8FB;border:2px solid var(--ac2)}
 .nota-priv{background:var(--sup2)}
+.gato-h{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px}.gato-h input{width:auto;max-width:150px;margin:0;flex:none}
+.gato-ck{display:flex;align-items:center;gap:8px;font-size:14px}.gato-ck input{width:20px;height:20px;margin:0;accent-color:var(--ac)}
+.gato-dias{display:flex;flex-direction:column;gap:6px;margin-top:8px;padding-left:12px;border-left:3px solid var(--borde)}
+.rz-leyenda{padding:10px 12px;border-radius:14px;background:var(--sup2)}
+.rz-chip{min-height:34px;padding:0 11px;font-size:13px;gap:6px}.rz-chip small{font-weight:700;color:var(--mu)}
+.rz-punto{width:12px;height:12px;border-radius:6px;background:var(--rz);flex:none}
+.rz-chip[aria-pressed=true]{background:var(--rz);border-color:var(--rz);color:#fff}.rz-chip[aria-pressed=true] small{color:#fff}.rz-chip[aria-pressed=true] .rz-punto{background:#fff}
+.prenda{border-color:color-mix(in srgb,var(--rz,#ccc) 45%,var(--borde))}
+.prenda::after{width:10px;height:10px;border-radius:5px}
+.rz-tag{font-style:normal;font-size:10px;font-weight:800;color:#fff;background:var(--rz);border-radius:8px;padding:1px 7px;line-height:1.5}
+.prenda.bloq .rz-tag{opacity:.85}
+.prenda.mit{border:2px solid transparent;background:linear-gradient(var(--sup),var(--sup)) padding-box,linear-gradient(135deg,#E53935,#FF4081,#FFD54F,#E53935) border-box}
+.prenda.mit[aria-pressed=true]{background:linear-gradient(var(--sup2),var(--sup2)) padding-box,linear-gradient(135deg,#E53935,#FF4081,#FFD54F,#E53935) border-box}
+.rz-revela{margin:0 auto;max-width:300px;padding:12px;border-radius:18px;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--rz) 22%,transparent),transparent 72%)}
+.rz-badge{display:inline-block;color:#fff;font-size:15px;padding:6px 16px;margin-top:6px}
+.rz-estrellas{font-size:22px;letter-spacing:3px;color:var(--rz);margin:6px 0 2px}
+.rz-revela.mit .rz-badge{background:linear-gradient(90deg,#E53935,#FF4081,#FFB300)!important}
+.rz-revela.mit{animation:latido 1.2s ease-in-out infinite}
 
 </style>
 <script defer src="fb.js"></script>
@@ -1092,11 +1110,17 @@ const GATO_T = [
   { id: 'juego', n: 'Jugar conmigo', ic: '🧶', h: '20:00', f: ['¿Jugamos un ratito? Te traje mi lana 🧶', 'Estoy aburrido… ¡juguemos 10 minutos! 🧶'] },
   { id: 'regaloneo', n: 'Regaloneo', ic: '🧡', h: '21:00', f: ['Antes de dormir… ¿me regaloneas? Prrr 🧡', 'Hoy no me has hecho cariño en la cabecita. ¿Me regaloneas? 🧡'] }
 ];
-const gatoCfg = () => { const g = cfg('gato'); return Object.assign({ activo: true, t: {}, hechos: {} }, g); };
-const gatoT = (id, g) => { const base = GATO_T.find(t => t.id === id), c = ((g || gatoCfg()).t || {})[id] || {}; return Object.assign({}, base, { on: c.on !== false, h: c.h || base.h, dias: c.dias || base.dias || [0, 1, 2, 3, 4, 5, 6] }); };
+const gatoCfg = () => { const g = cfg('gato'); return Object.assign({ activo: true, t: {}, hechos: {}, extra: [] }, g); };
+/* tareas propias que agrega la familia */
+const GATO_IC = ['🐾', '🦴', '🐟', '💧', '🌳', '🧹', '🧶', '🧸', '🛁', '🪥', '✂️', '💊', '🩺', '🧡'];
+const frasesExtra = x => [`¡Miau! Ya es hora de: ${x.n.toLowerCase()} ${x.ic}`, `¿Me ayudas con esto? ${x.n} ${x.ic}`];
+const gatoLista = g => [...GATO_T, ...((g || gatoCfg()).extra || []).map(x => Object.assign({ propia: true, f: frasesExtra(x) }, x))];
+/* hora de una tarea: la del día si tiene "hora distinta por día", si no la general */
+const horaGato = (t, dia) => (t.pd && t.hd && t.hd[dia]) || t.h;
+const gatoT = (id, g) => { g = g || gatoCfg(); const base = gatoLista(g).find(t => t.id === id), c = (g.t || {})[id] || {}; if (!base) return null; return Object.assign({}, base, { on: c.on !== false, h: c.h || base.h, dias: c.dias || base.dias || [0, 1, 2, 3, 4, 5, 6], pd: !!c.pd, hd: c.hd || {} }); };
 function gatoTareas(fecha, g) {
   g = g || gatoCfg(); const dia = deYmd(fecha).getDay();
-  return GATO_T.map(t => gatoT(t.id, g)).filter(t => t.on && t.dias.includes(dia)).sort((a, b) => a.h.localeCompare(b.h));
+  return gatoLista(g).map(t => gatoT(t.id, g)).filter(t => t && t.on && t.dias.includes(dia)).map(t => Object.assign(t, { h: horaGato(t, dia) })).sort((a, b) => a.h.localeCompare(b.h));
 }
 const horaAhora = () => { const d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
 const hechoGato = (fecha, id, g) => (((g || gatoCfg()).hechos || {})[fecha] || {})[id];
@@ -1152,22 +1176,57 @@ function vGato() {
   <div class="ron-zona chico"><div class="ron" data-ron data-pelo="${ronEq().pelaje || 'naranjo'}" role="button" tabindex="0" aria-label="Ron">${ronSVG(ronEq())}</div><p class="globo">Yo también existo fuera del teléfono 🐾 Te recordaré cuándo darme comida, agua, limpiar mi arenero, sacarme a pasear y regalonearme.</p></div>
   <div class="card"><label class="sw"><span><b>Recordatorios de Ron</b><br><small class="sub">Ron te habla en Hoy cuando llega la hora.</small></span><input type="checkbox" data-gato="activo" ${g.activo ? 'checked' : ''}></label></div>`;
   if (!g.activo) return h;
-  h += `<div class="card"><p class="eti mb">Tareas y horarios</p>${GATO_T.map(b => {
+  h += `<div class="card"><p class="eti mb">Tareas y horarios</p>${gatoLista(g).map(b => {
     const t = gatoT(b.id, g);
-    return `<div class="gato-fila"><label class="sw"><span>${b.ic} <b>${b.n}</b></span><input type="checkbox" data-gato="on" data-id="${b.id}" ${t.on ? 'checked' : ''}></label>
-      ${t.on ? `<div class="fila mt wrap"><input type="time" value="${t.h}" data-gato="h" data-id="${b.id}" aria-label="Hora de ${b.n}" style="max-width:160px">
-      <div class="chips">${DIAS_C.map((d, i) => `<button class="chip dsem" data-a="gato-dia" data-id="${b.id}" data-v="${i}" aria-pressed="${t.dias.includes(i)}" aria-label="${DIAS[i]}">${d}</button>`).join('')}</div></div>
-      <a class="btn sm suave mt" target="_blank" rel="noopener" href="${gatoGcal(t)}">${ic('cal')} Recordatorio en Google Calendar</a>` : ''}</div>`;
-  }).join('')}</div>
-  <div class="card rosa"><p class="sub">Los avisos dentro de la app solo aparecen con la app abierta. Para que te avise con el teléfono bloqueado, agrega el recordatorio a Google Calendar (en el calendario "Mochila" o "Estudio") con el botón de cada tarea.</p></div>`;
+    return `<div class="gato-fila"><label class="sw"><span>${b.ic} <b>${esc(b.n)}</b>${b.propia ? ' <small class="sub">(propia)</small>' : ''}</span><input type="checkbox" data-gato="on" data-id="${b.id}" ${t.on ? 'checked' : ''}></label>
+      ${t.on ? `<div class="chips mt">${DIAS_C.map((d, i) => `<button class="chip dsem" data-a="gato-dia" data-id="${b.id}" data-v="${i}" aria-pressed="${t.dias.includes(i)}" aria-label="${DIAS[i]}">${d}</button>`).join('')}</div>
+      ${t.pd ? '' : `<label class="gato-h mt"><span>Hora</span><input type="time" value="${t.h}" data-gato="h" data-id="${b.id}" aria-label="Hora de ${esc(b.n)}"></label>`}
+      <label class="gato-ck mt"><input type="checkbox" data-gato="pd" data-id="${b.id}" ${t.pd ? 'checked' : ''}> Hora distinta según el día</label>
+      ${t.pd ? `<div class="gato-dias">${[1, 2, 3, 4, 5, 6, 0].filter(i => t.dias.includes(i)).map(i => `<label class="gato-h"><span>${cap(DIAS[i])}</span><input type="time" value="${horaGato(t, i)}" data-gato="hd" data-id="${b.id}" data-d="${i}" aria-label="Hora de ${esc(b.n)} el ${DIAS[i]}"></label>`).join('')}</div>` : ''}
+      <div class="fila wrap mt">${gatoGcal(t).map(x => `<a class="btn sm suave" target="_blank" rel="noopener" href="${x.url}">${ic('cal')} ${x.txt}</a>`).join('')}${b.propia ? `<button class="btn sm suave" data-a="gato-borrar" data-id="${b.id}">Quitar tarea</button>` : ''}</div>` : ''}</div>`;
+  }).join('')}
+  <button class="btn pr w mt" data-a="gato-nueva">+ Agregar una tarea para Ron</button></div>
+  <div class="card rosa"><p class="sub">Con los Avisos de Ron activados (Más → Avisos de Ron), Ron te avisa a la hora de cada día aunque la app esté cerrada. También puedes agregar el recordatorio a Google Calendar con los botones de cada tarea.</p></div>`;
   const dias = diasGatoCompletos();
   h += `<div class="card"><p class="eti">Dueña responsable 🐾</p><p class="mt">${dias} de 7 días con todo el cuidado de Ron completo.</p><div class="barra-prog mt"><i style="width:${Math.min(100, dias / 7 * 100)}%"></i></div><p class="sub mt">Al llegar a 7 días, Ron gana un pañuelo celeste.</p></div>`;
   return h;
 }
+/* un enlace de Google Calendar por cada hora distinta de la semana */
 function gatoGcal(t) {
-  const hoy = hoyYmd(), todos = t.dias.length === 7, BY = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-  let f = hoy; for (let i = 0; i < 7 && !t.dias.includes(deYmd(f).getDay()); i++) f = sumaDias(f, 1);
-  return gcalEnlace({ titulo: `${t.ic} Ron: ${t.n}`, fecha: f, hora: t.h, min: 15, detalles: t.f[0] + '\n\nMarca la tarea en Ronrutina cuando esté lista.', recur: todos ? 'RRULE:FREQ=DAILY' : 'RRULE:FREQ=WEEKLY;BYDAY=' + t.dias.map(d => BY[d]).join(',') });
+  const BY = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'], grupos = {};
+  t.dias.forEach(d => { const hh = horaGato(t, d); (grupos[hh] = grupos[hh] || []).push(d); });
+  const l = Object.entries(grupos).sort((a, b) => a[0].localeCompare(b[0]));
+  return l.map(([hh, ds]) => {
+    let f = hoyYmd(); for (let i = 0; i < 7 && !ds.includes(deYmd(f).getDay()); i++) f = sumaDias(f, 1);
+    const url = gcalEnlace({ titulo: `${t.ic} Ron: ${t.n}`, fecha: f, hora: hh, min: 15, detalles: t.f[0] + '\n\nMarca la tarea en Ronrutina cuando esté lista.', recur: ds.length === 7 ? 'RRULE:FREQ=DAILY' : 'RRULE:FREQ=WEEKLY;BYDAY=' + ds.map(d => BY[d]).join(',') });
+    return { url, txt: l.length === 1 ? 'Recordatorio en Google Calendar' : `Calendar ${hh} (${ds.sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map(d => DIAS[d].slice(0, 3)).join(', ')})` };
+  });
+}
+/* hoja para agregar una tarea propia */
+function gatoNueva() {
+  S.gatoN = { ic: '🐾', dias: [0, 1, 2, 3, 4, 5, 6] };
+  abrirHoja(`${cabHoja('Nueva tarea para Ron')}
+    <label class="lbl" for="gn-n">¿Qué hay que hacer?</label><input type="text" id="gn-n" maxlength="40" placeholder="Cepillarle el pelo, darle su remedio…">
+    <p class="lbl">Ícono</p><div class="chips" id="gn-ic">${GATO_IC.map(x => `<button class="chip" data-a="gato-n-ic" data-v="${x}" aria-pressed="${x === '🐾'}">${x}</button>`).join('')}</div>
+    <label class="lbl" for="gn-h">Hora</label><input type="time" id="gn-h" value="18:00" style="max-width:160px">
+    <p class="lbl">Días</p><div class="chips">${DIAS_C.map((d, i) => `<button class="chip dsem" data-a="gato-n-dia" data-v="${i}" aria-pressed="true" aria-label="${DIAS[i]}">${d}</button>`).join('')}</div>
+    <p class="sub mt">Después podrás poner una hora distinta para cada día.</p>
+    <button class="btn pr big mt" data-a="gato-guardar">Guardar tarea</button>`);
+  setTimeout(() => { const i = $('#gn-n'); if (i) i.focus(); }, 50);
+}
+async function gatoGuardar() {
+  const n = ($('#gn-n').value || '').trim(), h = $('#gn-h').value || '18:00', N = S.gatoN || {};
+  if (!n) return toast('Escribe qué hay que hacer.');
+  if (!(N.dias || []).length) return toast('Elige al menos un día.');
+  const g = gatoCfg(), x = { id: 'x' + uid(), n: n.charAt(0).toUpperCase() + n.slice(1), ic: N.ic || '🐾', h, dias: N.dias.slice().sort() };
+  await put('config', Object.assign({}, g, { id: 'gato', extra: [...(g.extra || []), x] }));
+  cerrarHoja(true); render(true); toast(`Listo: ${x.ic} ${x.n} 🐾`); sonido('mrrp');
+}
+async function gatoBorrar(id) {
+  const g = gatoCfg(), x = (g.extra || []).find(e => e.id === id); if (!x) return;
+  if (!confirm(`¿Quitar «${x.n}» del cuidado de Ron?`)) return;
+  const t = Object.assign({}, g.t); delete t[id];
+  await put('config', Object.assign({}, g, { id: 'gato', extra: g.extra.filter(e => e.id !== id), t })); render(true);
 }
 async function gatoCambia(id, cambios) {
   const g = gatoCfg(), t = Object.assign({}, g.t); t[id] = Object.assign({}, t[id], cambios);
@@ -1335,7 +1394,13 @@ async function guardarMision() {
 }
 
 /* ===== Armario de Ron y regalos misteriosos ===== */
-const RAREZA = { comun: { n: 'Común', c: '#78909C', p: 55 }, rara: { n: 'Rara', c: '#1E88E5', p: 28 }, epica: { n: 'Épica', c: '#8E24AA', p: 13 }, legendaria: { n: 'Legendaria', c: '#F9A825', p: 6 } };
+const RAREZA = { comun: { n: 'Normal', c: '#78909C', p: 52, e: 1 }, rara: { n: 'Rara', c: '#1E88E5', p: 27, e: 2 }, epica: { n: 'Épica', c: '#8E24AA', p: 13, e: 3 }, legendaria: { n: 'Legendaria', c: '#F9A825', p: 6, e: 4 }, mitica: { n: 'Mítica', c: '#E53935', p: 2, e: 5 } };
+const RZ_BASE = { n: 'Inicial', c: '#B0BEC5', e: 0 };
+const rzInfo = x => (x && RAREZA[x.rz]) || RZ_BASE;
+const esTop = x => !!x && (x.rz === 'legendaria' || x.rz === 'mitica');
+const cadaN = rz => Math.max(2, Math.round(100 / RAREZA[rz].p));
+const estrellasRz = rz => '★'.repeat(RAREZA[rz].e) + '☆'.repeat(5 - RAREZA[rz].e);
+const rzClase = x => x.rz === 'mitica' ? 'mit' : x.rz === 'legendaria' ? 'leg' : '';
 const RANURAS = { cabeza: 'Sombreros', ojos: 'Gafas', cuello: 'Cuello', disfraz: 'Disfraces', pelaje: 'Pelaje', arenero: 'Areneros' };
 const NS = 'stroke="none"';
 const flor = (cx, cy, c) => [0, 72, 144, 216, 288].map(a => `<circle cx="${(cx + 7 * Math.cos(a * Math.PI / 180)).toFixed(1)}" cy="${(cy + 7 * Math.sin(a * Math.PI / 180)).toFixed(1)}" r="5.5" fill="${c}"/>`).join('') + `<circle cx="${cx}" cy="${cy}" r="4" fill="#FFD54F"/>`;
@@ -1399,12 +1464,12 @@ const CATALOGO = [
   { id: 'ar_cohete', n: 'Arenero cohete', r: 'arenero', rz: 'epica', s: `<path d="M6 32 h68 l-6 22 h-56z" fill="#ECEFF1"/><path d="M10 32 q30 -9 60 0" fill="#FFE0B2"/><path d="M40 2 Q52 12 50 30 H30 Q28 12 40 2Z" fill="#E53935"/><circle cx="40" cy="16" r="4" fill="#81D4FA"/><path d="M30 24 l-7 8 h7z M50 24 l7 8 h-7z" fill="#FFB300"/>` },
   { id: 'ar_nube', n: 'Arenero nube', r: 'arenero', rz: 'rara', s: `<path d="M8 54 Q0 44 10 38 Q8 26 22 28 Q28 16 42 22 Q54 14 62 26 Q76 26 72 40 Q80 48 70 54 Z" fill="#FFF" /><path d="M16 42 q24 -8 48 0" fill="#FFE0B2"/>` },
   /* ===== LEGENDARIOS EXTRAVAGANTES ===== */
-  { id: 'unicornio', n: 'Cuerno de unicornio', r: 'cabeza', rz: 'legendaria', s: `<path d="M140 62 Q178 50 192 98" stroke="#EF5350" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M144 66 Q176 58 186 102" stroke="#FFB74D" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M146 72 Q172 66 180 106" stroke="#FFF176" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M148 78 Q168 74 174 110" stroke="#81C784" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M150 84 Q164 82 168 112" stroke="#64B5F6" stroke-width="7" fill="none" stroke-linecap="round"/><polygon points="109,66 131,66 120,0" fill="#FFF8E1"/><path d="M112 56 l16 -5 M114 42 l12 -4 M116 28 l8 -3" stroke="#FFB300" stroke-width="2.4"/><g class="anim-brillo">${estrella(140, 18, 6, '#FFF59D')}</g><g class="anim-brillo" style="animation-delay:.9s">${estrella(98, 30, 5, '#F8BBD0')}</g>` },
+  { id: 'unicornio', n: 'Cuerno de unicornio', r: 'cabeza', rz: 'mitica', s: `<path d="M140 62 Q178 50 192 98" stroke="#EF5350" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M144 66 Q176 58 186 102" stroke="#FFB74D" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M146 72 Q172 66 180 106" stroke="#FFF176" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M148 78 Q168 74 174 110" stroke="#81C784" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M150 84 Q164 82 168 112" stroke="#64B5F6" stroke-width="7" fill="none" stroke-linecap="round"/><polygon points="109,66 131,66 120,0" fill="#FFF8E1"/><path d="M112 56 l16 -5 M114 42 l12 -4 M116 28 l8 -3" stroke="#FFB300" stroke-width="2.4"/><g class="anim-brillo">${estrella(140, 18, 6, '#FFF59D')}</g><g class="anim-brillo" style="animation-delay:.9s">${estrella(98, 30, 5, '#F8BBD0')}</g>` },
   { id: 'jopo', n: 'Jopo rockero', r: 'cabeza', rz: 'legendaria', s: `<path d="M72 84 Q62 44 100 34 Q148 18 176 50 Q158 42 138 46 Q164 54 166 76 Q130 56 104 62 Q84 66 72 84Z" fill="#2B2B2B"/><path d="M92 44 Q124 30 154 42 M100 52 Q126 44 146 50" stroke="#8D8D8D" stroke-width="3" fill="none"/><g class="anim-brillo">${estrella(150, 30, 6, '#FFFFFF')}</g>` },
   { id: 'dj', n: 'Audífonos DJ neón', r: 'cabeza', rz: 'legendaria', s: `<path d="M62 112 Q56 30 120 30 Q184 30 178 112" stroke="#212121" stroke-width="9" fill="none"/><rect x="46" y="94" width="26" height="40" rx="12" fill="#E91E63"/><rect x="168" y="94" width="26" height="40" rx="12" fill="#E91E63"/><rect x="51" y="102" width="7" height="24" rx="3.5" fill="#00E5FF" stroke="none" class="anim-luz"/><rect x="182" y="102" width="7" height="24" rx="3.5" fill="#00E5FF" stroke="none" class="anim-luz" style="animation-delay:.5s"/>` },
   { id: 'visor', n: 'Visor cibernético', r: 'ojos', rz: 'legendaria', s: `<path d="M72 92 Q120 80 168 92 L164 118 Q120 127 76 118Z" fill="rgba(0,229,255,.55)" stroke="#263238" stroke-width="3.5"/><path d="M80 105 H160" stroke="#E0F7FA" stroke-width="2.5" class="anim-scan"/><circle cx="70" cy="104" r="5" fill="#90A4AE"/><circle cx="170" cy="104" r="5" fill="#90A4AE"/><circle cx="150" cy="96" r="2.5" fill="#FF1744" stroke="none" class="anim-luz"/>` },
   { id: 'cadena', n: 'Cadena de oro', r: 'cuello', rz: 'legendaria', s: `<path d="M84 150 Q120 204 156 150" fill="none" stroke="#B8860B" stroke-width="7"/><path d="M84 150 Q120 204 156 150" fill="none" stroke="#FFD54F" stroke-width="5" stroke-dasharray="5 3"/><circle cx="120" cy="186" r="15" fill="#FFC107"/><text x="120" y="192" text-anchor="middle" font-size="17" font-weight="900" fill="#8D6E00" stroke="none" font-family="Nunito,sans-serif">R</text><g class="anim-brillo">${estrella(134, 174, 5, '#FFFFFF')}</g>` },
-  { id: 'disco70', n: 'Fiebre disco de los 70', r: 'disfraz', rz: 'legendaria', tapa: 1,
+  { id: 'disco70', n: 'Fiebre disco de los 70', r: 'disfraz', rz: 'mitica', tapa: 1,
     tras: `<g class="anim-brillo">${estrella(36, 120, 8, '#FFD54F')}</g><g class="anim-brillo" style="animation-delay:.6s">${estrella(206, 140, 7, '#F48FB1')}</g><g class="anim-brillo" style="animation-delay:1.2s">${estrella(200, 70, 6, '#80D8FF')}</g><circle cx="40" cy="60" r="16" fill="#CFD8DC"/><path d="M28 52 h24 M26 60 h28 M28 68 h24 M40 44 v32 M32 46 v28 M48 46 v28" stroke="#90A4AE" stroke-width="1.5"/><path d="M40 44 V20" stroke-width="1.5"/>`,
     cuerpo: `<path d="M64 198 C62 162 80 148 100 150 L120 182 L140 150 C160 148 178 162 176 198 C176 232 160 248 140 250 L100 250 C80 248 64 232 64 198Z" fill="#E65100"/><g fill="#FFB300" stroke="none"><circle cx="82" cy="190" r="6"/><circle cx="92" cy="222" r="6"/><circle cx="158" cy="190" r="6"/><circle cx="148" cy="222" r="6"/><circle cx="76" cy="212" r="4"/><circle cx="164" cy="212" r="4"/></g><path d="M100 150 L74 180 L114 168 Z M140 150 L166 180 L126 168 Z" fill="#FFF8E1"/><path d="M104 160 Q120 196 136 160" fill="none" stroke="#FFC107" stroke-width="3"/><circle cx="120" cy="186" r="8" fill="#FFC107"/><path d="M76 244 L64 258 H100 L98 248 M164 244 L176 258 H140 L142 248" fill="#E65100"/>`,
     cabezaTras: `<g fill="#3E2723"><circle cx="120" cy="58" r="44"/><circle cx="74" cy="72" r="34"/><circle cx="166" cy="72" r="34"/><circle cx="56" cy="108" r="26"/><circle cx="184" cy="108" r="26"/><circle cx="92" cy="34" r="26"/><circle cx="148" cy="34" r="26"/></g>`,
@@ -1416,14 +1481,14 @@ const CATALOGO = [
     tras: `<path d="M76 148 Q46 210 26 256 L214 256 Q194 210 164 148 Z" fill="#B71C1C"/><path d="M26 256 L214 256" stroke="#FFF" stroke-width="10"/><g fill="#212121" stroke="none"><circle cx="50" cy="256" r="2.5"/><circle cx="90" cy="256" r="2.5"/><circle cx="150" cy="256" r="2.5"/><circle cx="190" cy="256" r="2.5"/></g>`,
     cuerpo: `<path d="M72 150 Q120 178 168 150 Q174 168 162 176 Q120 196 78 176 Q66 168 72 150Z" fill="#FFF"/><g fill="#212121" stroke="none"><path d="M88 166 l3 6 -3 -1 -3 1z"/><path d="M110 176 l3 6 -3 -1 -3 1z"/><path d="M132 176 l3 6 -3 -1 -3 1z"/><path d="M152 166 l3 6 -3 -1 -3 1z"/></g><path d="M178 240 L196 136" stroke="#FFC107" stroke-width="6"/><circle cx="197" cy="130" r="9" fill="#E91E63"/><g class="anim-brillo">${estrella(204, 118, 5, '#FFF')}</g>`,
     cabeza: `<path d="M84 68 Q120 50 156 68 L160 34 L140 50 L120 22 L100 50 L80 34 Z" fill="#FFC107"/><path d="M86 66 Q120 54 154 66 L152 74 Q120 62 88 74Z" fill="#C62828"/><circle cx="120" cy="40" r="5" fill="#29B6F6"/><circle cx="80" cy="34" r="4.5" fill="#E91E63"/><circle cx="160" cy="34" r="4.5" fill="#E91E63"/><circle cx="120" cy="22" r="4.5" fill="#FFF"/>` },
-  { id: 'robot', n: 'Ron-Bot 3000', r: 'disfraz', rz: 'legendaria', tapa: 1,
+  { id: 'robot', n: 'Ron-Bot 3000', r: 'disfraz', rz: 'mitica', tapa: 1,
     cuerpo: `<rect x="66" y="152" width="108" height="96" rx="16" fill="#B0BEC5"/><rect x="88" y="168" width="64" height="44" rx="6" fill="#263238"/><path d="M96 190 h8 l4 -10 6 20 6 -14 4 4 h18" stroke="#00E676" stroke-width="2.5" fill="none" class="anim-luz"/><circle cx="96" cy="228" r="6" fill="#FF5252"/><circle cx="120" cy="228" r="6" fill="#FFD740"/><circle cx="144" cy="228" r="6" fill="#40C4FF"/><circle cx="74" cy="160" r="3" fill="#78909C" stroke="none"/><circle cx="166" cy="160" r="3" fill="#78909C" stroke="none"/>`,
     cabeza: `<path d="M120 60 V24" stroke-width="3"/><circle cx="120" cy="20" r="7" fill="#FF1744" class="anim-luz"/><rect x="50" y="98" width="14" height="24" rx="4" fill="#90A4AE"/><rect x="176" y="98" width="14" height="24" rx="4" fill="#90A4AE"/><path d="M78 76 l6 6 M162 76 l-6 6" stroke="#90A4AE" stroke-width="4"/>` },
-  { id: 'arcoiris', n: 'Arcoíris', r: 'pelaje', rz: 'legendaria', col: ['url(#rr-arco)', '#FFFFFF'], sw: 'linear-gradient(#FF8A80,#FFD180,#FFFF8D,#B9F6CA,#80D8FF,#EA80FC)' },
+  { id: 'arcoiris', n: 'Arcoíris', r: 'pelaje', rz: 'mitica', col: ['url(#rr-arco)', '#FFFFFF'], sw: 'linear-gradient(#FF8A80,#FFD180,#FFFF8D,#B9F6CA,#80D8FF,#EA80FC)' },
   { id: 'neon', n: 'Neón', r: 'pelaje', rz: 'legendaria', col: ['#FF2BD6', '#00F5FF'] },
   { id: 'fantasma', n: 'Fantasmita', r: 'pelaje', rz: 'legendaria', col: ['rgba(225,245,254,.75)', '#81D4FA'] },
-  { id: 'ar_ovni', n: 'Arenero OVNI', r: 'arenero', rz: 'legendaria', s: `<path d="M28 44 L52 44 L70 62 L10 62Z" fill="rgba(255,241,118,.6)" stroke="none" class="anim-rayo"/><path d="M22 30 Q40 2 58 30Z" fill="rgba(129,212,250,.8)"/><path d="M27 29 q13 -6 26 0" fill="#FFE0B2" stroke-width="1.5"/><ellipse cx="40" cy="34" rx="37" ry="11" fill="#B0BEC5"/><ellipse cx="40" cy="31" rx="30" ry="5" fill="#CFD8DC" stroke="none"/><g stroke="none"><circle cx="12" cy="36" r="3" fill="#FF5252" class="anim-luz"/><circle cx="26" cy="40" r="3" fill="#FFD740" class="anim-luz" style="animation-delay:.25s"/><circle cx="40" cy="41" r="3" fill="#69F0AE" class="anim-luz" style="animation-delay:.5s"/><circle cx="54" cy="40" r="3" fill="#40C4FF" class="anim-luz" style="animation-delay:.75s"/><circle cx="68" cy="36" r="3" fill="#E040FB" class="anim-luz" style="animation-delay:1s"/></g>` },
-  { id: 'ar_moto', n: 'Arenero moto', r: 'arenero', rz: 'legendaria', s: `<circle cx="16" cy="48" r="10" fill="#212121"/><circle cx="16" cy="48" r="4" fill="#BDBDBD"/><circle cx="64" cy="48" r="10" fill="#212121"/><circle cx="64" cy="48" r="4" fill="#BDBDBD"/><path d="M16 48 L30 30 H52 L64 48" fill="none" stroke-width="3"/><path d="M24 34 Q28 22 44 24 L56 30 Q50 40 30 40Z" fill="#E53935"/><path d="M20 26 h20 v8 h-20z" fill="#FFE0B2"/><path d="M18 26 h24" stroke-width="2"/><path d="M56 30 L62 16 M58 16 h8" stroke-width="3"/><circle cx="66" cy="26" r="4" fill="#FFF59D"/><path d="M6 40 h6" stroke="#FFB300" stroke-width="3" class="anim-luz"/><g class="anim-brillo">${estrella(44, 12, 4, '#FFD54F')}</g>` },
+  { id: 'ar_ovni', n: 'Arenero OVNI', r: 'arenero', rz: 'mitica', s: `<path d="M28 44 L52 44 L70 62 L10 62Z" fill="rgba(255,241,118,.6)" stroke="none" class="anim-rayo"/><path d="M22 30 Q40 2 58 30Z" fill="rgba(129,212,250,.8)"/><path d="M27 29 q13 -6 26 0" fill="#FFE0B2" stroke-width="1.5"/><ellipse cx="40" cy="34" rx="37" ry="11" fill="#B0BEC5"/><ellipse cx="40" cy="31" rx="30" ry="5" fill="#CFD8DC" stroke="none"/><g stroke="none"><circle cx="12" cy="36" r="3" fill="#FF5252" class="anim-luz"/><circle cx="26" cy="40" r="3" fill="#FFD740" class="anim-luz" style="animation-delay:.25s"/><circle cx="40" cy="41" r="3" fill="#69F0AE" class="anim-luz" style="animation-delay:.5s"/><circle cx="54" cy="40" r="3" fill="#40C4FF" class="anim-luz" style="animation-delay:.75s"/><circle cx="68" cy="36" r="3" fill="#E040FB" class="anim-luz" style="animation-delay:1s"/></g>` },
+  { id: 'ar_moto', n: 'Arenero moto', r: 'arenero', rz: 'mitica', s: `<circle cx="16" cy="48" r="10" fill="#212121"/><circle cx="16" cy="48" r="4" fill="#BDBDBD"/><circle cx="64" cy="48" r="10" fill="#212121"/><circle cx="64" cy="48" r="4" fill="#BDBDBD"/><path d="M16 48 L30 30 H52 L64 48" fill="none" stroke-width="3"/><path d="M24 34 Q28 22 44 24 L56 30 Q50 40 30 40Z" fill="#E53935"/><path d="M20 26 h20 v8 h-20z" fill="#FFE0B2"/><path d="M18 26 h24" stroke-width="2"/><path d="M56 30 L62 16 M58 16 h8" stroke-width="3"/><circle cx="66" cy="26" r="4" fill="#FFF59D"/><path d="M6 40 h6" stroke="#FFB300" stroke-width="3" class="anim-luz"/><g class="anim-brillo">${estrella(44, 12, 4, '#FFD54F')}</g>` },
   { id: 'ar_trono', n: 'Arenero trono real', r: 'arenero', rz: 'legendaria', s: `<path d="M14 58 V14 Q14 4 24 8 L40 2 L56 8 Q66 4 66 14 V58Z" fill="#FFC107"/><path d="M20 58 V40 h40 v18" fill="#C62828"/><path d="M22 40 q18 -8 36 0" fill="#FFE0B2"/><circle cx="40" cy="18" r="6" fill="#E91E63"/><circle cx="24" cy="14" r="3" fill="#29B6F6"/><circle cx="56" cy="14" r="3" fill="#29B6F6"/><g class="anim-brillo">${estrella(64, 4, 4, '#FFF')}</g>` },
   { id: 'ar_tesoro', n: 'Arenero tesoro', r: 'arenero', rz: 'legendaria', s: `<rect x="8" y="28" width="64" height="26" rx="3" fill="#8D6E63"/><path d="M8 28 Q40 6 72 28" fill="#A1887F"/><rect x="34" y="26" width="12" height="12" rx="2" fill="#FFC107"/><circle cx="20" cy="24" r="4" fill="#FFD54F"/><circle cx="58" cy="22" r="4" fill="#FFD54F"/>${estrella(40, 12, 5, '#FFF59D')}` }
 ];
@@ -1473,12 +1538,15 @@ function miniItem(x) {
   return `<svg viewBox="${vb}" stroke="${OSC}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${s}</svg>`;
 }
 function vArmario() {
-  const inv = inventario(), eq = ronEq(), r = S.ranura || 'cabeza', items = CATALOGO.filter(x => x.r === r), tot = CATALOGO.length;
+  const inv = inventario(), eq = ronEq(), r = S.ranura || 'cabeza', fil = S.rzFil || '', tot = CATALOGO.length;
+  const items = CATALOGO.filter(x => x.r === r && (!fil || x.rz === fil));
+  const cuenta = rz => { const l = CATALOGO.filter(x => x.rz === rz); return `${l.filter(x => inv.has(x.id)).length}/${l.length}`; };
   return `<div class="card" id="armario"><div class="fila entre mb"><p class="eti">👗 Armario de Ron</p><span class="badge">${[...inv].filter(id => itemCat(id)).length}/${tot}</span></div>
-    <div class="chips scroll mb">${Object.entries(RANURAS).map(([k, n]) => `<button class="chip" data-a="ranura" data-v="${k}" aria-pressed="${r === k}">${n}</button>`).join('')}</div>
-    <div class="armario">${items.map(x => { const tiene = inv.has(x.id), puesto = eq[r] === x.id || (r === 'pelaje' && !eq.pelaje && x.id === 'naranjo') || (r === 'arenero' && !eq.arenero && x.id === 'ar_clasico');
-      return tiene ? `<button class="prenda ${x.rz === 'legendaria' ? 'leg' : ''}" data-a="equipar" data-v="${x.id}" aria-pressed="${puesto}" style="--rz:${(RAREZA[x.rz] || { c: '#B0BEC5' }).c}"><span class="ic">${miniItem(x)}</span><small>${esc(x.n)}</small></button>`
-        : `<div class="prenda bloq" title="Por descubrir"><span class="ic">?</span><small>${x.logro ? 'Logro: ' + esc((LOGROS.find(l => l.id === x.logro) || {}).n || '') : 'Regalo misterioso'}</small></div>`; }).join('')}</div>
+    <div class="rz-leyenda"><p class="sub">Colores por categoría · toca una para filtrar</p><div class="chips mt">${Object.entries(RAREZA).map(([k, z]) => `<button class="chip rz-chip" data-a="rz-fil" data-v="${k}" aria-pressed="${fil === k}" style="--rz:${z.c}"><span class="rz-punto"></span>${z.n} <small>${cuenta(k)}</small></button>`).join('')}${fil ? `<button class="chip" data-a="rz-fil" data-v="">Ver todas</button>` : ''}</div></div>
+    <div class="chips scroll mb mt">${Object.entries(RANURAS).map(([k, n]) => `<button class="chip" data-a="ranura" data-v="${k}" aria-pressed="${r === k}">${n}</button>`).join('')}</div>
+    ${items.length ? `<div class="armario">${items.map(x => { const tiene = inv.has(x.id), z = rzInfo(x), puesto = eq[r] === x.id || (r === 'pelaje' && !eq.pelaje && x.id === 'naranjo') || (r === 'arenero' && !eq.arenero && x.id === 'ar_clasico');
+      return tiene ? `<button class="prenda ${rzClase(x)}" data-a="equipar" data-v="${x.id}" aria-pressed="${puesto}" style="--rz:${z.c}"><span class="ic">${miniItem(x)}</span><small>${esc(x.n)}</small><em class="rz-tag">${z.n}</em></button>`
+        : `<div class="prenda bloq" title="Por descubrir" style="--rz:${z.c}"><span class="ic">?</span><small>${x.logro ? 'Logro: ' + esc((LOGROS.find(l => l.id === x.logro) || {}).n || '') : 'Regalo misterioso'}</small><em class="rz-tag">${z.n}</em></div>`; }).join('')}</div>` : `<p class="sub">No hay objetos ${fil ? RAREZA[fil].n.toLowerCase() + 's' : ''} en esta sección. Prueba otra.</p>`}
     ${eq[r] && !['pelaje', 'arenero'].includes(r) ? `<button class="btn sm suave w mt" data-a="equipar" data-v="" data-r="${r}">Quitar ${RANURAS[r].toLowerCase().replace(/s$/, '')}</button>` : ''}</div>`;
 }
 async function equipar(id, ranura) {
@@ -1507,14 +1575,19 @@ async function revelarRegalo() {
   caja.classList.add('abre'); sonido('mrrp');
   if (!x) { await guardarRon({ regalos: (rc.regalos || 0) + 1, bonus: (rc.bonus || 0) + 3 }); }
   else await guardarRon({ regalos: (rc.regalos || 0) + 1, inv: [...(rc.inv || []), x.id] });
-  confeti(); if (x && x.rz === 'legendaria') { setTimeout(confeti, 500); setTimeout(() => sonido('feliz'), 700); } else setTimeout(() => sonido('miau'), 700);
+  confeti(); if (esTop(x)) { setTimeout(confeti, 500); if (x.rz === 'mitica') setTimeout(confeti, 1000); setTimeout(() => sonido('feliz'), 700); } else setTimeout(() => sonido('miau'), 700);
   { const rcEl = $('.regalo-card'); if (rcEl) rcEl.outerHTML = regaloCard(); const ar = $('#armario'); if (ar) ar.outerHTML = vArmario(); }
   setTimeout(() => {
     const cont = $('#regalo'); if (!cont) return;
     if (!x) { cont.innerHTML = `<h2>¡Ya tienes todo el armario! 🏆</h2><p class="mt">Ron te regala 3 🍓 extra.</p><button class="btn pr big mt2" data-a="cerrar">¡Genial!</button>`; return; }
-    const rz = RAREZA[x.rz], eq = Object.assign({}, ronEq(), { [x.r]: x.id });
-    cont.innerHTML = `<p class="badge ${x.rz === 'legendaria' ? 'badge-leg' : ''}" style="background:${rz.c};color:#fff;display:inline-block">${x.rz === 'legendaria' ? '✨ ' : ''}${rz.n}${x.rz === 'legendaria' ? ' ✨' : ''}</p><h2 class="mt">${esc(x.n)}</h2>
-      ${x.r === 'arenero' ? `<div class="arenero-grande">${miniItem(x)}</div>` : ronHTML('grande', x.rz === 'legendaria' ? '¡¡NO PUEDE SER!! ¡Es legendario! 🤩' : elige(['¡Wow! ¿Para mí? 😻', '¡Me encanta! Gracias 🧡', '¡Pruébamelo, pruébamelo!']), 'ron-regalo', eq)}
+    const rz = rzInfo(x), eq = Object.assign({}, ronEq(), { [x.r]: x.id }), top = esTop(x);
+    const DICE = { mitica: '¡¡¿¿MÍTICO??!! ¡Casi nadie tiene uno! 🤯', legendaria: '¡¡NO PUEDE SER!! ¡Es legendario! 🤩', epica: elige(['¡Épico! Me veo increíble 😼', '¡Esto sí que es especial! 😻']), rara: elige(['¡Uy, uno raro! 😺', '¡Qué buena suerte! 🍀']), comun: elige(['¡Wow! ¿Para mí? 😻', '¡Me encanta! Gracias 🧡', '¡Pruébamelo, pruébamelo!']) };
+    cont.innerHTML = `<div class="rz-revela ${rzClase(x)}" style="--rz:${rz.c}"><p class="eti">Categoría</p>
+        <p class="badge rz-badge ${top ? 'badge-leg' : ''}" style="background:${rz.c}">${top ? '✨ ' : ''}${rz.n}${top ? ' ✨' : ''}</p>
+        <p class="rz-estrellas" aria-label="${RAREZA[x.rz].e} de 5 estrellas de rareza">${estrellasRz(x.rz)}</p>
+        <p class="sub">Sale más o menos en 1 de cada ${cadaN(x.rz)} regalos</p></div>
+      <h2 class="mt">${esc(x.n)}</h2>
+      ${x.r === 'arenero' ? `<div class="arenero-grande">${miniItem(x)}</div>` : ronHTML('grande', DICE[x.rz] || DICE.comun, 'ron-regalo', eq)}
       <div class="grid2 mt2"><button class="btn" data-a="cerrar">Guardar</button><button class="btn pr" data-a="equipar-cerrar" data-v="${x.id}">Ponérselo</button></div>
       ${regalosInfo().pend ? `<button class="btn suave w mt" data-a="abrir-regalo">Abrir otro (${regalosInfo().pend})</button>` : ''}`;
     setTimeout(() => ronEstado('ron-regalo', 'celebra'), 0);
@@ -1888,7 +1961,7 @@ function vYoMas() {
   ${it('mas-gato', '🐾', 'Ron de verdad', 'Comida, agua, arenero, paseo y cariño')}
   ${it('mas-familia', '👨‍👩‍👧', 'Familia', 'Código y enlace de la familia')}
   ${it('mas-ajustes', '⚙️', 'Ajustes', 'Fondo, colores, hora de corte y sonido')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 11</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · Mi vida · versión 12.1</p>`;
 }
 /* Navegación según el modo */
 const NAV_IC = { hoy: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', libro: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M19 19v2H6"/>', gato: '<path d="M5 20v-8l-1-7 5 3h6l5-3-1 7v8z"/><circle cx="9.5" cy="13" r=".8"/><circle cx="14.5" cy="13" r=".8"/>', mas: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>', maletin: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>' };
@@ -2890,7 +2963,7 @@ function vMas() {
   ${it('mas-mochila', 'mochila', 'Mochila y recordatorios', 'Avisos en Google Calendar')}
   ${it('mas-familia', 'grupo', 'Familia', 'Compartir Ronrutina con mamá')}
   ${it('mas-ajustes', 'ajustes', 'Ajustes', 'Colores, Ron y tu nombre')}
-  <p class="sub mt2" style="text-align:center">Ronrutina · versión 11</p>`;
+  <p class="sub mt2" style="text-align:center">Ronrutina · versión 12.1</p>`;
 }
 const cabSub = t => `<div class="top"><a class="icono" href="#mas" aria-label="Volver">${ic('back')}</a><h1 style="flex:1">${t}</h1></div>`;
 
@@ -3177,6 +3250,12 @@ document.addEventListener('click', async ev => {
     case 'ratito': try { localStorage.setItem('ronrutina.ratito', hoyYmd()); } catch (e) { } S.cuidado = { hasta: Date.now() + 3 * 60000 }; S.bandeja = 'juego'; return render(true);
     case 'gato': return marcarGato(v);
     case 'gato-dia': { const tt = gatoT(id), d = +v, dias = tt.dias.includes(d) ? tt.dias.filter(x => x !== d) : [...tt.dias, d].sort(); if (!dias.length) return toast('Deja al menos un día.'); return gatoCambia(id, { dias }); }
+    case 'gato-nueva': return gatoNueva();
+    case 'gato-guardar': return gatoGuardar();
+    case 'gato-borrar': return gatoBorrar(id);
+    case 'gato-n-ic': { S.gatoN.ic = v; $$('[data-a=gato-n-ic]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v)); return; }
+    case 'gato-n-dia': { const d = +v, l = S.gatoN.dias, on = l.includes(d); S.gatoN.dias = on ? l.filter(x => x !== d) : [...l, d]; t.setAttribute('aria-pressed', !on); return; }
+    case 'rz-fil': S.rzFil = v; { const ar = $('#armario'); if (ar) ar.outerHTML = vArmario(); } return;
     case 'ranura': S.ranura = v; { const ar = $('#armario'); if (ar) { ar.outerHTML = vArmario(); return; } } return render(true);
     case 'equipar': return equipar(v, t.dataset.r);
     case 'equipar-cerrar': cerrarHoja(true); if (S.vista !== 'ron') location.hash = '#ron'; return equipar(v);
@@ -3259,6 +3338,8 @@ document.addEventListener('change', e => {
     if (k === 'activo') put('config', Object.assign({}, gatoCfg(), { id: 'gato', activo: t.checked })).then(() => render(true));
     else if (k === 'on') gatoCambia(t.dataset.id, { on: t.checked });
     else if (k === 'h' && t.value) gatoCambia(t.dataset.id, { h: t.value });
+    else if (k === 'pd') { const tt = gatoT(t.dataset.id), hd = Object.assign({}, tt.hd); if (t.checked) tt.dias.forEach(d => { if (!hd[d]) hd[d] = tt.h; }); gatoCambia(t.dataset.id, { pd: t.checked, hd }); }
+    else if (k === 'hd' && t.value) { const tt = gatoT(t.dataset.id); gatoCambia(t.dataset.id, { hd: Object.assign({}, tt.hd, { [t.dataset.d]: t.value }) }); }
   }
   if (t.id === 'fa-est') { const n = t.value.trim(); if (n) put('config', Object.assign({}, cfg('familia'), { id: 'familia', estudiante: n })); }
 });
